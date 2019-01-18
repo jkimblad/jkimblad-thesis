@@ -1,17 +1,103 @@
-@Article{einstein2016,
-  author = 	 {Einstein, Albert},
-  title = 	 {On the Relative Value of Relatives},
-  journal = 	 {J. Irreproducible Results},
-  year = 	 {2016},
-  volume = 	 {17},
-  pages = 	 {4711--4721}
+
+@inproceedings{nasri_response-time_2018,
+	address = {Dagstuhl, Germany},
+	series = {Leibniz {International} {Proceedings} in {Informatics} ({LIPIcs})},
+	title = {A {Response}-{Time} {Analysis} for {Non}-{Preemptive} {Job} {Sets} under {Global} {Scheduling}},
+	volume = {106},
+	isbn = {978-3-95977-075-0},
+	url = {http://drops.dagstuhl.de/opus/volltexte/2018/8994},
+	doi = {10.4230/LIPIcs.ECRTS.2018.9},
+	urldate = {2019-01-15},
+	booktitle = {30th {Euromicro} {Conference} on {Real}-{Time} {Systems} ({ECRTS} 2018)},
+	publisher = {Schloss Dagstuhl–Leibniz-Zentrum fuer Informatik},
+	author = {Nasri, Mitra and Nelissen, Geoffrey and Brandenburg, Björn B.},
+	editor = {Altmeyer, Sebastian},
+	year = {2018},
+	keywords = {best-case response time, global multiprocessor scheduling, non-preemptive tasks, schedulability analysis, worst-case response time},
+	pages = {9:1--9:23},
+	file = {Full Text PDF:/home/jacob/Zotero/storage/MJY4SM3R/Nasri et al. - 2018 - A Response-Time Analysis for Non-Preemptive Job Se.pdf:application/pdf;Snapshot:/home/jacob/Zotero/storage/8IY6NVEI/8994.html:text/html}
 }
 
-@InProceedings{heisenberg2015,
-  author = 	 {Heisenberg, Werner and Dirac, Paul},
-  title = 	 {To be or not to be},
-  booktitle =    {Proceedings of the Uncertain Society Annual Meeting},
-  year = 	 {2015},
-  editor = 	 {Schrödinger, Erwin},
-  pages =	 {21--22}
+@inproceedings{becker_contention-free_2016,
+	title = {Contention-{Free} {Execution} of {Automotive} {Applications} on a {Clustered} {Many}-{Core} {Platform}},
+	doi = {10.1109/ECRTS.2016.14},
+	abstract = {Next generations of compute-intensive real-time applications in automotive systems will require more powerful computing platforms. One promising power-efficient solution for such applications is to use clustered many-core architectures. However, ensuring that real-time requirements are satisfied in the presence of contention in shared resources, such as memories, remains an open issue. This work presents a novel contention-free execution framework to execute automotive applications on such platforms. Privatization of memory banks together with defined access phases to shared memory resources is the backbone of the framework. An Integer Linear Programming (ILP) formulation is presented to find the optimal time-triggered schedule for the on-core execution as well as for the access to shared memory. Additionally a heuristic solution is presented that generates the schedule in a fraction of the time required by the ILP. Extensive evaluations show that the proposed heuristic performs only 0.5\% away from the optimal solution while it outperforms a baseline heuristic by 67\%. The applicability of the approach to industrially sized problems is demonstrated in a case study of a software for Engine Management Systems.},
+	booktitle = {2016 28th {Euromicro} {Conference} on {Real}-{Time} {Systems} ({ECRTS})},
+	author = {Becker, M. and Dasari, D. and Nicolic, B. and Akesson, B. and Nélis, V. and Nolte, T.},
+	month = jul,
+	year = {2016},
+	keywords = {Automotive, automotive applications, Automotive applications, automotive electronics, automotive systems, clustered many-core architectures, clustered many-core platform, compute-intensive real-time applications, computing platforms, contention-free execution framework, Execution Framework, ILP formulation, integer linear programming, integer programming, linear programming, Many-Core, memory banks privatization, Memory management, optimal time-triggered schedule, parallel architectures, power-efficient solution, Real-Time, real-time requirements, real-time systems, resource allocation, Schedules, Scheduling, shared memory resources, shared memory systems, Software, Time-Triggered},
+	pages = {14--24},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/2UMJR82E/7557865.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/KSRFFN6G/Becker et al. - 2016 - Contention-Free Execution of Automotive Applicatio.pdf:application/pdf}
+}
+
+@inproceedings{kramer_real_2015,
+	title = {Real world automotive benchmarks for free},
+	booktitle = {6th {International} {Workshop} on {Analysis} {Tools} and {Methodologies} for {Embedded} and {Real}-time {Systems} ({WATERS})},
+	author = {Kramer, Simon and Ziegenbein, Dirk and Hamann, Arne},
+	year = {2015}
+}
+
+@inproceedings{maia_schedulability_2017,
+	title = {Schedulability analysis for global fixed-priority scheduling of the 3-phase task model},
+	doi = {10.1109/RTCSA.2017.8046313},
+	abstract = {Scheduling real-time applications on general purpose multicore platforms is a challenging problem from a timing analysis perspective. Such platforms expose uncontrolled sources of interference whenever concurrent accesses to memory are performed. The non-deterministic bus and memory access behavior complicates the estimations of applications' worst-case execution times (WCET). The 3-phase task model seems a good candidate to circumvent the uncontrolled sources of interference by isolating concurrent memory accesses. A task is divided in three successive phases; first, the task loads its instruction and data in a local memory, then it executes non-preemptively using those pre-loaded instructions and data, and finally, the modified data are pushed back to main memory. Following this execution model, tasks never access the bus during their execution phase. Instead, all the bus accesses are performed during the first and third phases. In this paper, we focus on the global fixed-priority scheduling of the 3-phase task model. A new schedulability test is derived by modelling the interference happening on the bus rather than the interference on the cores as in the state-of-the-art techniques. The effectiveness of the test is evaluated by comparing it against the state-of-the-art.},
+	booktitle = {2017 {IEEE} 23rd {International} {Conference} on {Embedded} and {Real}-{Time} {Computing} {Systems} and {Applications} ({RTCSA})},
+	author = {Maia, C. and Nelissen, G. and Nogueira, L. and Pinho, L. M. and Pérez, D. G.},
+	month = aug,
+	year = {2017},
+	keywords = {schedulability analysis, 3-phase task model, Analytical models, concurrency (computers), general purpose multicore platforms, global fixed-priority scheduling, Interference, Load modeling, Multicore processing, Predictive models, Program processors, Real-time systems, scheduling, WCET, worst-case execution times},
+	pages = {1--10},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/YYV5S36L/8046313.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/ZNVQ8CA3/Maia et al. - 2017 - Schedulability analysis for global fixed-priority .pdf:application/pdf}
+}
+
+@inproceedings{maia_closer_2016,
+	title = {A closer look into the {AER} {Model}},
+	doi = {10.1109/ETFA.2016.7733567},
+	abstract = {Commercial-of-the-shelf based multi-core systems present timing anomalies that cannot be ignored by the real-time systems community due to their unpredictable behaviour. These timing anomalies, often caused by applications' uncontrolled accesses to shared resources such as the components in the memory hierarchy or in the I/O subsystem, introduce interference that may lead to deadline misses if the problem is neglected. The Acquisition Execution Restitution (AER) execution model was previously proposed to circumvent this problem and, therefore, mitigate inter-task interference. In this model, applications decouple communication (acquisition and restitution phases) from the actual execution in a way that at most one acquisition or restitution phase is in execution at any instant of time while the execution phase of different tasks can progress in parallel on multiple cores. Thus, keeping each task's derived worst-case execution time closer to the one measured in isolation. In this paper, we study the AER execution model and compare it against a global Earliest Deadline First (EDF) approach where interferences are considered. Our results show that a priority assignment heuristic which assigns the priorities based on the tasks' periods dominates all the other proposed heuristics and that due to interference it can also schedule task sets which are not schedulable by using the global EDF approach.},
+	booktitle = {2016 {IEEE} 21st {International} {Conference} on {Emerging} {Technologies} and {Factory} {Automation} ({ETFA})},
+	author = {Maia, C. and Nogueira, L. and Pinho, L. M. and Pérez, D. G.},
+	month = sep,
+	year = {2016},
+	keywords = {Schedules, Software, Interference, Multicore processing, WCET, acquisition execution restitution model, AER model, Computational modeling, multicore system, multiprocessing systems, parallel processing, priority assignment heuristic, processor scheduling, task scheduling, Time division multiple access, Timing, worst-case execution time},
+	pages = {1--8},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/AWQQSM44/7733567.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/Q5EA988V/Maia et al. - 2016 - A closer look into the AER Model.pdf:application/pdf}
+}
+
+@inproceedings{schranzhofer_timing_2010,
+	title = {Timing {Analysis} for {TDMA} {Arbitration} in {Resource} {Sharing} {Systems}},
+	doi = {10.1109/RTAS.2010.24},
+	abstract = {Modern computing systems have adopted multicore architectures and multiprocessor systems on chip (MPSoCs) for accommodating the increasing demand on computation power. However, performance boosting is constrained by shared resources, such as buses, main memory, DMA, etc.This paper analyzes the worst-case completion (response) time for real-time tasks when time division multiple access (TDMA) policies are applied for resource arbitration.Real-time tasks execute periodically on a processing element and are constituted by sequential superblocks. A superblock is characterized by its accesses to a shared resource and its computation time. We explore three models of accessing shared resources: (1)dedicated access model, in which accesses happen only at the beginning and the end of a superblock, (2) general access model, in which accesses could happen anytime during the execution of a superblock, and (3) hybrid access model, which combines the dedicated and general access models. We present a framework to analyze the worst-case completion time of real-time tasks (superblocks) under these three access models, for a given TDMA arbiter. We compare the timing analysis of the three proposed models for a real-world application.},
+	booktitle = {2010 16th {IEEE} {Real}-{Time} and {Embedded} {Technology} and {Applications} {Symposium}},
+	author = {Schranzhofer, A. and Chen, J. and Thiele, L.},
+	month = apr,
+	year = {2010},
+	keywords = {Multicore processing, Time division multiple access, Timing, Boosting, buses, Computer architecture, DMA, general access model, hybrid access model, main memory, multicore architectures, Multiprocessing systems, multiprocessor systems on chip, Performance analysis, Real-Time Systems, Resource management, resource sharing systems, SOC, System-on-a-chip, system-on-chip, TDMA arbitration, time division multiple access, Time Division Multiple Access (TDMA), time division multiple access policies, Time factors, timing analysis, worst-case completion time, Worst-Case Timing Analysis},
+	pages = {215--224},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/NI3P88NG/5465981.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/3R4GNPRS/Schranzhofer et al. - 2010 - Timing Analysis for TDMA Arbitration in Resource S.pdf:application/pdf}
+}
+
+@article{pellizzoni_predictable_2011,
+	title = {A {Predictable} {Execution} {Model} for {COTS}-{Based} {Embedded} {Systems}},
+	doi = {10.1109/RTAS.2011.33},
+	abstract = {Building safety-critical real-time systems out of inexpensive, non-real-time, COTS components is challenging. Although COTS components generally offer high performance, they can occasionally incur significant timing delays. To prevent this, we propose controlling the operating point of each shared resource (like the cache, memory, and interconnection buses) to maintain it below its saturation limit. This is necessary because the low-level arbiters of these shared resources are not typically designed to provide real-time guarantees. In this work, we introduce a novel system execution model, the Predictable Execution Model (PREM), which, in contrast to the standard COTS execution model, coschedules at a high level all active components in the system, such as CPU cores and I/O peripherals. In order to permit predictable, system-wide execution, we argue that real-time embedded applications should be compiled according to a new set of rules dictated by PREM. To experimentally validate our theory, we developed a COTS-based PREM testbed and modified the LLVM Compiler Infrastructure to produce PREM-compatible executables.},
+	journal = {2011 17th IEEE Real-Time and Embedded Technology and Applications Symposium},
+	author = {Pellizzoni, Rodolfo and Betti, Emiliano and Bak, Stanley and Yao, Gang and Criswell, John and Caccamo, Marco and Kegley, Russell},
+	year = {2011},
+	keywords = {Arbiter (electronics), Central processing unit, Compiler, Embedded system, Executable, Experiment, High- and low-level, High-level programming language, Input/output, Interconnection, LLVM, Operating point, Peripheral, Real-time clock, Real-time computing, Testbed, Transponder timing},
+	pages = {269--279}
+}
+
+@inproceedings{durrieu_predictable_2014,
+	address = {TOULOUSE, France},
+	title = {Predictable {Flight} {Management} {System} {Implementation} on a {Multicore} {Processor}},
+	url = {https://hal.archives-ouvertes.fr/hal-01121700},
+	abstract = {This paper presents an approach for hosting a representative avionic function on a distributed-memory mul-ticore COTS architecture. This approach was developed in collaboration by Thales and ONERA, in order to improve the performance of the function while enforcing its predictability. Once the target avionic function and the multicore architecture have been introduced, the execution model and the needed basic services are described and evaluated.},
+	urldate = {2019-01-18},
+	booktitle = {Embedded {Real} {Time} {Software} ({ERTS}'14)},
+	author = {Durrieu, Guy and Faugère, Madeleine and Girbal, Sylvain and Gracia Pérez, Daniel and Pagetti, Claire and Puffitsch, W.},
+	month = feb,
+	year = {2014},
+	keywords = {FMS, MULTI-COEURS, PREDICTIBILITE},
+	file = {HAL PDF Full Text:/home/jacob/Zotero/storage/P9I98UMI/Durrieu et al. - 2014 - Predictable Flight Management System Implementatio.pdf:application/pdf}
 }
