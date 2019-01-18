@@ -1,6 +1,5 @@
 \documentclass{kththesis}
 
-\usepackage{blindtext} % This is just to get some nonsense text in this template, can be safely removed
 
 %Taken from ID1354
 \usepackage[utf8]{inputenc}
@@ -31,6 +30,9 @@
     colorlinks=true,
 }
 
+% List of abbreviations
+\usepackage[refpage]{nomencl}
+\makenomenclature
 
 \title{This is the English title}
 \alttitle{Detta är den svenska översättningen av titeln}
@@ -45,28 +47,28 @@
 
 \begin{document}
 
-% Frontmatter includes the titlepage, abstracts and table-of-contents
+% Frontmatter includes the title page, abstracts and table-of-contents
 \frontmatter
 
 \titlepage
 
-\begin{abstract}
-  English abstract goes here.
+\begin{abstract} 
 
-  \blindtext
+    English abstract goes here.
+
 \end{abstract}
 
 
-\begin{otherlanguage}{swedish}
-  \begin{abstract}
-    Träutensilierna i ett tryckeri äro ingalunda en oviktig faktor,
-    för trevnadens, ordningens och ekonomiens upprätthållande, och
-    dock är det icke sällan som sorgliga erfarenheter göras på grund
-    af det oförstånd med hvilket kaster, formbräden och regaler
-    tillverkas och försäljas Kaster som äro dåligt hopkomna och af
-    otillräckligt.
-  \end{abstract}
+\begin{otherlanguage}{swedish} 
+    
+    \begin{abstract}
+
+    \end{abstract} 
+
 \end{otherlanguage}
+
+
+\printnomenclature
 
 
 \tableofcontents
@@ -76,50 +78,109 @@
 \mainmatter
 
 
-\chapter{Introduction}
+\chapter{Introduction} 
 
-\Blindtext
+Embedded systems in the automotive sector are required to go through a lot of analysis and testing
+before being deemed safe for use in traffic. With the rise of autonomous vehicles these systems are
+becoming more complex as an effect of more computing needed being done.  This has also put
+requirements on the hardware to become faster and faster, thus the industry is turning to the use of
+multi-core and many-core platforms. These type of platforms present more unpredictability than
+single-core platforms which requires new methods of analysis and deterministic execution of these
+systems. 
 
-\section{Background}
+
+\section{Background} 
+
+Timing analysis is an important part of real-time systems. However, multi-core platforms often
+implement complicated memory hierarchies that make timing analysis a lot harder. One way to tackle
+this is to schedule the access to shared memory in cooperation with computational tasks. This can
+improve analysis and is employed by industrial domains already where the execution of tasks can be
+divided up into three distinct parts, read-execute-write.
+
+
 \section{Problem}
+
+An analysis method for resource contention in multi-core real-time systems have been proposed in
+paper [1]. This analysis method is however not 1 Template for project proposal 2018-12-12 customised
+for the read-execute-write execution model that is adapted both within the avionics domain and
+automotive domain.
+
+
 \section{Purpose}
+
+The purpose is to expand existing analysis methods by adding to the source code and/or produce a
+model of the read-execute-write task model that is available as input for these formal analysis
+methods.
+
+
 \section{Goal}
+
+
+
 \subsection{Benefits, Ethics and Sustainability}
+
 \section{Methodology / Methods}
+
 \section{Delimitations}
+
 \section{Outline}
 
-%We use the \emph{biblatex} package to handle our references.  We therefore use the
-%command \texttt{parencite} to get a reference in parenthesis, like this
-%\parencite{heisenberg2015}.  It is also possible to include the author
-%as part of the sentence using \texttt{textcite}, like talking about
-%the work of \textcite{einstein2016}.
 
-\chapter{<Theoretic Background> Use a sself-explaining title}
+%We use the \emph{biblatex} package to handle our references.  We therefore use the command
+%\texttt{parencite} to get a reference in parenthesis, like this \parencite{heisenberg2015}.  It is
+%also possible to include the author as part of the sentence using \texttt{textcite}, like talking
+%about the work of \textcite{einstein2016}.
+
+\chapter{<Theoretic Background> Use a self-explaining title}
 
 \section{Global Scheduling}
 
+\subsection{The Task Model}
+
+Although computer give away the illusion of being able to deal with very many things simultaneously
+this is actually not the case. Computers are limited to how much parallel computing they are able to
+do by the hardware, specifically the amount of cores within the CPU \nomenclature{CPU}{Central
+Processing Unit}. A computer with, for example, four cores is able to do at most four things in
+parallel at any one time. For a computer to deal with more than four calculations require it to
+switch ongoing calculations in and out of a core. These calculations are often referred to as tasks,
+where tasks often preduce some type of results that can be used either by the user of the computer
+or another task on the system. For systems with more than one computer or processor in the result
+may even be used by another computer.  For an OS \nomenclature{OS}{Operating System} to give the illusion being able to
+execute many programs in 
+
 \section{The AER Execution Model}
 
-\blindtext
+The AER \nomenclature{AER}{Acquisition Execution Restitution} execution model was first proposed in
+\parencite{durrieu_predictable_2014} to improve performance and predictability while using COTS
+\nomenclature{COTS}{Commercial-off-the-Shelf} multi-core processors with distributed memory in the
+avionics industry. Since the bottleneck for these types of systems often is the access to shared
+memory AER focuses on making it more deterministic and easier to analyse. This is done by dividing
+up the tasks that run within an OS \nomenclature{OS}{Operating System} into three distinct parts.
+
+%TODO Do we first explain what a task is, that it runs on a single core within a multi-processor and
+%that for this industry it often is non-greedy when it is non-preemptive. Do we go into detail of
+%the task model (running, ready and executing), this is probably good to cover in the global
+%scheduling part.
+
+The paper \parencite{maia_closer_2016} takes a closer look i
+
 
 \chapter{<Engineering-related content, Methodologies and Methods> Use a self-explaining title}
 
-\blindtext
+\nomenclature{AER}{Acquisition Execution Restitution}
 
 \chapter{<The work> Use a self-explaining title}
 
-\blindtext
 
 \chapter{<Result> Use a self-explaining title}
 
-\blindtext
 
 \chapter{<Conclusions> Use a self-explaining title}
 
-\blindtext
 
-\printbibliography[heading=bibintoc] % Print the bibliography (and make it appear in the table of contents)
+\printbibliography[heading=bibintoc] % Print the bibliography (and make it appear in the table of
+    %contents)
+
 
 \appendix
 
