@@ -5,6 +5,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{graphicx}
+\graphicspath{./images/}
 \usepackage{lastpage}
 \usepackage{pgf}
 \usepackage{wrapfig}
@@ -133,20 +134,62 @@ methods.
 
 \chapter{<Theoretic Background> Use a self-explaining title}
 
-\section{Global Scheduling}
 
-\subsection{The Task Model}
+
+\section{The Task Model}
+
+A task is a unit of work that is to be completed repetitively by executing on a processor over and
+over again where each iteration of execution is defined as a unique job. In embedded systems a job
+is usually completed in some set amount of time, this is known as its execution time which is the
+same for all jobs in a task. Once a job is finished executing the task will usually wait for some
+amount of time before its next job needs to execute, this is known as the tasks period. For each
+multiple of the period a new job is released, this time is known as the release time and is unique
+to each job within a single task.  The job is also required to be finished before a set amount of
+time from its release time, this is known as the jobs absolute deadline.  For an
+OS\nomenclature{OS}{Operating System} to decide in what order the jobs should be executed they each
+are also assigned a priority by a scheduler, this is discussed in section \ref{sec:scheduling}.
+
+Using the above definitions we can ascribe properties to tasks telling us what state they are in
+during a set time. After a job is released and is currently being executed the task which it belongs
+to can be described as currently running. Once the job is finished and the next job from the same
+task is yet to be released the task can be described as waiting before once again a job belonging to
+the tasks starts executing and the task is running. Once a job is running it may require access to
+some resource that is not ready to be accessed yet. Instead of the job taking up time on the
+processor we can pause it and let some other job execute instead. We would then say that the task is
+waiting. Once the resource is available again the task can be said to be ready before its job is
+allowed to continue execution.
+
+
+\begin{figure}
+
+    \centering
+
+    \includegraphics[scale=1\linewidth, bb=0 0 0 0]{images/ready-running-blocked-model.pdf}
+
+    \caption{The physical setup of the hardware running the experiments.}
+
+    \label{fig:experiment_setup}
+
+\end{figure}
+
+% TODO: talk about aperiodic and sporadic tasks as well? 
+
+\section{Scheduling} \label{sec:scheduling}
 
 Although computer give away the illusion of being able to deal with very many things simultaneously
 this is actually not the case. Computers are limited to how much parallel computing they are able to
-do by the hardware, specifically the amount of cores within the CPU \nomenclature{CPU}{Central
+do by the hardware, specifically the amount of cores within the CPU\nomenclature{CPU}{Central
 Processing Unit}. A computer with, for example, four cores is able to do at most four things in
 parallel at any one time. For a computer to deal with more than four calculations require it to
 switch ongoing calculations in and out of a core. These calculations are often referred to as tasks,
-where tasks often preduce some type of results that can be used either by the user of the computer
-or another task on the system. For systems with more than one computer or processor in the result
-may even be used by another computer.  For an OS \nomenclature{OS}{Operating System} to give the illusion being able to
-execute many programs in 
+where tasks often produce some type of results that can be used either by the user of the computer
+or another task on the system. For systems with more than one processor or processor core in it the
+result may even be used by another computer. For an OS\nomenclature{OS}{Operating System} to give
+the illusion being able to execute many programs in parallel it needs to schedule the tasks
+according to some order. By scheduling tasks and switching them in and out of the processor very
+quickly the OS is able to perform many different calculations seemingly at the same time.
+
+The order in which tasks are scheduled is determined by a scheduler,
 
 \section{The AER Execution Model}
 
@@ -155,7 +198,7 @@ The AER \nomenclature{AER}{Acquisition Execution Restitution} execution model wa
 \nomenclature{COTS}{Commercial-off-the-Shelf} multi-core processors with distributed memory in the
 avionics industry. Since the bottleneck for these types of systems often is the access to shared
 memory AER focuses on making it more deterministic and easier to analyse. This is done by dividing
-up the tasks that run within an OS \nomenclature{OS}{Operating System} into three distinct parts.
+up the tasks that run within an OS\nomenclature{OS}{Operating System} into three distinct parts.
 
 %TODO Do we first explain what a task is, that it runs on a single core within a multi-processor and
 %that for this industry it often is non-greedy when it is non-preemptive. Do we go into detail of
