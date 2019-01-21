@@ -5,7 +5,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{graphicx}
-\graphicspath{./images/}
 \usepackage{lastpage}
 \usepackage{pgf}
 \usepackage{wrapfig}
@@ -32,8 +31,8 @@
 }
 
 % List of abbreviations
-\usepackage[refpage]{nomencl}
-\makenomenclature
+\usepackage{glossaries}
+\makeglossaries
 
 \title{This is the English title}
 \alttitle{Detta är den svenska översättningen av titeln}
@@ -47,6 +46,15 @@
 
 
 \begin{document}
+
+%Term definitions
+\newacronym{os}{OS}{Operating System}
+\newacronym{cpu}{CPU}{Central Processing Unit}
+\newacronym{lcu}{LCU}{Central Processing Unit}
+\newacronym{aer}{AER}{Acquisition Execution Restitution}
+\newacronym{cots}{COTS}{Commerical off the Shelf}
+\newacronym{edf}{EDF}{Earliest Deadline First}
+\newacronym{rms}{RMS}{Rate-Monotonic Scheduling}
 
 % Frontmatter includes the title page, abstracts and table-of-contents
 \frontmatter
@@ -68,19 +76,18 @@
 
 \end{otherlanguage}
 
+% List of Acronyms
+\printglossary[title={Acronyms}]
 
-\printnomenclature
-
-
-\tableofcontents
-
+% Table of contents
+%\tableofcontents
 
 % Mainmatter is where the actual contents of the thesis goes
 \mainmatter
 
 
 \chapter{Introduction} 
-
+temp
 Embedded systems in the automotive sector are required to go through a lot of analysis and testing
 before being deemed safe for use in traffic. With the rise of autonomous vehicles these systems are
 becoming more complex as an effect of more computing needed being done.  This has also put
@@ -136,39 +143,54 @@ methods.
 
 
 
-\section{The Task Model}
+\section{The Task Model} \label{sec:the_task_model}
 
-A task is a unit of work that is to be completed repetitively by executing on a processor over and
-over again where each iteration of execution is defined as a unique job. In embedded systems a job
-is usually completed in some set amount of time, this is known as its execution time which is the
-same for all jobs in a task. Once a job is finished executing the task will usually wait for some
-amount of time before its next job needs to execute, this is known as the tasks period. For each
-multiple of the period a new job is released, this time is known as the release time and is unique
-to each job within a single task.  The job is also required to be finished before a set amount of
-time from its release time, this is known as the jobs absolute deadline.  For an
-OS\nomenclature{OS}{Operating System} to decide in what order the jobs should be executed they each
-are also assigned a priority by a scheduler, this is discussed in section \ref{sec:scheduling}.
+% TODO Center the text around tasks instead of jobs. Then explain how individual jobs can be
+% modelled from the information given about its belonging task.
 
-Using the above definitions we can ascribe properties to tasks telling us what state they are in
+A periodic task, denoted as $T_j$ is a unit of work that is executed periodically on a processor
+alongside other tasks over and over again where each iteration of execution is defined as a unique
+job. In embedded systems a job is usually completed in some amount of time known as its execution
+time, denoted as $C_i$, which is the same for all jobs in a task. Once a job is finished executing
+the task will usually wait for some amount of time before its next job is ready to execute, this is
+known as the tasks period. The largest-common-divider for all the tasks is known as the systems
+hyper-period, defined as $H = lcm(period_j)$ for $i = 1, 2, ..., n$. For each multiple of a tasks
+period a new job is released, this time is defined as the release time, denoted as $r_i$, and is
+unique to each job within a single task. The job is also required to be finished before a set amount
+of time from its release time, this is known as the jobs absolute deadline, denoted as $d_i$. For an
+\acrshort{os} to decide in what order the jobs should be executed when more than one is available at
+one time they are each assigned a priority, denoted as $p_i$, by a scheduler which is further
+discussed in section \ref{sec:scheduling}.
+
+A job can thus be defined by its characteristics as such $j_i = (r_i, C_i, d_i, p_i)$ where $j_i \in
+T_j$ . And a task contains a set of jobs defines as $T_j = \{j_1, j_2, ..., j_n\}$ . It is then also
+possible to define the set containing all of the jobs in the system the union all of the different
+tasks $J = \{T_1 \cup T_2 \cup ... \cup T_m\}$ .
+
+% TODO Add a one-sentence intro to pre-emption and tasks moved from running straight to ready
+
+Following the above definitions we can ascribe properties to tasks telling us what state they are in
 during a set time. After a job is released and is currently being executed the task which it belongs
 to can be described as currently running. Once the job is finished and the next job from the same
 task is yet to be released the task can be described as waiting before once again a job belonging to
 the tasks starts executing and the task is running. Once a job is running it may require access to
 some resource that is not ready to be accessed yet. Instead of the job taking up time on the
 processor we can pause it and let some other job execute instead. We would then say that the task is
-waiting. Once the resource is available again the task can be said to be ready before its job is
-allowed to continue execution.
+blocker. Once the resource is available again the task can be said to be ready before its job is
+allowed to continue execution. The three different states that a task can be in depicted in figure
+\ref{fig:ready-running-blocked-model}. 
 
+% TODO reference to cyber-physical-systems? And follow their description
 
 \begin{figure}
 
     \centering
 
-    \includegraphics[scale=1\linewidth, bb=0 0 0 0]{images/ready-running-blocked-model.pdf}
+    \includegraphics[width=0.5\linewidth]{images/ready-running-blocked-model.pdf}
 
-    \caption{The physical setup of the hardware running the experiments.}
+    \caption{The three states a task may be in.}
 
-    \label{fig:experiment_setup}
+    \label{fig:ready-running-blocked-model}
 
 \end{figure}
 
@@ -176,29 +198,46 @@ allowed to continue execution.
 
 \section{Scheduling} \label{sec:scheduling}
 
-Although computer give away the illusion of being able to deal with very many things simultaneously
+Although computers give away the illusion of being able to deal with very many things simultaneously
 this is actually not the case. Computers are limited to how much parallel computing they are able to
-do by the hardware, specifically the amount of cores within the CPU\nomenclature{CPU}{Central
-Processing Unit}. A computer with, for example, four cores is able to do at most four things in
-parallel at any one time. For a computer to deal with more than four calculations require it to
-switch ongoing calculations in and out of a core. These calculations are often referred to as tasks,
-where tasks often produce some type of results that can be used either by the user of the computer
-or another task on the system. For systems with more than one processor or processor core in it the
-result may even be used by another computer. For an OS\nomenclature{OS}{Operating System} to give
-the illusion being able to execute many programs in parallel it needs to schedule the tasks
-according to some order. By scheduling tasks and switching them in and out of the processor very
-quickly the OS is able to perform many different calculations seemingly at the same time.
+do by the hardware, specifically the amount of cores within the \acrshort{cpu}. A computer with,
+for example, four cores is only able to do at most four things in parallel at any one time. For a
+computer to deal with more than four calculations requires switching ongoing calculations in and out
+of a core. These calculations are often referred to as tasks and are discussed more in detail in
+section \ref{sec:the_task_model}. For the \acrshort{os} to give an illusion of being able to execute
+many tasks in parallel it needs to schedule the jobs of the tasks according to some order. This is
+were the jobs priorities come in, by scheduling jobs and switching them in and out of the processor
+very quickly depending on their priority the OS is able to perform many more calculations seemingly
+at the same time than what is actually allowed for by hardware.
 
-The order in which tasks are scheduled is determined by a scheduler,
+The order in which jobs are executed is determined by a scheduler which in of itself is a special
+type of task executed by the \acrshort{os} of the system. The scheduler is invoked by the operating
+system depending on different events in the system. It could for example be that a job is finished
+executing or that it has begun waiting on some resource that is not yet available.  Different
+scheduling algorithms are able to schedule same job sets unequally good, utilization is a
+measurement introduced to compare how well schedulers actually work. The utilization of a scheduler
+tells to what degree the scheduler is able to keep the processor busy for a given job set before
+jobs start missing their deadlines. 
+
+For embedded systems there exists a set of well known scheduling algorithms such as \acrshort{edf}
+and \acrshort{rms}. Imagining a single-core \acrshort{cpu} the algorithm \acrshort{rms} works by
+setting the priority of the jobs equal to the period of the task they are part of. This means that
+the jobs belonging to the task with the lowest period are given the highest priority and always
+scheduled first once they are ready. Since periods of tasks never changes during execution, the
+priorities of the individual jobs belonging to a certain task will never change either, this is
+known as fixed-priority scheduling. Instead of setting priorities according to the periods
+\acrshort{edf} works by setting the priorities according to how close a job is to its deadline. T
+
+\subsection{Multiprocessor scheduling}
 
 \section{The AER Execution Model}
 
-The AER \nomenclature{AER}{Acquisition Execution Restitution} execution model was first proposed in
-\parencite{durrieu_predictable_2014} to improve performance and predictability while using COTS
-\nomenclature{COTS}{Commercial-off-the-Shelf} multi-core processors with distributed memory in the
-avionics industry. Since the bottleneck for these types of systems often is the access to shared
-memory AER focuses on making it more deterministic and easier to analyse. This is done by dividing
-up the tasks that run within an OS\nomenclature{OS}{Operating System} into three distinct parts.
+The \acrshort{aer} execution model was first proposed in \parencite{durrieu_predictable_2014} to
+improve performance and predictability while using \acrshort{cots} multi-core processors with
+distributed memory in the avionics industry. Since the bottleneck for these types of systems often
+is the access to shared memory \acrshort{aer} focuses on making it more deterministic and easier to
+analyse. This is done by dividing up the tasks that run within an \acrshort{os} into three distinct
+parts.
 
 %TODO Do we first explain what a task is, that it runs on a single core within a multi-processor and
 %that for this industry it often is non-greedy when it is non-preemptive. Do we go into detail of
@@ -210,7 +249,6 @@ The paper \parencite{maia_closer_2016} takes a closer look i
 
 \chapter{<Engineering-related content, Methodologies and Methods> Use a self-explaining title}
 
-\nomenclature{AER}{Acquisition Execution Restitution}
 
 \chapter{<The work> Use a self-explaining title}
 
@@ -228,5 +266,6 @@ The paper \parencite{maia_closer_2016} takes a closer look i
 \appendix
 
 \chapter{Unnecessary Appended Material}
+
 
 \end{document}
