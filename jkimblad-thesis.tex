@@ -55,6 +55,7 @@
 \newacronym{cots}{COTS}{Commerical off the Shelf}
 \newacronym{edf}{EDF}{Earliest Deadline First}
 \newacronym{rms}{RMS}{Rate-Monotonic Scheduling}
+\newacronym{lcm}{LCM}{Least Common Multiple}
 
 % Frontmatter includes the title page, abstracts and table-of-contents
 \frontmatter
@@ -68,7 +69,7 @@
 \end{abstract}
 
 
-\begin{otherlanguage}{swedish} 
+\begin{otherlanguage}{Swedish} 
     
     \begin{abstract}
 
@@ -145,48 +146,41 @@ methods.
 
 \section{The Task Model} \label{sec:the_task_model}
 
-% TODO Center the text around tasks instead of jobs. Then explain how individual jobs can be
-% modelled from the information given about its belonging task.
+A periodic task, denoted as $\tau_i$, is a unit of work that is executed periodically on a processor
+alongside other tasks over and over again. In embedded systems a task is usually completed in some
+amount of time known as its \textbf{computation time}, denoted as $C_i$. Once a task has finished
+executing it will usually wait for some amount of time before it is ready to execute again, this is
+known as the tasks \textbf{period}, denoted by $T_i$. The earliest time where a task is ready to
+start execution within a new period is called the \textbf{arrival time} of the task and is denoted $
+a_i $. Note that the arrival time is equal to the beginning of a specific period for the task.
 
-A periodic task, denoted as $T_j$ is a unit of work that is executed periodically on a processor
-alongside other tasks over and over again where each iteration of execution is defined as a unique
-job. In embedded systems a job is usually completed in some amount of time known as its execution
-time, denoted as $C_i$, which is the same for all jobs in a task. Once a job is finished executing
-the task will usually wait for some amount of time before its next job is ready to execute, this is
-known as the tasks period. The largest-common-divider for all the tasks is known as the systems
-hyper-period, defined as $H = lcm(period_j)$ for $i = 1, 2, ..., n$. For each multiple of a tasks
-period a new job is released, this time is defined as the release time, denoted as $r_i$, and is
-unique to each job within a single task. The job is also required to be finished before a set amount
-of time from its release time, this is known as the jobs absolute deadline, denoted as $d_i$. For an
-\acrshort{os} to decide in what order the jobs should be executed when more than one is available at
-one time they are each assigned a priority, denoted as $p_i$, by a scheduler which is further
-discussed in section \ref{sec:scheduling}.
+The \acrshort{lcm} of the periods for all the tasks in a task set is known as the task set's
+\textbf{hyper-period} and is an important concept in scheduling tasks which is further discussed
+in section \ref{sec:scheduling}. The hyper-period is defined as $H = \acrshort{lcm}(P_i)$ for $i =
+1, 2, ..., n$. Each task is also required to finish execution before a set amount of time starting
+from each new period belonging to the specific task, this is known as the task's \textbf{relative
+deadline} denoted as $D_i$. For an \acrshort{os} to decide in what order the tasks should execute
+when more than one is available at the same time they are each assigned a \textbf{priority}, denoted
+by $P_i$, by a scheduler which is further discussed in section \ref{sec:scheduling}. A task can thus
+be introduced by defining its characteristics as $\tau_i = (T_i, C_i)$. It is then also possible to
+define a task set as $ \Gamma = \{\tau_1, \tau_2, \tau_3, ..., \tau_n\} $.
 
-A job can thus be defined by its characteristics as such $j_i = (r_i, C_i, d_i, p_i)$ where $j_i \in
-T_j$ . And a task contains a set of jobs defines as $T_j = \{j_1, j_2, ..., j_n\}$ . It is then also
-possible to define the set containing all of the jobs in the system the union all of the different
-tasks $J = \{T_1 \cup T_2 \cup ... \cup T_m\}$ .
-
-% TODO Add a one-sentence intro to pre-emption and tasks moved from running straight to ready
-
-Following the above definitions we can ascribe properties to tasks telling us what state they are in
-during a set time. After a job is released and is currently being executed the task which it belongs
-to can be described as currently running. Once the job is finished and the next job from the same
-task is yet to be released the task can be described as waiting before once again a job belonging to
-the tasks starts executing and the task is running. Once a job is running it may require access to
-some resource that is not ready to be accessed yet. Instead of the job taking up time on the
-processor we can pause it and let some other job execute instead. We would then say that the task is
-blocker. Once the resource is available again the task can be said to be ready before its job is
-allowed to continue execution. The three different states that a task can be in depicted in figure
-\ref{fig:ready-running-blocked-model}. 
-
-% TODO reference to cyber-physical-systems? And follow their description
+Following the above definitions state can be can ascribed to tasks depending on their status in the
+system at a specific time instance. A task is in the \textit{ready} state when it still needs time
+to complete its execution before its deadline but is not yet allowed access to the processor. Once a
+task is moved out of the ready state and is executing on the \acrshort{cpu} it is said that the task
+is \textit{running}. The task can also be moved back to the ready state from running state before
+execution is finished by being \textbf{preempted} by the scheduler. If a task requires access to
+some shared resource that is not currently available, thus halting execution, the task is said to be
+\textit{waiting}. Once the shared resource is available again the task is moved back into the ready
+state. The three different states and their transitioning are depicted in figure
+\ref{fig:ready-running-blocked-model}.
 
 \begin{figure}
 
     \centering
 
-    \includegraphics[width=0.5\linewidth]{images/ready-running-blocked-model.pdf}
+    \includegraphics[width=0.7\linewidth]{images/ready-running-blocked-model.pdf}
 
     \caption{The three states a task may be in.}
 
@@ -195,40 +189,93 @@ allowed to continue execution. The three different states that a task can be in 
 \end{figure}
 
 % TODO: talk about aperiodic and sporadic tasks as well? 
-
 \section{Scheduling} \label{sec:scheduling}
 
-Although computers give away the illusion of being able to deal with very many things simultaneously
-this is actually not the case. Computers are limited to how much parallel computing they are able to
-do by the hardware, specifically the amount of cores within the \acrshort{cpu}. A computer with,
-for example, four cores is only able to do at most four things in parallel at any one time. For a
-computer to deal with more than four calculations requires switching ongoing calculations in and out
-of a core. These calculations are often referred to as tasks and are discussed more in detail in
-section \ref{sec:the_task_model}. For the \acrshort{os} to give an illusion of being able to execute
-many tasks in parallel it needs to schedule the jobs of the tasks according to some order. This is
-were the jobs priorities come in, by scheduling jobs and switching them in and out of the processor
-very quickly depending on their priority the OS is able to perform many more calculations seemingly
-at the same time than what is actually allowed for by hardware.
+Although computers give away the illusion of being able to deal with many things simultaneously this
+is actually not the case. Computers are limited to how much parallel computing they are able to do
+by the hardware, specifically the amount of cores within the \acrshort{cpu}. A computer with, for
+example, a single core \acrshort{cpu} is only able to execute one task at a time. For a computer
+with a single core to deal with more than a single task at the same time requires switching ongoing
+tasks in and out of the core during runtime. For the \acrshort{os} to switch tasks quickly in and
+out of the core it needs to schedule the tasks according to some order. This is where the priority
+of tasks come in handy, by scheduling tasks and switching them in and out of the processor very
+quickly depending on their priority the \acrshort{os} is able to perform more than one task seemingly in
+parallel than what is actually allowed for by hardware. The rest of this section up until section
+\ref{subsec:multiprocessor-scheduling} is only concerned with the scheduling of single core
+processors.
 
-The order in which jobs are executed is determined by a scheduler which in of itself is a special
-type of task executed by the \acrshort{os} of the system. The scheduler is invoked by the operating
-system depending on different events in the system. It could for example be that a job is finished
-executing or that it has begun waiting on some resource that is not yet available.  Different
-scheduling algorithms are able to schedule same job sets unequally good, utilization is a
-measurement introduced to compare how well schedulers actually work. The utilization of a scheduler
-tells to what degree the scheduler is able to keep the processor busy for a given job set before
-jobs start missing their deadlines. 
+% TODO Maybe add other measurements of how good schedulers are, least-slack time etc.
+The order in which tasks are executed is determined by the scheduler which in of itself is a special
+type of task executed by the \acrshort{os}. The scheduler is invoked by specific events happening in
+the system. It could for example be that a task is finished executing or that it has begun waiting
+on some resource that is not yet available. As not all scheduling algorithms were created equal they
+vary in how good of a task they do when scheduling the same task sets. Because of this some
+measurements must be introduced in order to have a fair comparison of how well they work. The
+processor utilization factor, denoted as $ U $, is such a measurement introduced to show to what
+percentage a specific task set would keep the processor busy if scheduled optimally. The utilization
+can be calculated as such $ U = \sum_{i=1}^n \frac{e_i}{P_i} $.
 
 For embedded systems there exists a set of well known scheduling algorithms such as \acrshort{edf}
 and \acrshort{rms}. Imagining a single-core \acrshort{cpu} the algorithm \acrshort{rms} works by
-setting the priority of the jobs equal to the period of the task they are part of. This means that
-the jobs belonging to the task with the lowest period are given the highest priority and always
-scheduled first once they are ready. Since periods of tasks never changes during execution, the
-priorities of the individual jobs belonging to a certain task will never change either, this is
-known as fixed-priority scheduling. Instead of setting priorities according to the periods
-\acrshort{edf} works by setting the priorities according to how close a job is to its deadline. T
+setting the priority of each task equals to its period. This means that the task with the lowest
+period is given the highest priority and always scheduled first once it is in the ready state. Since
+periods of tasks never changes during execution, the priorities of the individual tasks will never
+change either, thus \acrshort{rms} is said to be a \textbf{static-priority scheduler}. If a
+scheduler instead changes the priorities of the task during execution it is a
+\textbf{dynamic-priority scheduler}. 
 
-\subsection{Multiprocessor scheduling}
+Instead of setting priorities according to the periods, \acrshort{edf} works by setting the
+priorities according to how close a task is to its deadline. This means that the task closest to
+exceeding its deadline will always be executing first on the processor. If some task $ \tau_a $ is
+executing with a deadline further away in time than another task $ \tau_b $, that was just released,
+then $ \tau_a $ will get preempted and the newly released $ \tau_b $ will be allowed to execute
+instead. This behaviour makes \acrshort{edf} a \textbf{preemptive scheduling algorithm}, the
+opposite of which is a \textbf{non-preemptive scheduling algorithm} which lets each task finish
+before scheduling the next highest priority task.
+
+An example of how \acrshort{rms} would schedule a task set can be seen in figure
+\ref{fig:rate-monotonic-scheduling}. A special point of interest is at time 4 when $T_3$ is
+executing from earlier as $T_1$ is released. As $T_1$ has a lower period than $T_3$ it also has
+a higher priority. The scheduler preempts $T_3$ and instead lets $T_1$ execute before $T_3$ is
+allowed to resume execution of $j_3$ at time 5.
+
+\begin{figure}
+
+    \centering
+
+    \includegraphics[width=0.8\linewidth]{images/rate-monotonic-scheduling.pdf}
+
+    \caption{Example of rate monotonic scheduling for three tasks where $T_1=(4, 4, 1)$, $T_2=(6, 6,
+    2)$, $T_3=(12, 12, 4)$.}
+
+    \label{fig:rate-monotonic-scheduling}
+
+\end{figure}
+
+\subsection{Multiprocessor scheduling} \label{subsec:multiprocessor-scheduling}
+
+When considering multiprocessors life for schedulers become a little harder. The additional
+questions that have to be answered is  
+
+% TODO Talk about global scheduling
+
+\section{Schedulability testing}
+
+When developing new scheduling methods it is important to put the schedules that they produce under
+analysis as to show that they are feasible. It is especially important when the schedules are used
+in hard real-time systems like those found in the avionics and the automotive sector were missed
+deadlines could mean fatal outcome. \acrshort{rms} for example can be analysed mathematically and
+has been proven to be able to schedule any set of tasks that utilizes the processor to a degree less
+than $\ln (2)\%$ and more precisely be able to schedule any set of tasks that satisfies $U =
+\sum_{i=1}^n \frac{e_i}{P_i} \le n(2^{\frac{1}{n}}-1)$.  This means that \acrshort{rms} might not be
+able to find a feasible schedule even if one exists. This makes \acrshort{rms}
+\textbf{non-optimal}. In contrast \acrshort{edf} has been proven to always find a feasible schedule
+for preemptive single-core systems if one exists, making it \textbf{optimal} in those circumstances.
+
+% TODO explain optimal vs. non-optimal scheduling algorithms
+% TODO example of the formula that is a sufficient schedulability test for 
+% TODO introduce the concept of WCET and BCET as well as release-time jitter in this section and
+% explain how it helps to make analysis of multicore systems much harder
 
 \section{The AER Execution Model}
 
@@ -246,7 +293,6 @@ parts.
 
 The paper \parencite{maia_closer_2016} takes a closer look i
 
-
 \chapter{<Engineering-related content, Methodologies and Methods> Use a self-explaining title}
 
 
@@ -259,12 +305,13 @@ The paper \parencite{maia_closer_2016} takes a closer look i
 \chapter{<Conclusions> Use a self-explaining title}
 
 
-\printbibliography[heading=bibintoc] % Print the bibliography (and make it appear in the table of
-    %contents)
+% Print the bibliography (and make it appear in the table of contents)
+\printbibliography[heading=bibintoc] 
 
-
+% Start the appendix section
 \appendix
 
+% Appendix A
 \chapter{Unnecessary Appended Material}
 
 
