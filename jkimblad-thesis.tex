@@ -56,6 +56,8 @@
 \newacronym{edf}{EDF}{Earliest Deadline First}
 \newacronym{rms}{RMS}{Rate-Monotonic Scheduling}
 \newacronym{lcm}{LCM}{Least Common Multiple}
+\newacronym{bcet}{BCET}{Best-Case Execution Time}
+\newacronym{wcet}{WCET}{Worst-Case Execution Time}
 
 % Frontmatter includes the title page, abstracts and table-of-contents
 \frontmatter
@@ -81,7 +83,7 @@
 \printglossary[title={Acronyms}]
 
 % Table of contents
-%\tableofcontents
+\tableofcontents
 
 % Mainmatter is where the actual contents of the thesis goes
 \mainmatter
@@ -152,7 +154,7 @@ amount of time known as its \textbf{computation time}, denoted as $C_i$. Once a 
 executing it will usually wait for some amount of time before it is ready to execute again, this is
 known as the tasks \textbf{period}, denoted by $T_i$. The earliest time where a task is ready to
 start execution within a new period is called the \textbf{arrival time} of the task and is denoted $
-a_i $. Note that the arrival time is equal to the beginning of a specific period for the task.
+a_i $. Note that the arrival time is equal to the beginning of the current period of the task.
 
 The \acrshort{lcm} of the periods for all the tasks in a task set is known as the task set's
 \textbf{hyper-period} and is an important concept in scheduling tasks which is further discussed
@@ -174,7 +176,7 @@ execution is finished by being \textbf{preempted} by the scheduler. If a task re
 some shared resource that is not currently available, thus halting execution, the task is said to be
 \textit{waiting}. Once the shared resource is available again the task is moved back into the ready
 state. The three different states and their transitioning are depicted in figure
-\ref{fig:ready-running-blocked-model}.
+\ref{fig:ready_running_blocked_model}.
 
 \begin{figure}
 
@@ -184,7 +186,7 @@ state. The three different states and their transitioning are depicted in figure
 
     \caption{The three states a task may be in.}
 
-    \label{fig:ready-running-blocked-model}
+    \label{fig:ready_running_blocked_model}
 
 \end{figure}
 
@@ -201,7 +203,7 @@ out of the core it needs to schedule the tasks according to some order. This is 
 of tasks come in handy, by scheduling tasks and switching them in and out of the processor very
 quickly depending on their priority the \acrshort{os} is able to perform more than one task seemingly in
 parallel than what is actually allowed for by hardware. The rest of this section up until section
-\ref{subsec:multiprocessor-scheduling} is only concerned with the scheduling of single core
+\ref{subsec:multiprocessor_scheduling} is only concerned with the scheduling of single core
 processors.
 
 % TODO Maybe add other measurements of how good schedulers are, least-slack time etc.
@@ -234,9 +236,9 @@ opposite of which is a \textbf{non-preemptive scheduling algorithm} which lets e
 before scheduling the next highest priority task.
 
 An example of how \acrshort{rms} would schedule a task set can be seen in figure
-\ref{fig:rate-monotonic-scheduling}. A special point of interest is at time 4 when $T_3$ is
-executing from earlier as $T_1$ is released. As $T_1$ has a lower period than $T_3$ it also has
-a higher priority. The scheduler preempts $T_3$ and instead lets $T_1$ execute before $T_3$ is
+\ref{fig:rate_monotonic_scheduling}. A special point of interest is at time 4 when $T_3$ is
+executing since earlier as $T_1$ is released. Due to $T_1$ having a lower period than $T_3$ it also
+has a higher priority. The scheduler preempts $T_3$ and lets $T_1$ execute instead. $T_3$ is later
 allowed to resume execution of $j_3$ at time 5.
 
 \begin{figure}
@@ -248,34 +250,80 @@ allowed to resume execution of $j_3$ at time 5.
     \caption{Example of rate monotonic scheduling for three tasks where $T_1=(4, 4, 1)$, $T_2=(6, 6,
     2)$, $T_3=(12, 12, 4)$.}
 
-    \label{fig:rate-monotonic-scheduling}
+    \label{fig:rate_monotonic_scheduling}
 
 \end{figure}
 
-\subsection{Multiprocessor scheduling} \label{subsec:multiprocessor-scheduling}
 
-When considering multiprocessors life for schedulers become a little harder. The additional
-questions that have to be answered is  
+\subsection{Multiprocessor scheduling} \label{subsec:multiprocessor_scheduling}
 
-% TODO Talk about global scheduling
+When considering multi-core processors life for schedulers become a little harder. On a single-core
+processor the scheduler only needs to consider temporal allocation of the task, as in
+\underline{when} they should run. Scheduling tasks on a multi-core system also requires the
+scheduler to consider spatial allocation of the tasks, as in \underline{where} they should run
+(on what core). Schedulers deal with these allocations in two different ways, either through what is
+known as \textbf{global scheduling} or through \textbf{partitioned scheduling}. 
 
-\section{Schedulability testing}
+%TODO: maybe have pros and cons for partitioned and global scheduling
+%TODO: Maybe have a picture to help explain the differences between partitioned and global
+%scheduling. This contains a good example:
+%http://retis.sssup.it/~giorgio/slides/cbsd/mc3-global-2p.pdf
+Partitioned scheduling entails that each task is assigned to a dedicated core where it always will
+be running. Because of this, any single-core scheduling algorithm can be used individually on each core during
+runtime. This sounds easy enough, but in reality assigning tasks to cores is a version of the bin
+packing problem which is known to be a NP-hard problem meaning that there exists no algorithm to
+solve it in less than polynomial time. However, good heuristics exists that find good solutions fast
+and since tasks can be allocated to cores offline more computing power can be put into finding an
+optimal solution.
 
+Global scheduling means that the scheduler takes into account both when and where to schedule each
+task. Under global scheduling tasks are able to be dispatched to different cores each execution.
+Because of this, different analysis methods are required 
+
+
+\section{Schedulability analysis}
+
+%TODO mention brute-forcing analysis by simulating one hyper period of the schedule. And this seems
+%easy in theory, but in practice there can be hundreds of tasks and super long hyper period.
 When developing new scheduling methods it is important to put the schedules that they produce under
-analysis as to show that they are feasible. It is especially important when the schedules are used
-in hard real-time systems like those found in the avionics and the automotive sector were missed
-deadlines could mean fatal outcome. \acrshort{rms} for example can be analysed mathematically and
-has been proven to be able to schedule any set of tasks that utilizes the processor to a degree less
-than $\ln (2)\%$ and more precisely be able to schedule any set of tasks that satisfies $U =
-\sum_{i=1}^n \frac{e_i}{P_i} \le n(2^{\frac{1}{n}}-1)$.  This means that \acrshort{rms} might not be
-able to find a feasible schedule even if one exists. This makes \acrshort{rms}
-\textbf{non-optimal}. In contrast \acrshort{edf} has been proven to always find a feasible schedule
+analysis as to show whether they are feasible or not. It is especially important when the schedules
+are used in hard real-time systems like those found in the avionics and the automotive sector where
+missed deadlines could mean fatal outcome. For example, \acrshort{rms} can be analysed
+mathematically and has been proven to be able to schedule any task set that fulfills the constraint
+$ U \le n(2^{\frac{1}{n}}-1) $ where $ n $ is the amount of tasks \parencite{liu_scheduling_1973}.
+This is only a sufficient schedulability test, meaning that \acrshort{rms} might be able to schedule
+task sets that do not fulfill the constraint, but it is not guaranteed to. \acrshort{rms} does not
+guarantee finding a feasible schedule if such a schedule exists, making it a \textbf{heuristic}
+scheduling algorithm. In contrast \acrshort{edf} has been proven to always find a feasible schedule
 for preemptive single-core systems if one exists, making it \textbf{optimal} in those circumstances.
+Under the assumptions of a preemptive single-core system \acrshort{edf} is able to schedule task
+sets with a processor utilization factor of one. 
 
-% TODO explain optimal vs. non-optimal scheduling algorithms
-% TODO example of the formula that is a sufficient schedulability test for 
-% TODO introduce the concept of WCET and BCET as well as release-time jitter in this section and
-% explain how it helps to make analysis of multicore systems much harder
+Another way of analysing a schedule is simply to simulate it and look for missed deadlines. 
+
+% TODO think about moving this paragraph to the task model instead.
+Since the task model presented in \ref{sec:the_task_model} is very simplistic some additional
+concepts are introduced in order for it to better represent reality to increase the validity of
+schedulability analysis methods. The computation time of a task varies because of unpredictable
+behaviour in the processor such as caches. Therefor the notions of \acrfull{bcet} and \acrfull{wcet}
+is introduced to represent the interval between the fastest respective slowest computation time of a
+specific task. To denote this $ C_i^{min} $ and $ C_i^{max} $ is used. In addition to uncertainties
+in the computation time there are also uncertainties in the arrival time of tasks. The notion of
+earliest arrival time, denoted $ a_i^{min} $, is the  absolute earliest time at which a task may be
+able to start executing within the period and likewise the latest arrival time, denoted $ a_i~{max}
+$ is the time when the task is guaranteed to be able to start execution.
+
+Having the arrival and computation time defined as intervals creates the possibility of different
+schedules for the same task set using the same scheduler. This makes analysis more difficult as
+simulation requires testing several of the combinations of release and computation times. It is
+intuitive to think that it is sufficient to analyse the worst-case times of all tasks to find if the
+schedule is feasible. This is however not true for non-preemptive systems as two jobs released
+within the same interval can lead to either being scheduled until its completion before the other.
+For some task sets with this property an earlier release of a certain job can lead to a missed
+deadline later in the schedule.
+
+% TODO Example of how earlier release of a task on multicore systems can make the schedule miss a
+% deadline while a later release of the same task may have been able to complete the deadline.
 
 \section{The AER Execution Model}
 
@@ -292,6 +340,8 @@ parts.
 %scheduling part.
 
 The paper \parencite{maia_closer_2016} takes a closer look i
+
+\section{Related Work}
 
 \chapter{<Engineering-related content, Methodologies and Methods> Use a self-explaining title}
 
