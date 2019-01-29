@@ -118,3 +118,79 @@
 	pages = {46--61},
 	file = {ACM Full Text PDF:/home/jacob/Zotero/storage/4NS366CB/Liu and Layland - 1973 - Scheduling Algorithms for Multiprogramming in a Ha.pdf:application/pdf}
 }
+
+@inproceedings{sebestyen_simulation-based_2012,
+	title = {Simulation-based schedulability tests for multiprocessor real-time systems},
+	doi = {10.1109/AQTR.2012.6237706},
+	abstract = {The assimilation of multiprocessor programming into the real-time application's domain is limited because there are not enough theoretical and pragmatic tools for proving the feasibility of such systems. Theoretical results are few and tend to be too complex for a practical implementation. In this paper, we combine theoretical analysis results with simulation to obtain a tool, which can assess the multiprocessor real-time schedulability of periodic task sets. We performed simulations on different scenarios in order to determine the features that influence schedulability of a multiprocessor real-time system.},
+	booktitle = {Proceedings of 2012 {IEEE} {International} {Conference} on {Automation}, {Quality} and {Testing}, {Robotics}},
+	author = {Sebestyen, G. and Hangan, A. and Suciu, A.},
+	month = may,
+	year = {2012},
+	keywords = {Analytical models, Equations, global EDF, Mathematical model, multiprocessing systems, multiprocessor, multiprocessor programming, multiprocessor real-time systems, processor scheduling, Processor scheduling, Real time systems, real-time systems, schedulability analysis, Schedules, Scheduling, Simulation, simulation-based schedulability tests, task set generation, theoretical analysis},
+	pages = {216--221},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/YQ5GIIVA/6237706.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/KNXEX8FF/Sebestyen et al. - 2012 - Simulation-based schedulability tests for multipro.pdf:application/pdf}
+}
+
+@inproceedings{bini_multi_2009,
+	title = {The {Multi} {Supply} {Function} {Abstraction} for {Multiprocessors}},
+	doi = {10.1109/RTCSA.2009.39},
+	abstract = {Multi-core platforms are becoming the dominant computing architecture for next generation embedded systems. Nevertheless, designing, programming, and analyzing such systems is not easy and a solid methodology is still missing. In this paper, we propose two powerful abstractions to model the computing power of a parallel machine, which provide a general interface for developing and analyzing real-time applications in isolation, independently of the physical platform. The proposed abstractions can be applied on top of different types of service mechanisms, such as periodic servers, static partitions, and P-fair time partitions. In addition, we developed the schedulability analysis of a set of real-time tasks on top of a parallel machine that is compliant with the proposed abstractions.},
+	booktitle = {2009 15th {IEEE} {International} {Conference} on {Embedded} and {Real}-{Time} {Computing} {Systems} and {Applications}},
+	author = {Bini, E. and Buttazzo, G. and Bertogna, M.},
+	month = aug,
+	year = {2009},
+	keywords = {Bandwidth, Compositional analysis, computer architecture, Computer architecture, computing architecture, Embedded computing, embedded systems, global EDF, multi supply function, multi supply function abstraction, multicore platforms, multiprocessing systems, multiprocessors, P-fair time partitions, parallel machine, parallel machines, Parallel machines, periodic servers, Power system modeling, Processor scheduling, Protection, Real time systems, real-time applications, Resource management, schedulability analysis, service mechanisms, static partitions, Timing},
+	pages = {294--302},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/FHRBNI92/5279679.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/N5CC6RJQ/Bini et al. - 2009 - The Multi Supply Function Abstraction for Multipro.pdf:application/pdf}
+}
+
+@article{manolache_schedulability_2004,
+	title = {Schedulability {Analysis} of {Applications} with {Stochastic} {Task} {Execution} {Times}},
+	volume = {3},
+	issn = {1539-9087},
+	url = {http://doi.acm.org/10.1145/1027794.1027797},
+	doi = {10.1145/1027794.1027797},
+	abstract = {In the past decade, the limitations of models considering fixed (worst-case) task execution times have been acknowledged for large application classes within soft real-time systems. A more realistic model considers the tasks having varying execution times with given probability distributions. Considering such a model with specified task execution time probability distribution functions, an important performance indicator of the system is the expected deadline miss ratio of the tasks and of the task graphs. This article presents an approach for obtaining this indicator in an analytic way. Our goal is to keep the analysis cost low, in terms of required analysis time and memory, while considering as general classes of target application models as possible. The following main assumptions have been made on the applications that are modeled as sets of task graphs: the tasks are periodic, the task execution times have given generalized probability distribution functions, the task execution deadlines are given and arbitrary, the scheduling policy can belong to practically any class of non-preemptive scheduling policies, and a designer supplied maximum number of concurrent instantiations of the same task graph is tolerated in the system. Experiments show the efficiency of the proposed technique for monoprocessor systems.},
+	number = {4},
+	urldate = {2019-01-28},
+	journal = {ACM Trans. Embed. Comput. Syst.},
+	author = {Manolache, Sorin and Eles, Petru and Peng, Zebo},
+	month = nov,
+	year = {2004},
+	keywords = {Schedulability analysis, soft real-time systems, stochastic task execution times},
+	pages = {706--735},
+	file = {ACM Full Text PDF:/home/jacob/Zotero/storage/LCKJEK8Q/Manolache et al. - 2004 - Schedulability Analysis of Applications with Stoch.pdf:application/pdf}
+}
+
+@article{bertogna_tests_2011,
+	series = {Special {Issue} on {Multiprocessor} {Real}-time {Scheduling}},
+	title = {Tests for global {EDF} schedulability analysis},
+	volume = {57},
+	issn = {1383-7621},
+	url = {http://www.sciencedirect.com/science/article/pii/S1383762110001128},
+	doi = {10.1016/j.sysarc.2010.09.004},
+	abstract = {Several schedulability tests have been proposed for global EDF scheduling on identical multiprocessors. All these tests are sufficient, rather than exact. These different tests were, for the most part, independently developed. The relationships among such tests have not been adequately investigated, so that it is difficult to understand which test is most appropriate in a particular given scenario. This paper represents an attempt to remedy this, by means of three major contributions. First, we summarize the main existing results for the schedulability analysis of multiprocessor systems scheduled with global edf, showing, when possible, existing dominance relations. We compare these algorithms taking into consideration different aspects, namely, run-time complexity, average performances over randomly generated workloads, sustainability properties and speedup factors. Second, based on this comparative evaluation we propose a recommended approach to schedulability analysis, that suggests a particular order in which to apply preexisting tests, thereby accomplishing both good provable performance and good behavior in practice. And finally, we propose a further improvement to one of these preexisting tests to improve its run-time performance by an order of magnitude, while completely retaining its ability to correctly identify schedulable systems.},
+	number = {5},
+	urldate = {2019-01-28},
+	journal = {Journal of Systems Architecture},
+	author = {Bertogna, Marko and Baruah, Sanjoy},
+	month = may,
+	year = {2011},
+	keywords = {Earliest deadline first, Global scheduling, Multiprocessor scheduling, Schedulability analysis},
+	pages = {487--497},
+	file = {ScienceDirect Full Text PDF:/home/jacob/Zotero/storage/KFNMCGE7/Bertogna and Baruah - 2011 - Tests for global EDF schedulability analysis.pdf:application/pdf;ScienceDirect Snapshot:/home/jacob/Zotero/storage/2SYDKNTS/S1383762110001128.html:text/html}
+}
+
+@inproceedings{bini_hyperbolic_2001,
+	title = {A hyperbolic bound for the rate monotonic algorithm},
+	doi = {10.1109/EMRTS.2001.934000},
+	abstract = {In this paper we propose a novel schedulability analysis for verifying the feasibility of large periodic task sets under the rate monotonic algorithm, when the exact test cannot be applied on line due to prohibitively long execution times. The proposed test has the same complexity as the original Liu and Layland bound but it is less pessimistic, so allowing to accept task sets that would be rejected using the original approach. The performance of the proposed approach is evaluated with respect to the classical Liu and Layland method, and theoretical bounds are derived as a function of n (the number of tasks) and for the limit case of n tending to infinity. The analysis is also extended to include aperiodic servers and blocking times due to concurrency control protocols. Extensive simulations on synthetic tasks sets are presented to compare the effectiveness of the proposed test with respect to the Liu and Layland method and the exact response time analysis.},
+	booktitle = {Proceedings 13th {Euromicro} {Conference} on {Real}-{Time} {Systems}},
+	author = {Bini, E. and Buttazzo, G. and Buttazzo, G.},
+	month = jun,
+	year = {2001},
+	keywords = {Algorithm design and analysis, Analytical models, complexity, computational complexity, concurrency control, Concurrency control, concurrency control protocols, Delay, exact response time analysis, formal verification, H infinity control, hyperbolic bound, large periodic task sets, Mathematics, processor scheduling, protocols, Protocols, rate monotonic algorithm, Runtime, schedulability analysis, Scheduling algorithm, Testing},
+	pages = {59--66},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/HQVKGWI6/934000.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/3GSD2QQS/Bini et al. - 2001 - A hyperbolic bound for the rate monotonic algorith.pdf:application/pdf}
+}

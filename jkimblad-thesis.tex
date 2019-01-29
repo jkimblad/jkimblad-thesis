@@ -90,7 +90,6 @@
 
 
 \chapter{Introduction} 
-temp
 Embedded systems in the automotive sector are required to go through a lot of analysis and testing
 before being deemed safe for use in traffic. With the rise of autonomous vehicles these systems are
 becoming more complex as an effect of more computing needed being done.  This has also put
@@ -112,9 +111,8 @@ divided up into three distinct parts, read-execute-write.
 \section{Problem}
 
 An analysis method for resource contention in multi-core real-time systems have been proposed in
-paper [1]. This analysis method is however not 1 Template for project proposal 2018-12-12 customised
-for the read-execute-write execution model that is adapted both within the avionics domain and
-automotive domain.
+paper [1]. This analysis method is however not customised for the read-execute-write execution model
+that is adapted both within the avionics domain and automotive domain.
 
 
 \section{Purpose}
@@ -148,6 +146,7 @@ methods.
 
 \section{The Task Model} \label{sec:the_task_model}
 
+%TODO Maybe add a picture that shows all the characteristics of a job/task
 A periodic task, denoted as $\tau_i$, is a unit of work that is executed periodically on a processor
 alongside other tasks over and over again. In embedded systems a task is usually completed in some
 amount of time known as its \textbf{computation time}, denoted as $C_i$. Once a task has finished
@@ -164,7 +163,7 @@ from each new period belonging to the specific task, this is known as the task's
 deadline} denoted as $D_i$. For an \acrshort{os} to decide in what order the tasks should execute
 when more than one is available at the same time they are each assigned a \textbf{priority}, denoted
 by $P_i$, by a scheduler which is further discussed in section \ref{sec:scheduling}. A task can thus
-be introduced by defining its characteristics as $\tau_i = (T_i, C_i)$. It is then also possible to
+be introduced by defining its characteristics as $\tau_i = (C_i, T_i, D_i)$. It is then also possible to
 define a task set as $ \Gamma = \{\tau_1, \tau_2, \tau_3, ..., \tau_n\} $.
 
 Following the above definitions state can be can ascribed to tasks depending on their status in the
@@ -190,7 +189,22 @@ state. The three different states and their transitioning are depicted in figure
 
 \end{figure}
 
-% TODO: talk about aperiodic and sporadic tasks as well? 
+The task model presented thus far has made some assumptions that are not realistic, such as the
+release time and computation time being exactly the same each period. In order for the model to
+better represent reality to increase the validity of schedulability analysis methods some additional
+concepts are introduced. Computation time of a task varies because of unpredictable behaviour in the
+processor such as caches. Therefor the notions of \acrfull{bcet} and \acrfull{wcet} is introduced to
+represent the interval between the fastest and the slowest computation time of a specific task.  To
+denote this $ C_i^{min} $ and $ C_i^{max} $ is used. In addition to uncertainties in the computation
+time there are also uncertainties in the arrival time of tasks. The notion of earliest arrival time,
+denoted $ a_i^{min} $, is the  absolute earliest time at which a task may be able to start executing
+within the period and likewise the latest arrival time, denoted $ a_i~{max} $ is the time when the
+task is guaranteed to be able to start execution. In addition, the intervals for computation times
+and release jitter can be represented as a probability distribution, but this will not be covered in
+this thesis.
+
+
+% TODO: maybe talk about aperiodic and sporadic tasks as well? 
 \section{Scheduling} \label{sec:scheduling}
 
 Although computers give away the illusion of being able to deal with many things simultaneously this
@@ -214,8 +228,8 @@ on some resource that is not yet available. As not all scheduling algorithms wer
 vary in how good of a task they do when scheduling the same task sets. Because of this some
 measurements must be introduced in order to have a fair comparison of how well they work. The
 processor utilization factor, denoted as $ U $, is such a measurement introduced to show to what
-percentage a specific task set would keep the processor busy if scheduled optimally. The utilization
-can be calculated as such $ U = \sum_{i=1}^n \frac{e_i}{P_i} $.
+percentage a specific task set would keep the processor busy. The utilization can be calculated as
+$ U = \sum_{i=1}^n \frac{C_i}{T_i} $.
 
 For embedded systems there exists a set of well known scheduling algorithms such as \acrshort{edf}
 and \acrshort{rms}. Imagining a single-core \acrshort{cpu} the algorithm \acrshort{rms} works by
@@ -247,8 +261,8 @@ allowed to resume execution of $j_3$ at time 5.
 
     \includegraphics[width=0.8\linewidth]{images/rate-monotonic-scheduling.pdf}
 
-    \caption{Example of rate monotonic scheduling for three tasks where $T_1=(4, 4, 1)$, $T_2=(6, 6,
-    2)$, $T_3=(12, 12, 4)$.}
+    \caption{Example of rate monotonic scheduling for three tasks where $T_1=(1, 4, 4)$, $T_2=(2, 6,
+    6)$, $T_3=(4, 12, 12)$.}
 
     \label{fig:rate_monotonic_scheduling}
 
@@ -264,6 +278,7 @@ scheduler to consider spatial allocation of the tasks, as in \underline{where} t
 (on what core). Schedulers deal with these allocations in two different ways, either through what is
 known as \textbf{global scheduling} or through \textbf{partitioned scheduling}. 
 
+%TODO: Mention some examples of multi-core scheduling algorithms (gEDF, RMS, etc)
 %TODO: maybe have pros and cons for partitioned and global scheduling
 %TODO: Maybe have a picture to help explain the differences between partitioned and global
 %scheduling. This contains a good example:
@@ -291,27 +306,64 @@ are used in hard real-time systems like those found in the avionics and the auto
 missed deadlines could mean fatal outcome. For example, \acrshort{rms} can be analysed
 mathematically and has been proven to be able to schedule any task set that fulfills the constraint
 $ U \le n(2^{\frac{1}{n}}-1) $ where $ n $ is the amount of tasks \parencite{liu_scheduling_1973}.
-This is only a sufficient schedulability test, meaning that \acrshort{rms} might be able to schedule
-task sets that do not fulfill the constraint, but it is not guaranteed to. \acrshort{rms} does not
-guarantee finding a feasible schedule if such a schedule exists, making it a \textbf{heuristic}
-scheduling algorithm. In contrast \acrshort{edf} has been proven to always find a feasible schedule
-for preemptive single-core systems if one exists, making it \textbf{optimal} in those circumstances.
-Under the assumptions of a preemptive single-core system \acrshort{edf} is able to schedule task
-sets with a processor utilization factor of one. 
+This is only a \textbf{sufficient} condition, meaning that \acrshort{rms} might be able to schedule
+task sets that do not fulfill the condition, but it is not guaranteed to. A condition that must be
+fulfilled for the task set to have a feasible schedule is known as a \textbf{necessary} condition.
+If a condition is both necessary and sufficient it is said to be \textbf{exact}. Finding good
+conditions is not always trivial as shown by \parencite{bini_hyperbolic_2001} which presents a less
+pessimistic sufficient condition of the same complexity $ O(n) $ for \acrshort{rms} almost 30
+years after the earlier presented condition was introduced. 
 
-Another way of analysing a schedule is simply to simulate it and look for missed deadlines. 
+%TODO: Mention that the critical instance (when all tasks are released at the same time) is not
+%enough to evaluate if the task set is schedulable when considering a multi-core system.
+%TODO: Mention that increase of tasks leads to harder schedulability
+The gap between sufficient conditions and necessary conditions where the tasks sets are undetermined
+if they are able to be scheduled is depicted in figure
+\ref{fig:sufficient_necessary_schedulability}. A lot of research is being aimed towards finding less
+pessimistic necessary and sufficient conditions for scheduling algorithms to close the gap between
+them which is still not a solved problem. In addition, each unique scheduling algorithm may require
+its own set of unique conditions for analysis. All conditions are also not as simple as the one
+presented for \acrshort{rms}, they have varying complexity and they often need to make the trade-off
+between complexity and how pessimistic they are. The paper \parencite{bertogna_tests_2011} shows
+examples of conditions that are of $ O(n^3) $ complexity which can be alright when analysing small
+task sets, but is too complex as the task sets grow or if it has to be calculated online with
+limited computation power.
 
-% TODO think about moving this paragraph to the task model instead.
-Since the task model presented in \ref{sec:the_task_model} is very simplistic some additional
-concepts are introduced in order for it to better represent reality to increase the validity of
-schedulability analysis methods. The computation time of a task varies because of unpredictable
-behaviour in the processor such as caches. Therefor the notions of \acrfull{bcet} and \acrfull{wcet}
-is introduced to represent the interval between the fastest respective slowest computation time of a
-specific task. To denote this $ C_i^{min} $ and $ C_i^{max} $ is used. In addition to uncertainties
-in the computation time there are also uncertainties in the arrival time of tasks. The notion of
-earliest arrival time, denoted $ a_i^{min} $, is the  absolute earliest time at which a task may be
-able to start executing within the period and likewise the latest arrival time, denoted $ a_i~{max}
-$ is the time when the task is guaranteed to be able to start execution.
+%TODO: move this section to somewhere where it makes more sense, perhaps section about scheduling is
+%good!
+When dealing with non-preemptive single-core systems, \acrshort{rms} guarantees finding a feasible
+schedule if such a schedule exists, making it an \textbf{optimal} scheduling algorithm. For
+preemptive single-core systems, \acrshort{edf} has been proven to always find a feasible schedule if
+one exists, making it optimal in those circumstances. It is able to schedule task sets with a
+processor utilization factor of one. If an algorithm however is unable to find a feasible schedule, even
+when such a schedule exists, it is considered a \textbf{heuristic}.
+
+\begin{figure}
+
+    \centering
+
+    \includegraphics[width=0.8\linewidth]{images/sufficient_necessary_schedulability.pdf}
+
+    \caption{Example of rate monotonic scheduling for three tasks where $T_1=(1, 4, 4)$, $T_2=(2, 6,
+    6)$, $T_3=(4, 12, 12)$.}
+
+    \label{fig:sufficient_necessary_schedulability}
+
+\end{figure}
+
+% TODO: Add that some task sets (with tasks that have a phase) does not have a critical instant for
+% all tasks. 
+% TODO: Is this section really necessary? Perhaps preface with it by explaining there are different
+% ways of analysis. Other than mathematically, we can also simulate the schedule and look for missed
+% deadlines. 
+For \acrshort{rms} on single-core systems the so called \textbf{critical instant} of a task happens
+when all higher priority tasks are released at the same time as the task. This pushes the task
+completion time as far away from its release time as it ever will be in the given task set, defined
+as the tasks response time. If the task doesn't miss its deadline after the critical instant it is
+guaranteed to never miss its deadline for any other instance in the schedule. As an effect of this,
+each task can be examined during its critical instant, and if all tasks meet their deadlines the
+task set is guaranteed to be schedulable. This facilitates analysis considerably as only a small
+part of the schedule needs to be analysed.
 
 Having the arrival and computation time defined as intervals creates the possibility of different
 schedules for the same task set using the same scheduler. This makes analysis more difficult as
@@ -320,19 +372,43 @@ intuitive to think that it is sufficient to analyse the worst-case times of all 
 schedule is feasible. This is however not true for non-preemptive systems as two jobs released
 within the same interval can lead to either being scheduled until its completion before the other.
 For some task sets with this property an earlier release of a certain job can lead to a missed
-deadline later in the schedule.
-
+deadline later in the schedule in multi-core systems.
 % TODO Example of how earlier release of a task on multicore systems can make the schedule miss a
 % deadline while a later release of the same task may have been able to complete the deadline.
 
+% TODO add graph showing necessary and sufficient conditions coverage of schedulable task sets (see
+% zim), then explain research is about shrinking window between them while also keeping a low O(n).
+
 \section{The AER Execution Model}
 
-The \acrshort{aer} execution model was first proposed in \parencite{durrieu_predictable_2014} to
-improve performance and predictability while using \acrshort{cots} multi-core processors with
-distributed memory in the avionics industry. Since the bottleneck for these types of systems often
-is the access to shared memory \acrshort{aer} focuses on making it more deterministic and easier to
-analyse. This is done by dividing up the tasks that run within an \acrshort{os} into three distinct
-parts.
+% TODO: mention that a pre-requisite of AER is separate memory banks for each core
+The \acrfull{aer} execution model was first proposed in \parencite{durrieu_predictable_2014} to
+improve performance and predictability while using \acrshort{cots} multi-core processors with shared
+and private memory in the avionics industry. Since the bottleneck for these types of systems becomes
+contention in access to shared memory when introducing an increasing number of cores \acrshort{aer}
+focuses on making it more deterministic and easier to analyse. This is done by dividing up each
+tasks into three distinct parts. The \textbf{acquisition} part reads all the data necessary for
+execution of the task such as code and shared variables into the private memory of the core
+dedicated for execution. The \textbf{execution} phase then executes the code without making any
+further reads or writes from the shared memory, operating on local copies of the shared variables.
+The \textbf{restitution} phase then writes back all of the acquired results of the task to the
+shared memory.
+
+The idea of this model is to enable scheduling of the read and write accesses to the shared memory
+instead of scheduling the tasks onto cores. Since contention of the shared memory is what limits the
+utilization of the cores it is more important to combat this instead of trying to find the optimal
+assignment of tasks onto cores since it wont increase utilization anyways. \acrshort{aer} can be
+said to employ a \textit{memory-centric} approach to scheduling instead of a \textit{core-centric}
+approach that schedulers usually employ. Since no reads and writes to shared memory is allowed
+outside of the allocated phases the \acrfull{aer} model requires non-preemptive scheduling. This
+model also have the advantage of easier analysis by being more deterministic. When several cores
+compete for resources and create congestion which leads to timing deviations the system model
+becomes more complex thus harder to analyse. Timing that was calculated offline, for example the
+\acrshort{wcet}, may not match reality or require very pessimistic approximations that exaggerate
+the timings, both of which decreases the certainty or predictability of the design and analysis.
+
+% AER is an improvement over other models such as proposed by pikeOS which enables all other cores
+% to be paused while running critical tasks on a single core.
 
 %TODO Do we first explain what a task is, that it runs on a single core within a multi-processor and
 %that for this industry it often is non-greedy when it is non-preemptive. Do we go into detail of
