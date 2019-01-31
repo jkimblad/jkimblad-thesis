@@ -127,7 +127,7 @@
 	author = {Sebestyen, G. and Hangan, A. and Suciu, A.},
 	month = may,
 	year = {2012},
-	keywords = {Analytical models, Equations, global EDF, Mathematical model, multiprocessing systems, multiprocessor, multiprocessor programming, multiprocessor real-time systems, processor scheduling, Processor scheduling, Real time systems, real-time systems, schedulability analysis, Schedules, Scheduling, Simulation, simulation-based schedulability tests, task set generation, theoretical analysis},
+	keywords = {schedulability analysis, real-time systems, Schedules, Scheduling, Analytical models, multiprocessing systems, processor scheduling, Equations, global EDF, Mathematical model, multiprocessor, multiprocessor programming, multiprocessor real-time systems, Processor scheduling, Real time systems, Simulation, simulation-based schedulability tests, task set generation, theoretical analysis},
 	pages = {216--221},
 	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/YQ5GIIVA/6237706.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/KNXEX8FF/Sebestyen et al. - 2012 - Simulation-based schedulability tests for multipro.pdf:application/pdf}
 }
@@ -140,7 +140,7 @@
 	author = {Bini, E. and Buttazzo, G. and Bertogna, M.},
 	month = aug,
 	year = {2009},
-	keywords = {Bandwidth, Compositional analysis, computer architecture, Computer architecture, computing architecture, Embedded computing, embedded systems, global EDF, multi supply function, multi supply function abstraction, multicore platforms, multiprocessing systems, multiprocessors, P-fair time partitions, parallel machine, parallel machines, Parallel machines, periodic servers, Power system modeling, Processor scheduling, Protection, Real time systems, real-time applications, Resource management, schedulability analysis, service mechanisms, static partitions, Timing},
+	keywords = {schedulability analysis, multiprocessing systems, Timing, Computer architecture, Resource management, global EDF, Processor scheduling, Real time systems, Bandwidth, Compositional analysis, computer architecture, computing architecture, Embedded computing, embedded systems, multi supply function, multi supply function abstraction, multicore platforms, multiprocessors, P-fair time partitions, parallel machine, parallel machines, Parallel machines, periodic servers, Power system modeling, Protection, real-time applications, service mechanisms, static partitions},
 	pages = {294--302},
 	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/FHRBNI92/5279679.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/N5CC6RJQ/Bini et al. - 2009 - The Multi Supply Function Abstraction for Multipro.pdf:application/pdf}
 }
@@ -177,7 +177,7 @@
 	author = {Bertogna, Marko and Baruah, Sanjoy},
 	month = may,
 	year = {2011},
-	keywords = {Earliest deadline first, Global scheduling, Multiprocessor scheduling, Schedulability analysis},
+	keywords = {Schedulability analysis, Global scheduling, Multiprocessor scheduling, Earliest deadline first},
 	pages = {487--497},
 	file = {ScienceDirect Full Text PDF:/home/jacob/Zotero/storage/KFNMCGE7/Bertogna and Baruah - 2011 - Tests for global EDF schedulability analysis.pdf:application/pdf;ScienceDirect Snapshot:/home/jacob/Zotero/storage/2SYDKNTS/S1383762110001128.html:text/html}
 }
@@ -190,7 +190,54 @@
 	author = {Bini, E. and Buttazzo, G. and Buttazzo, G.},
 	month = jun,
 	year = {2001},
-	keywords = {Algorithm design and analysis, Analytical models, complexity, computational complexity, concurrency control, Concurrency control, concurrency control protocols, Delay, exact response time analysis, formal verification, H infinity control, hyperbolic bound, large periodic task sets, Mathematics, processor scheduling, protocols, Protocols, rate monotonic algorithm, Runtime, schedulability analysis, Scheduling algorithm, Testing},
+	keywords = {schedulability analysis, Analytical models, processor scheduling, Algorithm design and analysis, complexity, computational complexity, concurrency control, Concurrency control, concurrency control protocols, Delay, exact response time analysis, formal verification, H infinity control, hyperbolic bound, large periodic task sets, Mathematics, protocols, Protocols, rate monotonic algorithm, Runtime, Scheduling algorithm, Testing},
 	pages = {59--66},
 	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/HQVKGWI6/934000.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/3GSD2QQS/Bini et al. - 2001 - A hyperbolic bound for the rate monotonic algorith.pdf:application/pdf}
+}
+
+@article{johnson_fast_1974,
+	title = {Fast algorithms for bin packing},
+	volume = {8},
+	issn = {0022-0000},
+	url = {http://www.sciencedirect.com/science/article/pii/S0022000074800267},
+	doi = {10.1016/S0022-0000(74)80026-7},
+	abstract = {Low-order polynomial time algorithms for near-optimal solutions to the problem of bin packing are studied. The previously analyzed FIRST FIT and BEST FIT packing rules are shown to be members of a more generalized class of packing rules all of which have the same worst case behavior. If the input list is in decreasing order, the worst case behavior of the packing rules in the class is considerably improved and, if not the same for all, at least restricted to a narrow range of possibilities. Finally, after showing that any implementation of a packing rule in the class requires at least 0(n log n) comparisons, we present linear-time approximations to these packing rules whose worst case behavior is as good as that of FIRST FIT under a large variety of restrictions on the input.},
+	number = {3},
+	urldate = {2019-01-30},
+	journal = {Journal of Computer and System Sciences},
+	author = {Johnson, David S.},
+	month = jun,
+	year = {1974},
+	pages = {272--314},
+	file = {ScienceDirect Full Text PDF:/home/jacob/Zotero/storage/42768N8A/Johnson - 1974 - Fast algorithms for bin packing.pdf:application/pdf;ScienceDirect Snapshot:/home/jacob/Zotero/storage/47D5FAL7/S0022000074800267.html:text/html}
+}
+
+@article{coffman_application_1978,
+	title = {An {Application} of {Bin}-{Packing} to {Multiprocessor} {Scheduling}},
+	volume = {7},
+	issn = {0097-5397},
+	url = {https://epubs.siam.org/doi/abs/10.1137/0207001},
+	doi = {10.1137/0207001},
+	abstract = {We consider one of the basic, well-studied problems of scheduling theory, that of nonpreemptively scheduling n independent tasks on m identical, parallel processors with the objective of minimizing the “makespan,” i.e., the total timespan required to process all the given tasks. Because this problem is \$NP\$-complete and apparently intractable in general, much effort has been directed toward devising fast algorithms which find near-optimal schedules. The well-known LPT (Largest Processing Time first) algorithm always finds a schedule having makespan within \$4/3 = 1.333 {\textbackslash}cdots \$ of the minimum possible makespan, and this is the best such bound satisfied by any previously published fast algorithm. We describe a comparably fast algorithm, based on techniques from “bin-packing,” which we prove satisfies a bound of 1.220. On the basis of exact upper bounds determined for each \$m {\textbackslash}leqq 7\$, we conjecture that the best possible general bound for our algorithm is actually \$20/17 = 1.176 {\textbackslash}cdots \$.},
+	number = {1},
+	urldate = {2019-01-30},
+	journal = {SIAM Journal on Computing},
+	author = {Coffman, E., Jr. and Garey, M. and Johnson, D.},
+	month = feb,
+	year = {1978},
+	pages = {1--17},
+	file = {Full Text PDF:/home/jacob/Zotero/storage/UGW48GD4/Coffman et al. - 1978 - An Application of Bin-Packing to Multiprocessor Sc.pdf:application/pdf;Snapshot:/home/jacob/Zotero/storage/74ABEIIF/0207001.html:text/html}
+}
+
+@inproceedings{nasri_exact_2017,
+	title = {An {Exact} and {Sustainable} {Analysis} of {Non}-preemptive {Scheduling}},
+	doi = {10.1109/RTSS.2017.00009},
+	abstract = {This paper provides an exact and sustainable schedulability test for a set of non-preemptive jobs scheduled with a fixed-job-priority (FJP) policy upon a uniprocessor. Both classic work-conserving and recent non-work-conserving schedulers are supported. Jobs may exhibit both release jitter and execution time variation. Both best- and worst-case response time bounds are derived. No prior response-time analysis (RTA) for this general setting is both exact and sustainable, nor does any prior RTA support non-work-conserving schedulers. The proposed analysis works by building a schedule graph that precisely abstracts all possible execution scenarios. Key to deferring the state-space explosion problem is a novel path-merging technique that collapses similar scenarios without giving up analysis precision. In an empirical evaluation with randomly generated workloads based on an automotive benchmark, the method is shown to scale to 30+ periodic tasks with thousands of jobs (per hyperperiod).},
+	booktitle = {2017 {IEEE} {Real}-{Time} {Systems} {Symposium} ({RTSS})},
+	author = {Nasri, M. and Brandenburg, B. B.},
+	month = dec,
+	year = {2017},
+	keywords = {Algorithm design and analysis, exact analysis, exact schedulability test, execution time variation, fixed-job-priority, fixed-job-priority policy, Jitter, non-preemptive-scheduling, non-work-conserving-scheduling, nonpreemptive jobs, nonpreemptive scheduling, processor scheduling, real-time systems, Real-time systems, real-time-systems, Runtime, schedulability-analysis, schedule graph, Schedules, Scheduling algorithms, sustainability, sustainable analysis, sustainable schedulability test, Task analysis, worst-case response time bounds},
+	pages = {12--23},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/96FAYXCC/8277276.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/SKVSDRHH/Nasri and Brandenburg - 2017 - An Exact and Sustainable Analysis of Non-preemptiv.pdf:application/pdf}
 }
