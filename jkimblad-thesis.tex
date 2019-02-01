@@ -60,6 +60,7 @@
 \newacronym{wcet}{WCET}{Worst-Case Execution Time}
 \newacronym{prem}{PREM}{Predictable Execution Model}
 \newacronym{ilp}{ILP}{Integer Linear Programming}
+\newacronym{dms}{DMS}{Deadline Monotonic Scheduling}
 
 % Frontmatter includes the title page, abstracts and table-of-contents
 \frontmatter
@@ -448,8 +449,23 @@ The most important paper to discuss is \parencite{nasri_response-time_2018} whic
 state-of-the-art schedulability analysis method for non-preemptive static tasks sets under global
 scheduling. The analysis is sufficient for multi-core systems and a corresponding precise method for
 uni-core systems by the same authors is presented in \parencite{nasri_exact_2017}. The paper is
-explained in detail in section \ref{subsec:artafnpjsug}
+explained in detail in section \ref{subsec:artafnpjsug}. Since the thesis builds on top of the
+concept of the \acrshort{aer} model it is necessary to be familiar with the paper
+\parencite{durrieu_predictable_2014} which was the first to present this model and presents an
+offline non-preemptive partitioned scheduling algorithm to schedule the memory accesses. The idea to divide
+up tasks into distinct execution phases is not a novel one as \acrshort{aer} builds on top of the
+\acrshort{prem} which divides up tasks into a read and execute phase for single-core system and was
+first presented in \parencite{pellizzoni_predictable_2011}. The \acrshort{aer} model is
+further explored in \parencite{maia_closer_2016} which presents five new global non-preemptive
+online scheduling algorithms where the most successful assigns priorities to tasks based on their
+period in the same way \acrshort{rms} works. It is also shown to be able to schedule tasks sets that
+would otherwise not be schedulable under global \acrshort{edf} due to congestion.
 
+Some work on analysing have been done on analysing the schedulability of algorithms developed around
+\acrshort{prem} such as \ref{alhammad_schedulability_2014} which borrows the notion of a problem
+window from \ref{baker_multiprocessor_2003} which presents an analysis method for \acrshort{edf} and
+\acrshort{dms} on multi-core processors. 
+ 
 \begin{itemize}
     \item Schedulability analysis paper, this is the most important
         \item The 2 schedulability analysis papers that this one compares it with
