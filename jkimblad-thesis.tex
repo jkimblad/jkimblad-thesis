@@ -34,7 +34,7 @@
 \usepackage{glossaries}
 \makeglossaries
 
-\title{This is the English title}
+\title{Extending Timing Analysis for Non-Preemptive Task Sets on Multicore Under the AER Model}
 \alttitle{Detta är den svenska översättningen av titeln}
 \author{Jacob Kimblad}
 \email{jacobki@kth.se}
@@ -58,9 +58,12 @@
 \newacronym{lcm}{LCM}{Least Common Multiple}
 \newacronym{bcet}{BCET}{Best-Case Execution Time}
 \newacronym{wcet}{WCET}{Worst-Case Execution Time}
-\newacronym{prem}{PREM}{Predictable Execution Model}
+\newacronym{prem}{PREM}{PRedictable Execution Model}
+\newacronym{gprem}{gPREM}{global PREM}
 \newacronym{ilp}{ILP}{Integer Linear Programming}
 \newacronym{dms}{DMS}{Deadline Monotonic Scheduling}
+\newacronym{autosar}{AUTOSAR}{AUTomotive Open System ARchitecture}
+\newacronym{ecu}{ECU}{Electronic Control Unit}
 
 % Frontmatter includes the title page, abstracts and table-of-contents
 \frontmatter
@@ -207,7 +210,6 @@ and release jitter can be represented as a probability distribution, but this wi
 this thesis.
 
 
-% TODO: maybe talk about aperiodic and sporadic tasks as well? 
 % TODO: Introduce the notion of offline and online schedulers, start time of tasks (when they start
 % execution)
 \section{Scheduling} \label{sec:scheduling}
@@ -330,8 +332,6 @@ conditions is not always trivial as shown by \parencite{bini_hyperbolic_2001} wh
 pessimistic sufficient condition of the same complexity $ O(n) $ for \acrshort{rms} almost 30 years
 after the earlier presented condition was introduced. 
 
-%TODO: Mention that the critical instance (when all tasks are released at the same time) is not
-%enough to evaluate if the task set is schedulable when considering a multi-core system.
 %TODO: Mention that increase of tasks leads to harder schedulability
 %TODO: Mention that the illustration is mostly to get and idea of the problem trying to be solved,
 %and that it represents single-core and a multi-core representation would look slightly different
@@ -348,22 +348,19 @@ they are. The paper \parencite{bertogna_tests_2011} shows examples of conditions
 O(n^3) $ complexity which can be alright when analysing small task sets, but is too complex as the
 task sets grow or if it has to be calculated online with limited computation power.
 
-% TODO Reference original image in caption
 \begin{figure}
 
     \centering
 
     \includegraphics[width=0.8\linewidth]{images/sufficient_necessary_schedulability.pdf}
 
-    \caption{Example of rate monotonic scheduling for three tasks where $T_1=(1, 4, 4)$, $T_2=(2, 6,
-    6)$, $T_3=(4, 12, 12)$.}
+    \caption{Research aims to shrink the gap left between sufficient and necessary conditions.
+    Illustration inspired by \parencite{sebestyen_simulation-based_2012}.}
 
     \label{fig:sufficient_necessary_schedulability}
 
 \end{figure}
 
-% TODO: Add that some task sets (with tasks that have a phase) does not have a critical instant for
-% all tasks. 
 % TODO: Is this section really necessary? Perhaps preface with it by explaining there are different
 % ways of analysis. Other than mathematically, we can also simulate the schedule and look for missed
 % deadlines. Don't use the word simulation, we are only doing analysis, otherwise people will be MAD
@@ -383,32 +380,32 @@ intuitive to think that it is sufficient to analyse the worst-case times of all 
 schedule is feasible. This is however not true for non-preemptive systems as two jobs released
 within the same interval can lead to either being scheduled until its completion before the other.
 For some task sets with this property an earlier release of a certain job can lead to a missed
-deadline later in the schedule in multi-core systems.
+deadline later in the schedule in multi-core systems. This also means that examining the critical
+instant of a task is no longer sufficient in determining if a task set is schedulable or not.
 % TODO Example of how earlier release of a task on multicore systems can make the schedule miss a
 % deadline while a later release of the same task may have been able to complete the deadline.
 
-% TODO add graph showing necessary and sufficient conditions coverage of schedulable task sets (see
-% zim), then explain research is about shrinking window between them while also keeping a low O(n).
 
 \section{The AER Execution Model}
 
-% TODO: mention that a pre-requisite of AER is separate memory banks for each core
 The \acrfull{aer} execution model was first proposed in \parencite{durrieu_predictable_2014} to
 improve performance and predictability while using \acrshort{cots} multi-core processors with shared
 and private memory in the avionics industry. It builds on top of the \acrfull{prem} first presented
 in \parencite{pellizzoni_predictable_2011} which introduces the idea of dividing tasks into a memory
-access phase and an execute phase.  Since the bottleneck for utilization in multi-core systems can
+access phase and an execute phase. Since the bottleneck for utilization in multi-core systems can
 become the contention in access to shared memory when introducing an increasing number of cores
 \acrshort{aer} focuses on making shared memory access more deterministic and easier to analyse. This
-is done by dividing up each task into three distinct parts. The \textbf{acquisition} part reads all
+is done by dividing up each task into three distinct parts. The \textbf{acquisition} (A) part reads all
 the data necessary for execution of the task such as code and shared variables into the private
-memory of the core dedicated for execution. The \textbf{execution} phase then executes the code,
+memory of the core dedicated for execution. The \textbf{execution} (E) phase then executes the code,
 without making any further read or write instructions to the shared memory, operating on local
-copies of the shared variables. The \textbf{restitution} phase then writes back all of the acquired
-results of the task to the shared memory.
+copies of the shared variables. The \textbf{restitution} (R) phase then writes back all of the acquired
+results of the task to the shared memory. Since the A-phase only is allowed to execute before
+execution of the task actually starts a pre-requisite of the model is that each core has a separate
+private memory, such as a cache or a scratchpad. Since these types of memory often are constrained
+in size it puts a limit to how many instructions a task can consist of in addition with the amount
+of share variables that is used as they all must fit in the private memory of the core.
 
-%Mention that a requirement of the AER model is that the code and variables of each task all fit
-%within a private memory bank. I.e, tasks can not be to big!
 The idea of this model is to enable scheduling of the read and write accesses to the shared memory
 instead of scheduling the tasks onto cores. Since contention of the shared memory is what limits the
 utilization of the cores it is more important to combat this instead of trying to find the optimal
@@ -438,15 +435,11 @@ optimal \acrshort{ilp} algorithm in a fraction of the time.
 % AER is an improvement over other models such as proposed by pikeOS which enables all other cores
 % to be paused while running critical tasks on a single core.
 
-%TODO Do we first explain what a task is, that it runs on a single core within a multi-processor and
-%that for this industry it often is non-greedy when it is non-preemptive. Do we go into detail of
-%the task model (running, ready and executing), this is probably good to cover in the global
-%scheduling part.
 
 \section{Related Work}
 
 The most important paper to discuss is \parencite{nasri_response-time_2018} which provides a
-state-of-the-art schedulability analysis method for non-preemptive static tasks sets under global
+state-of-the-art schedulability analysis method for non-preemptive static-priority tasks sets under global
 scheduling. The analysis is sufficient for multi-core systems and a corresponding precise method for
 uni-core systems by the same authors is presented in \parencite{nasri_exact_2017}. The paper is
 explained in detail in section \ref{subsec:artafnpjsug}. Since the thesis builds on top of the
@@ -461,19 +454,54 @@ online scheduling algorithms where the most successful assigns priorities to tas
 period in the same way \acrshort{rms} works. It is also shown to be able to schedule tasks sets that
 would otherwise not be schedulable under global \acrshort{edf} due to congestion.
 
+%TODO: Mention that this does no take into the account the deadline of the R-phase.
+%TODO: Maybe keep all related work covering scheduling analysis in a new subsection
 Some work on analysing have been done on analysing the schedulability of algorithms developed around
-\acrshort{prem} such as \ref{alhammad_schedulability_2014} which borrows the notion of a problem
-window from \ref{baker_multiprocessor_2003} which presents an analysis method for \acrshort{edf} and
-\acrshort{dms} on multi-core processors. 
- 
-\begin{itemize}
-    \item Schedulability analysis paper, this is the most important
-        \item The 2 schedulability analysis papers that this one compares it with
-    \item The schedulability analysis paper for single core?
-    \item Matthias paper
-\end{itemize}
+\acrshort{prem} such as \parencite{alhammad_schedulability_2014} which builds on the idea of a
+problem window from \parencite{baker_multiprocessor_2003}. This idea presents an analysis method for
+\acrshort{edf} and \acrshort{dms} on multi-core processors and defines the problem window as the
+time interval between the release time and deadline of a certain task $ \tau_i $. The method works
+by contradiction where the task is assumed to miss its deadline within the window. An upper bound $
+UB(\psi_i) $ of the interference in the timing window $ \psi_i $ is defined as the maximum amount of
+utilization that the task set $ \Gamma $ could possibly generate inside the timing window. The lower
+bound $ LB(\psi_i) $ is then defined as the demand required on the problem window for $ \tau_i $ to
+miss its deadline. The condition $ UB(\psi_i) \le LB(\psi_i) $ then defines a sufficient
+schedulability condition for work-conserving schedulers if it is shown to hold for every task in the
+task set. The paper extends the \acrshort{prem} to a multi-core scheduler and called
+\acrshort{gprem} which is a global static-priority scheduler. This scheduler is shown to, on
+average, schedule more task sets than a baseline global round robin scheduler that does not account
+contention for all cases that was tried. The different cases were different utilization, different
+period ranges, different tasks per core and different number of cores.
 
+The paper \parencite{maia_schedulability_2017} specifically tackles analysis for the \acrshort{aer}
+model for multi-core systems by using the theory of a problem windows but applying it in a
+bus-centric way. The idea is that by doing analysis of the scheduling of bus accesses instead of the
+cores it becomes a single-core problem as only one core can access the bus at a time.  Instead of
+checking for an upper bound of the interference that tasks create on cores the method describes a
+way to find the upper bound of the interference on the bus created by the other tasks. A bus hole is
+defined as "\textit{A bus hole is an interval of time, within the problem window, where all m cores
+are busy executing E-phases}" \parencite{maia_schedulability_2017}. The amount of time within all
+the bus holes inside the problem window must be enough for the task being examined to schedule its A
+and R phases to be able to meet its deadline. The paper describes a method that can compute an upper
+bound on the holes in the problem window in pseudo-polynomial time.
 
+The paper \parencite{becker_contention-free_2016} makes an effort to adapt the \acrshort{aer} model
+to real applications in the automotive domain by providing a general framework that is also applied
+to the physical platform Kalray MPPA-256. It consists of 16 compute clusters that contain 16
+processing elements and 16 banks of shared parallel memory each. The concept builds on top of the
+\acrshort{autosar} architecture for automotive \acrshort{ecu}'s where the smallest unit of execution
+is known as a runnable. Runnables communicate with each other through variables called labels. For
+each compute cluster one memory bank is reserved as the shared memory which stores all of the
+labels, thus referred to as the label bank. The remaining 15 memory bank are then each assigned as a
+private memory to a unique processing element. The runnables running on the processing units are
+then executing under the \acrshort{aer} model. A scheduler is then presented to schedule the memory
+access phases of the runnables to battle congestion. The scheduling algorithm is said to be a
+\textit{memory-centric heuristic} as it schedules the A and R phases on the memory as opposed to a
+\textit{core-centric heuristic} that schedules tasks onto cores.
+
+% - autosar, labels, runnables
+% - physical hardware platform (MANY-core)
+% - scheduler
 
 \subsection{A Response-Time Analysis for Non-Preemptive Job Sets under Global
 Scheduling}\label{subsec:artafnpjsug}
@@ -508,7 +536,11 @@ have scheduled the same job sets in different order but have the same timing val
 identical sub-trees in the future. Because of this it is only necessary to continue evaluation from
 one of the nodes effectively making it so that the nodes can be \textit{merged}.
 
-\subsection{}
+
+\subsection{Contention-Free Execution of Automotive Applications on a Clustered Many-Core Platform}
+
+
+
 \chapter{<Engineering-related content, Methodologies and Methods> Use a self-explaining title}
 
 
