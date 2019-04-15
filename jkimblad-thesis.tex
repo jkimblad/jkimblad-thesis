@@ -64,6 +64,10 @@
 \newacronym{dms}{DMS}{Deadline Monotonic Scheduling}
 \newacronym{autosar}{AUTOSAR}{AUTomotive Open System ARchitecture}
 \newacronym{ecu}{ECU}{Electronic Control Unit}
+\newacronym{iip}{IIP}{Idle-time Insertion Policy}
+\newacronym{a}{A}{Acquisition}
+\newacronym{e}{E}{Execution}
+\newacronym{r}{R}{Restitution}
 
 % Frontmatter includes the title page, abstracts and table-of-contents
 \frontmatter
@@ -364,6 +368,8 @@ task sets grow or if it has to be calculated online with limited computation pow
 % TODO: Is this section really necessary? Perhaps preface with it by explaining there are different
 % ways of analysis. Other than mathematically, we can also simulate the schedule and look for missed
 % deadlines. Don't use the word simulation, we are only doing analysis, otherwise people will be MAD
+% TODO: Critical instant is worst case for a specific task. Only for RMS and EDF is this when all higher
+% prio tasks are released at the same time.
 An example of a precise schedulability test for \acrshort{rms} on single-core systems is to find the
 so called \textbf{critical instant} of a task. This is when all higher priority tasks are released
 at the same time as the task. This pushes the task completion time as far away from its release time
@@ -506,6 +512,7 @@ access phases of the runnables to battle congestion. The scheduling algorithm is
 \subsection{A Response-Time Analysis for Non-Preemptive Job Sets under Global
 Scheduling}\label{subsec:artafnpjsug}
 
+%TODO: Mention it requires static-priority assignment
 The paper \parencite{nasri_response-time_2018} is the most relevant work for this thesis. It
 presents a state-of-the art analysis methods for non-preemptive multi-processor global scheduling.
 The method gives a sufficient condition for schedulability. The input is a set of jobs consisting of
@@ -537,6 +544,8 @@ identical sub-trees in the future. Because of this it is only necessary to conti
 one of the nodes effectively making it so that the nodes can be \textit{merged}.
 
 
+
+
 \subsection{Contention-Free Execution of Automotive Applications on a Clustered Many-Core Platform}
 
 
@@ -546,11 +555,110 @@ one of the nodes effectively making it so that the nodes can be \textit{merged}.
 
 \chapter{<The work> Use a self-explaining title}
 
+\section{Task model}
+
+The term \textit{schedulability window} is used to refer to the time interval within which a task is
+able to be scheduled to not miss its deadline. 
+
+A problem arises when the interval between the worst-case finish time of the A-phase and the
+best-case release time of the R-phase is less than the \acrshort{wcet} of the E-phase. The analysis
+can't make the guarantee that the interval between the finish time of the A-phase and the start time
+of the R-phase is sufficient for the E-phase to finish its execution. The problem becomes even worse
+as the schedulability windows of the A-phase and R-phase overlaps as the analysis doesn't handle any
+precedence constraints among jobs. This means that it would be possible for and R-phase to be
+scheduled before the A-phase belonging to the same job.
+
+
+It is intrinsic to the model that A-phases must always precede the R-phase belonging to the same
+task. It also becomes more complicated than a simple precedence constraint when the interval between
+the  as the analysis must leave sufficient time between the finish time of the A-phase and the start
+time of the R-phase for the E-phase to finish execution. This can be circumvented by constraining
+the model. The interval from release to deadline of a job can be divided into three distinct
+intervals that can be though of as sub-windows of the schedulability window of a task. 
+
+
+\begin{figure}
+
+    \centering
+
+    \includegraphics[width=0.8\linewidth]{images/aer_window_model.pdf}
+
+    \caption{The AER window model}
+
+    \label{fig:aer_window_model}
+
+\end{figure}
+
+
+\section{Idle-time Insertion Policy}
+
+% TODO: Explain IIP in theoretical framework instead?
+An \acrfull{iip} is used by idle-time insertion policies during scheduling to see if the highest
+priority task is to be scheduled at the present time when there is a free core to schedule the task
+onto or if the core should be left idle. The idea is that a work-conserving algorithm can increase
+schedulability. Imagining a non-preemptive scheduler and a long-running, low-priority task with a
+deadline far into the future that has just been released and is about to be scheduled onto a core.
+If a higher-priority task with a short deadline is released just after the first tasks has been
+scheduled it might miss its deadline as the core wont be available for a long time. In this instance
+it could prove beneficial for the schedulability of the task set to leave a core idle even when
+there is work to be completed to wait for a higher priority task to be released. For the
+\acrshort{iip} to make a decision it is usually provided with three pieces of information. First the
+job-set of jobs that have previously been scheduled and are finished, second it is provided the job
+that just has been released and is to be scheduled, thirdly it is provided the present time at which
+the released job is to be scheduled. The policy then returns a true or false value representing if
+the provided job is schedulable at that time. The functionality of an \acrshort{iip} can thus be
+described by the following pseudo code, inspired by \parencite{nasri_exact_2017}.
+
+
+The scheduling analysis tool was extended by implementing a custom \acrshort{iip}. Scheduling tasks
+using a memory-centric approach can be described as a work-conserving scheduler as cores might be
+left idle, even when there is work to be done, if the memory is busy during the release of a task. 
+
+
+\subsection{Proof}
+
+No changes have been done to the original algorithm presented in \parencite{nasri_exact_2017} which
+also provides the proofs for it. Since the original algorithm allows for any \acrshort{iip} to be
+plugged in proof will be given for the developed \acrshort{iip}. The policy is invoked each time a
+job is to be scheduled as to see if the job is available for scheduling at that time or if the
+processor should idle until a higher priority job is released, when the \acrshort{iip} will be
+called upon again.
+
+% 3 Cases:
+%   - R-phase
+%   - A-phase available core
+%   - A-phase no available core
+%       - New top Priority
+%       - Other released, non-scheduled A-phase, has higher priority (IIP not invoked)
+%
+
+
+% Write proof of correctness
+
+\section{Benchmarking}
+
+\subsection{Task generation}
+
+\subsection{Job transformation}
+
+
 
 \chapter{<Result> Use a self-explaining title}
 
+\section{Window sizes}
+
+\section{Task amount}
+
+\section{Core amount}
 
 \chapter{<Conclusions> Use a self-explaining title}
+
+
+\subsection{Future work}
+
+%TODO: Mention that implementing precedence-constraints in the timing analysis makes it such that
+%the A and R windows become redundant. Also requires the WCET of E to be added to the A-phase.
+    % NOT TRUE. The WCET of E cant be added as it will seem to occupy the memory while its really
 
 
 % Print the bibliography (and make it appear in the table of contents)
