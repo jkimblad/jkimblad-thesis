@@ -12,6 +12,9 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \usepackage{dingbat}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{amssymb}
 
 \usepackage[autostyle]{csquotes}
 \usepackage[
@@ -593,6 +596,7 @@ intervals that can be though of as sub-windows of the schedulability window of a
 \section{Idle-time Insertion Policy}
 
 % TODO: Explain IIP in theoretical framework instead?
+% TODO: Mention IIP-eligibility
 An \acrfull{iip} is used by idle-time insertion policies during scheduling to see if the highest
 priority task is to be scheduled at the present time when there is a free core to schedule the task
 onto or if the core should be left idle. The idea is that a work-conserving algorithm can increase
@@ -608,6 +612,44 @@ that just has been released and is to be scheduled, thirdly it is provided the p
 the released job is to be scheduled. The policy then returns a true or false value representing if
 the provided job is schedulable at that time. The functionality of an \acrshort{iip} can thus be
 described by the following pseudo code, inspired by \parencite{nasri_exact_2017}.
+
+\begin{algorithm}
+    \caption{IIP eligibility}
+    \label{algo:iip_eligibility}
+    \begin{algorithmic}[1]
+        \State $J_i\gets Highest\ priority\ released\ job$
+        \If {$aer\_iip(J_i, t, \mathcal{J}^S, c) = true$}
+        \Comment{Algorithm \ref{algo:aer_iip}}
+            \State $schedule\ J_i$
+        \Else
+            \State $Idle\ processor$
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \caption{AER IIP}
+    \label{algo:aer_iip}
+    \begin{algorithmic}[1]
+        \Function{$aer_iip$}{$J_i, t, \mathcal{J}^S, c$}
+            \If{$is\_restitution(J_i)$}
+                \State \Return $true$
+            \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+    \caption{Available Cores}
+    \label{algo:available_cores}
+    \begin{algorithmic}[1]
+        \Function{$available\_cores$}{$\mathcal{J}^S, t$}
+            \ForAll{$J \in \mathcal{J}^S$}
+                \State
+            \EndFor
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
 
 
 The scheduling analysis tool was extended by implementing a custom \acrshort{iip}. Scheduling tasks
@@ -631,11 +673,42 @@ called upon again.
 %       - New top Priority
 %       - Other released, non-scheduled A-phase, has higher priority (IIP not invoked)
 %
+% Premises:
+%   - R-phases are always higher priority than A-phases
+%   - Any job can not execute without being assigned to a core
+%
 
 
 % Write proof of correctness
 
+
+\section{Scheduling algorithms}
+
+As the described analysis takes a task set to see if they make a feasible schedule by
+scheduling the jobs according to predefined priorities they have to be assigned in some
+deterministic way. The analysis does not put constraint on how to assign priorities, only that they
+are scheduled non-preemptively. There are several well-defined scheduling algorithms that can be
+used, but because of the novelty of the task model it is also interesting to explore
+if new scheduling algorithms could better exploit the nature of the task model and compare their
+results to existing algorithms.
+
+% RMS isn't a good choice as there are many tasks with the same period, and they will just be
+% scheduled according to task-id on the task-level
+
+\begin{figure}
+
+    \centering
+
+    \includegraphics[width=0.8\linewidth]{images/scheduling_priorities.pdf}
+
+    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+
+    \label{fig:scheduling_prioriteis}
+
+\end{figure}
+
 \section{Benchmarking}
+
 
 \subsection{Task generation}
 
@@ -652,6 +725,11 @@ called upon again.
 \section{Core amount}
 
 \chapter{<Conclusions> Use a self-explaining title}
+
+\section{Scheduling anomaly}
+
+% Describe how the task model requires that there are not more number of tasks of a given period
+% than the total amount of cores in the system, as it will lead to the schedule being not feasible.
 
 
 \subsection{Future work}
