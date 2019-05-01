@@ -71,6 +71,7 @@
 \newacronym{a}{A}{Acquisition}
 \newacronym{e}{E}{Execution}
 \newacronym{r}{R}{Restitution}
+\newacronym{csv}{CSV}{Comma-separated values}
 
 % Frontmatter includes the title page, abstracts and table-of-contents
 \frontmatter
@@ -547,6 +548,7 @@ identical sub-trees in the future. Because of this it is only necessary to conti
 one of the nodes effectively making it so that the nodes can be \textit{merged}.
 
 
+\subsection{An Exact and Sustainable Analysis of Non-Preemptive Scheduling}
 
 
 \subsection{Contention-Free Execution of Automotive Applications on a Clustered Many-Core Platform}
@@ -633,7 +635,14 @@ described by the following pseudo code, inspired by \parencite{nasri_exact_2017}
     \begin{algorithmic}[1]
         \Function{$aer_iip$}{$J_i, t, \mathcal{J}^S, c$}
             \If{$is\_restitution(J_i)$}
-                \State \Return $true$
+                \State \Return true
+            \Else
+                \If{$free\_cores(\mathcal{J}^S, c) > 0$}
+                \Comment {Algorithm \ref{algo:available_cores}}
+                    \State \Return $true$
+                \Else
+                    \State \Return $false$
+                \EndIf
             \EndIf
         \EndFunction
     \end{algorithmic}
@@ -643,10 +652,16 @@ described by the following pseudo code, inspired by \parencite{nasri_exact_2017}
     \caption{Available Cores}
     \label{algo:available_cores}
     \begin{algorithmic}[1]
-        \Function{$available\_cores$}{$\mathcal{J}^S, t$}
+        \Function{$free\_cores$}{$\mathcal{J}^S, c$}
+            \State $sum\gets 0$
             \ForAll{$J \in \mathcal{J}^S$}
-                \State
+                \If {$is\_restitution(J)$}
+                    \State $sum\gets sum-1$
+                \ElsIf{$is\_acquisition(J)$}
+                    \State $sum\gets sum+1$
+                \EndIf
             \EndFor
+            \State \Return $c - sum$
         \EndFunction
     \end{algorithmic}
 \end{algorithm}
@@ -692,6 +707,8 @@ used, but because of the novelty of the task model it is also interesting to exp
 if new scheduling algorithms could better exploit the nature of the task model and compare their
 results to existing algorithms.
 
+There are several interesting ways to prioritise the jobs. 
+
 % RMS isn't a good choice as there are many tasks with the same period, and they will just be
 % scheduled according to task-id on the task-level
 
@@ -709,6 +726,45 @@ results to existing algorithms.
 
 \section{Benchmarking}
 
+To benchmark the \acrshort{iip} job sets have to be generated that conform to
+the \acrshort{aer} model as well as conform to the input restrictions of the
+analysis tool. The input to the analysis is in the form of a \acrfull{csv}
+file. It is a plain-text file where each new line holds a unique job to be
+scheduled where the columns in the row represents attributes separated by
+commas. The columns expected by the analysis tools are as follows.
+
+\begin{itemize}
+    \item \textbf{Task ID} - The ID of the belonging task
+    \item \textbf{Job ID} - Its unique ID
+    \item \textbf{Arrival min} - Its earliest release time
+    \item \textbf{Arrival max} - Its latest release time
+    \item \textbf{Cost min} - Its \acrshort{wcet}
+    \item \textbf{Cost max} - Its \acrshort{bcet}
+    \item \textbf{Deadline} - The time at which the job must have finished execution
+    \item \textbf{Priority} - Its priority in relation to the other jobs
+\end{itemize}
+
+Thus all of these properties must be properly generated in order to perform
+benchmarks. One option would be to just randomize everything, but this would
+not be very reflective of any real systems as they are usual more formal. Since
+a lot of the benchmarking will explore how the analysis tool performs under
+different utilizations a good starting point would be to explore how tasks sets
+can be generated given the total desired utilization and the desired amount of
+tasks. Generating the amount of tasks to be constant is important, as tasks
+sets of different sizes but with the same utilizations have been shown to have
+different average schedulability\parencite{sebestyen_simulation-based_2012} on
+average for many schedulers and could thus have an effect on the results. The
+amount of tasks should therefor carefully be put into consideration. 
+
+The paper \ref{bini_measuring_2005} goes into great detail explaining some of
+the problems with creating good task sets for benchmarking. 
+
+
+
+a good starting point would instead be to find some type
+of benchmarks that reflect real systems. Luckily such a set has been provided
+for free by a research group at Bosch and can be found at
+\parencite{kramer_real_2015}.
 
 \subsection{Task generation}
 
