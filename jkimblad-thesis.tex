@@ -55,23 +55,26 @@
 \newacronym{cpu}{CPU}{Central Processing Unit}
 \newacronym{lcu}{LCU}{Central Processing Unit}
 \newacronym{aer}{AER}{Acquisition Execution Restitution}
-\newacronym{cots}{COTS}{Commerical off the Shelf}
+\newacronym{cots}{COTS}{Commercial Off The Shelf}
 \newacronym{edf}{EDF}{Earliest Deadline First}
 \newacronym{rms}{RMS}{Rate-Monotonic Scheduling}
 \newacronym{lcm}{LCM}{Least Common Multiple}
 \newacronym{bcet}{BCET}{Best-Case Execution Time}
 \newacronym{wcet}{WCET}{Worst-Case Execution Time}
-\newacronym{prem}{PREM}{PRedictable Execution Model}
+\newacronym{prem}{PREM}{Predictable Execution Model}
 \newacronym{gprem}{gPREM}{global PREM}
 \newacronym{ilp}{ILP}{Integer Linear Programming}
 \newacronym{dms}{DMS}{Deadline Monotonic Scheduling}
-\newacronym{autosar}{AUTOSAR}{AUTomotive Open System ARchitecture}
 \newacronym{ecu}{ECU}{Electronic Control Unit}
 \newacronym{iip}{IIP}{Idle-time Insertion Policy}
 \newacronym{a}{A}{Acquisition}
 \newacronym{e}{E}{Execution}
 \newacronym{r}{R}{Restitution}
 \newacronym{csv}{CSV}{Comma-separated values}
+\newacronym{autosar}{AUTOSAR}{Automotive Open System Architecture}
+\newacronym{ip}{IP}{Intellectual Property}
+\newacronym{np}{NP}{Non-Preemptive}
+
 
 % Frontmatter includes the title page, abstracts and table-of-contents
 \frontmatter
@@ -160,7 +163,10 @@ methods.
 
 \section{The Task Model} \label{sec:the_task_model}
 
-%TODO Maybe add a picture that shows all the characteristics of a job/task
+%TODO: Maybe add a picture that shows all the characteristics of a job/task
+%TODO: Show that this is something that can actually be used in AUTOSAR as they already to the
+%fetch-execute-write cycle for some of their streaming applications using runnables. Called
+%"implicit access" in autosar. Depicted in Real World Automotive Benchmarks for Free pp-slides.
 A periodic task, denoted as $\tau_i$, is a unit of work that is executed periodically on a processor
 alongside other tasks over and over again. In embedded systems a task is usually completed in some
 amount of time known as its \textbf{computation time}, denoted as $C_i$. Once a task has finished
@@ -613,11 +619,11 @@ job-set of jobs that have previously been scheduled and are finished, second it 
 that just has been released and is to be scheduled, thirdly it is provided the present time at which
 the released job is to be scheduled. The policy then returns a true or false value representing if
 the provided job is schedulable at that time. The functionality of an \acrshort{iip} can thus be
-described by the following pseudo code, inspired by \parencite{nasri_exact_2017}.
+described by algorithm \ref{algo:iip_eligibility}, inspired by \parencite{nasri_exact_2017}.
 
 \begin{algorithm}
     \caption{IIP eligibility}
-    \label{algo:iip_eligibility}
+    \label{algo:iip_eli2gibility}
     \begin{algorithmic}[1]
         \State $J_i\gets Highest\ priority\ released\ job$
         \If {$aer\_iip(J_i, t, \mathcal{J}^S, c) = true$}
@@ -724,7 +730,9 @@ There are several interesting ways to prioritise the jobs.
 
 \end{figure}
 
-\section{Benchmarking}
+\section{Benchmarking}\label{sec:benchmarking}
+
+%TODO: Create picture showing the toolchain.
 
 To benchmark the \acrshort{iip} job sets have to be generated that conform to
 the \acrshort{aer} model as well as conform to the input restrictions of the
@@ -744,33 +752,240 @@ commas. The columns expected by the analysis tools are as follows.
     \item \textbf{Priority} - Its priority in relation to the other jobs
 \end{itemize}
 
-Thus all of these properties must be properly generated in order to perform
-benchmarks. One option would be to just randomize everything, but this would
-not be very reflective of any real systems as they are usual more formal. Since
-a lot of the benchmarking will explore how the analysis tool performs under
-different utilizations a good starting point would be to explore how tasks sets
-can be generated given the total desired utilization and the desired amount of
-tasks. Generating the amount of tasks to be constant is important, as tasks
-sets of different sizes but with the same utilizations have been shown to have
-different average schedulability\parencite{sebestyen_simulation-based_2012} on
-average for many schedulers and could thus have an effect on the results. The
-amount of tasks should therefor carefully be put into consideration. 
 
-The paper \ref{bini_measuring_2005} goes into great detail explaining some of
-the problems with creating good task sets for benchmarking. 
+\begin{figure}
+
+    \centering
+
+    \includegraphics[width=0.8\linewidth]{images/benchmark_toolchain.pdf}
+
+    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+
+    \label{fig:scheduling_prioriteis}
+
+\end{figure}
 
 
+Thus all of these properties must be properly generated in order to perform benchmarks. One option
+would be to just randomize everything, but this would not be very reflective of any real systems as
+they are usual more formal. Since a lot of the benchmarking will explore how the analysis tool
+performs under different utilizations a good starting point would be to explore how tasks sets can
+be generated given the total desired utilization and the desired amount of tasks. Generating the
+amount of tasks to be constant is important, as tasks sets of different sizes but with the same
+utilizations have been shown to have different average
+schedulability\parencite{sebestyen_simulation-based_2012} on average for many schedulers and could
+thus have an effect on the results. The amount of tasks generated for a set utilization should
+therefor carefully be put into consideration. 
 
-a good starting point would instead be to find some type
-of benchmarks that reflect real systems. Luckily such a set has been provided
-for free by a research group at Bosch and can be found at
-\parencite{kramer_real_2015}.
 
 \subsection{Task generation}
 
-\subsection{Job transformation}
+The paper \parencite{bini_measuring_2005} goes into great detail explaining some of the common pitfalls
+when creating good task sets for benchmarking. It also presents the \textbf{Uunifast} algorithm,
+which is an $O(n)$ algorithm used to create sets of utilization values. The algorithm takes two
+inputs, the size of the set to be created and the total utilization sum of all elements in the sets.
+Once the output of the algorithm has been acquired it becomes a more trivial task to generate task
+sets by using the given utilizations.
+
+After the utilizations have been generated the next step would to create the tasks. This can now be
+approached from two different directions. Either the periods of the tasks can be generated, and from
+them the execution times using the already generated utilizations. Or the process can be reversed
+and the execution times can be generated first and then the periods from them based on the
+utilization set. In addition, we want to create the task set to be as reflective of reality as
+possible. Testing a scheduler on tasks sets that doesn't represent reality can be interesting, but
+showing that this is something that can be used in real systems is by far more interesting.
+
+Since the majority of interest in the \acrshort{aer} model lies within the automotive and avionics
+sector the task set should cohere to the standards and practices to these industries in some way.
+However large companies tend to be very secretive of their work but luckily there is a standard
+within the automotive industry called \acrshort{autosar} when developing embedded systems that has
+been agreed upon to make it easier for cooperation between corporations. According to the
+\acrshort{autosar} standard, the period intervals for periodic tasks must be selected from nine
+predefined intervals which are 1, 2, 5, 10, 20, 50, 100, 200, 1000 milliseconds. The standard also
+defines aperiodic tasks as either being driven by interrupts, or being angle-synchronous, which
+means that they are triggered by a certain angle of the crank-shaft, making the period a function of
+the rotations-per-minute of the crankshaft. Even though aperiodic tasks are accepted by the analysis
+tool they are outside of the scope of this thesis.
+
+%TODO: Explain the choice to not use the 1000ms period during experiments
+Since a set of predefined periods are given the execution times of the tasks can easily be generated
+from randomising a period and pairing it with a random utilization from the set created by the
+uunifast algorithm. However, the probability distribution for the periods might not be uniform for a
+real life system which could be put into consideration when choosing the period. Luckily a research
+group at Bosch have released benchmarking data from real world automotive systems to be used for
+free by anyone in the paper "Real World Automotive Benchmarks For Free"\parencite{kramer_real_2015}.
+The data has been extracted from a real-world application to a point where it doesn't doesn't give
+away any \acrshort{ip}-critical information about the actual application. The actual distribution
+for the periods are given in table \ref{tab:period_distribution}. Since we do not consider
+angle-synchronous tasks in this thesis the extra 15\% is simply ignored and the remaining
+percentages are scaled such that their sum equals 100\%.
+
+\begin{table}
+    \centering
+    \begin{tabular}{| c | c |} 
+        \hline
+        Period & Probability \\
+        \hline
+        1 ms & 3\% \\
+        \hline
+        2 ms & 2\% \\
+        \hline
+        5 ms & 2\% \\
+        \hline
+        10 ms & 25\% \\
+        \hline
+        20 ms & 25\% \\
+        \hline
+        50 ms & 3\% \\
+        \hline
+        100 ms & 20\% \\
+        \hline
+        200 ms & 1\% \\
+        \hline
+        1000 ms & 4\% \\
+        \hline
+        Angle-synchronous & 15\% \\
+        \hline
+    \end{tabular}
+    \caption{Distribution of periods within a real \acrshort{autosar} system. Taken from \parencite{kramer_real_2015}}
+    \label{tab:period_distribution}
+\end{table}
+
+After pairing a utilization with a period to create the tasks execution time the question remains
+how to decide the \acrshort{wcet} and \acrshort{bcet}. Even though the free benchmarks from Bosch
+offers a way to generate these from the average execution time and it is accepted by the
+\acrshort{np}-test it does not provide any additional benefit to the benchmark. This becomes more
+clear in chapter \ref{sec:task_transformation} but the short reason is that only the \acrshort{wcet}
+is used when creating the job set and setting it to something different than what was generated by
+the uunifast algorithm will change the total utilization of the task set, which is undesirable.
+
+The execution times of the \acrshort{a}-phase and \acrshort{r}-phase is functions of the size of
+the data read and written to the memory during each phase which can be very deterministic when we
+assume no cache and don't allow the phases to be preempted. The question remains what size to pick
+for the phases and it is not trivial. The paper "Scheduling Multi-Rate Real-Time Applications on
+Clustered Many-Core Architectures with Memory Constraints"\parencite{becker_scheduling_2018} contains
+information about the execution times of the acquisition and restitution phases of 18 different
+tasks in an engine management system in a car. These could be used to make approximations of the
+ratios between the execution times of the three different phases. It is however of interest to
+benchmark how the schedulability of the job sets is affected by varying the ratios between the three
+phases. These ratios are thus instead provided during benchmarking as an input to the task
+generator.
+
+The ratios determine how much of the total execution phase, which was determined earlier by the
+utilization and period, should be allocated to the \acrshort{a} and the \acrshort{r} phases, where
+differing ratios between them is possible. This mean that they "steal" execution time from the
+\acrshort{e} phase. This is in order to not change the total utilization of the task set in any way.
+
+The \acrshort{np}-test accepts the release-time to be defined as an interval in case of jitter in
+the system. This is not used in benchmarking and the worst-case release time is thus defined to be
+the same as the best-case release time, which is right at the beginning of each new period for every
+task.
+
+Priorities are assigned by a scheduler according to some property of the task such as \acrshort{edf}
+assigns priorities based on the deadlines.
+
+%TODO: Mention that even though one could create a much more accurate task set using the information
+%given in free benchmarks it would be hard to adhere it to a set total utilization and it would be
+%a large enough scope for a thesis of its own.
+
+\subsection{Task transformation} \label{sub:task_transformation}
+
+As the task sets generated thus far does not hold the information that is required by the analysis
+tool, explained in \ref{sec:benchmarking}, they have to be transformed into a regular job-set. This
+job-set does not hold any explicit data that would separate it from a regular job-set even though it
+actually represents tasks under the \acrshort{aer} model, all this information is instead implicit.
+This can be done as long as the task generation phase provides sufficient information about the
+tasks in its output. The necessary information is as follows.
+
+\begin{itemize}
+    \item \textbf{Task ID} - The tasks ID
+    \item \textbf{Arrival min} - The earliest relative release time
+    \item \textbf{Arrival max} - The latest relative release time
+    \item \textbf{Computation min} - The \acrshort{bcet} of the execution-phase
+    \item \textbf{Computation max} - The \acrshort{wcet} of the execution-phase
+    \item \textbf{Acquisition max} - The \acrshort{wcet} of the acquisition-phase
+    \item \textbf{Restitution mac} - The \acrshort{wcet} of the restitution-phase
+    \item \textbf{Deadline} - The relative deadline
+    \item \textbf{Priority} - The priority relative to other tasks in the set
+    \item \textbf{Period} - The period 
+\end{itemize}
+
+So all of this information about a task set is then to be transformed into a job set represented by
+the list given in chapter \ref{sec:benchmarking} to be accepted as input to the \acrshort{np}-test.
+The basic idea in transforming the \acrshort{aer}-modeled task set into a regular job set is to make
+the acquisition- and restitution-phase of each period into individual jobs. Although the
+execution-phase is not turned into its own job it still holds vital information. The reason is that
+the jobs are to be scheduled around memory-accesses, and the whole point of the \acrshort{aer}-model
+is that the execution-phase holds no memory-accesses to shared memory and as such doesn't have to
+directly be taken into account of the scheduler. The way the execution-phase will be used is to
+represent the constraint that the interval between the deadline of the acquisition-phase and the
+earliest release time of the restitution phase must be that of at least the \acrshort{wcet} of the
+execution-phase.
 
 
+\begin{algorithm}
+    \caption{Task transformation}
+    \label{algo:task_transformation}
+    \begin{algorithmic}[1]
+
+        
+        \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+        \Require $W \in [0, 1]$: ratio between A and R windows
+        
+
+        \State $hyperperiod \gets 0$
+        \ForAll{$\tau \in \Gamma$}
+            \Comment Find the hyperperiod in case its not 200ms
+            \State $hyperperiod \gets lcm(hyperperiod, \tau_T)$
+        \EndFor
+
+
+        \State $id \gets 1$
+        \ForAll{$\tau \in \Gamma$}
+            \Comment Create jobs for each task in the task set
+
+            \State $window\_size \gets \tau_{D} - \tau_{r^{min}} - \tau_{C^{max}}$ 
+
+            \For{$i \gets 0, hyperperiod/\tau_T$}
+                \State $t \gets i * \tau_T$
+                \Comment Absolute time for the period
+
+                \State //Create the acquisition job
+                \State $J^{A}_{id} \gets id$
+                \State $id \gets id + 1$
+                \State $J^{A}_{task\_id} \gets \tau_{id}$
+                \State $J^{A}_{r^{min}} \gets t + \tau_{r^{min}}$
+                \State $J^{A}_{r^{max}} \gets t + \tau_{r^{max}}$
+                \State $J^{A}_{C^{min}} \gets \tau_{acquisition}$
+                \State $J^{A}_{C^{max}} \gets \tau_{acquisition}$
+                \State $J^{A}_d \gets t + \left \lceil{W * window\_size}\right \rceil $
+                
+                \State //Create the restitution job
+                \State $J^{R}_{id} \gets id$
+                \State $id \gets id + 1$
+                \State $J^{R}_{task\_id} \gets \tau_{id}$
+                % Even though we don't consider jitter in our experiments it can still be considered
+                % in the algorithm
+                \State $J^{R}_{r^{min}} \gets J^{A}_d + \tau_{C^{max}}$
+                \State $J^{R}_{r^{max}} \gets J^{A}_d + \tau_{C^{max}}$
+                \State $J^{R}_{C^{min}} \gets \tau_{restitution}$
+                \State $J^{R}_{C^{max}} \gets \tau_{restitution}$
+                \State $J^{R}_d \gets t + \tau_D $
+
+                \State $\mathcal{J} \gets \mathcal{J} \cup J^A \cup J^R$
+                \Comment Add created jobs to the job set
+            \EndFor
+        \EndFor
+        \State $assign\_priorities(\mathcal{J})$
+        \Comment Assigning priorities relies on all jobs having been created
+
+    \end{algorithmic}
+\end{algorithm}
+
+
+\subsection{Running benchmarks}
+%TODO: Explain why the input is chosen the way it will be, 10% a and e cycles, the task amount, the
+%core amount etc.
 
 \chapter{<Result> Use a self-explaining title}
 
