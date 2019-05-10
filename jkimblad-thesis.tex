@@ -561,9 +561,6 @@ one of the nodes effectively making it so that the nodes can be \textit{merged}.
 
 
 
-\chapter{<Engineering-related content, Methodologies and Methods> Use a self-explaining title}
-
-
 \chapter{<The work> Use a self-explaining title}
 
 \section{Task model}
@@ -579,13 +576,16 @@ as the schedulability windows of the A-phase and R-phase overlaps as the analysi
 precedence constraints among jobs. This means that it would be possible for and R-phase to be
 scheduled before the A-phase belonging to the same job.
 
-
-It is intrinsic to the model that A-phases must always precede the R-phase belonging to the same
-task. It also becomes more complicated than a simple precedence constraint when the interval between
-the  as the analysis must leave sufficient time between the finish time of the A-phase and the start
-time of the R-phase for the E-phase to finish execution. This can be circumvented by constraining
-the model. The interval from release to deadline of a job can be divided into three distinct
-intervals that can be though of as sub-windows of the schedulability window of a task. 
+It is a property of the model that A-phases must always precede the R-phase belonging to the same
+task. It also becomes more complicated than a simple precedence constraint as the analysis must
+leave sufficient time between the finish time of the A-phase and the start time of the R-phase for
+the E-phase to finish execution. This can be circumvented by constraining the model. The interval
+from release to deadline of a job can be divided into three distinct intervals that can be thought of
+as sub-windows of the schedulability window of a task. These windows are referred to as the
+acquisition-window, the execution-phase and the restitution-window. The execution-phase is still
+referred to the same as it will have a static placement within the scheduling window as opposite to
+the other two phases which will be schedulable anywhere within their window. This idea is
+illustrated in figure \ref{fig:aer_window_model}.
 
 
 \begin{figure}
@@ -599,6 +599,29 @@ intervals that can be though of as sub-windows of the schedulability window of a
     \label{fig:aer_window_model}
 
 \end{figure}
+
+
+The task is divided into two separate jobs, one job, denoted $J^{A}$, represents the
+acquisition-phase and the other job, denoted $J^{R}$, representing the restitution-phase both being
+separated by the \acrshort{wcet} of the task. Each individual job can the be scheduled representing
+the memory access and the restitution-phase does not have to worry if the acquisition-phase and the
+execution-phase have yet to finish execution as a property of the model is that the
+restitution-phase will never be released before the execution-phase is guaranteed to have finished
+even in the worst-case. One interesting thing of the model is to chose the \textbf{window-ratio}
+between the acquisition-window and the restitution-window as they necessarily don't have to be of
+the same size. This will be explored further during benchmarking which is explained in chapter
+\ref{sec:benchmarking}.
+
+
+It quickly becomes obvious however that the model has some disadvantages. The most obvious one being
+that the core which the task is assigned to might idle for a long time when the acquisition and
+execution phases finish executing, especially in the best case, as the restitution phase is yet to
+be released. Another problem is that the number of tasks with the same period can never be larger
+than the amount of physical cores as the task set would never be schedulable then. Imagine all but
+one task of the same periods and same window-ratio being assigned cores at the same time such that
+all cores are busy. The occupied cores would then be busy until the restitution-phases are finished
+executing, at which the acquisition-phases are all guaranteed to have had their deadlines passed,
+thus the unassigned task will miss its deadline.
 
 
 \section{Idle-time Insertion Policy}
@@ -623,14 +646,14 @@ described by algorithm \ref{algo:iip_eligibility}, inspired by \parencite{nasri_
 
 \begin{algorithm}
     \caption{IIP eligibility}
-    \label{algo:iip_eli2gibility}
+    \label{algo:iip_eligibility}
     \begin{algorithmic}[1]
         \State $J_i\gets Highest\ priority\ released\ job$
         \If {$aer\_iip(J_i, t, \mathcal{J}^S, c) = true$}
         \Comment{Algorithm \ref{algo:aer_iip}}
-            \State $schedule\ J_i$
+            \State $schedule(J_i)$
         \Else
-            \State $Idle\ processor$
+            \State $idle\_processor()$
         \EndIf
     \end{algorithmic}
 \end{algorithm}
@@ -713,7 +736,14 @@ used, but because of the novelty of the task model it is also interesting to exp
 if new scheduling algorithms could better exploit the nature of the task model and compare their
 results to existing algorithms.
 
-There are several interesting ways to prioritise the jobs. 
+There are several interesting ways to prioritise the jobs. Existing scheduling algorithms
+\acrshort{edf} and \acrshort{rms} can be used. Note however that using \acrshort{rms} for a job
+set using periods defined by the \acrshort{autosar} standard has its limitations. For a large task
+set a lot of tasks will have the same period, thus their jobs will have the same priority, so is of
+interest to further prioritise the jobs which shares the same period according to some metric. One idea
+is to prioritize jobs within their period group according to their utilization. Prioritizing a low
+or high utilization might prove to improve the schedulability of the system.
+
 
 % RMS isn't a good choice as there are many tasks with the same period, and they will just be
 % scheduled according to task-id on the task-level
@@ -726,13 +756,12 @@ There are several interesting ways to prioritise the jobs.
 
     \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
 
-    \label{fig:scheduling_prioriteis}
+    \label{fig:scheduling_priorities}
 
 \end{figure}
 
-\section{Benchmarking}\label{sec:benchmarking}
 
-%TODO: Create picture showing the toolchain.
+\section{Benchmarking}\label{sec:benchmarking}
 
 To benchmark the \acrshort{iip} job sets have to be generated that conform to
 the \acrshort{aer} model as well as conform to the input restrictions of the
@@ -761,7 +790,7 @@ commas. The columns expected by the analysis tools are as follows.
 
     \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
 
-    \label{fig:scheduling_prioriteis}
+    \label{fig:benchmark_toolchain}
 
 \end{figure}
 
@@ -855,7 +884,7 @@ After pairing a utilization with a period to create the tasks execution time the
 how to decide the \acrshort{wcet} and \acrshort{bcet}. Even though the free benchmarks from Bosch
 offers a way to generate these from the average execution time and it is accepted by the
 \acrshort{np}-test it does not provide any additional benefit to the benchmark. This becomes more
-clear in chapter \ref{sec:task_transformation} but the short reason is that only the \acrshort{wcet}
+clear in chapter \ref{sub:task_transformation} but the short reason is that only the \acrshort{wcet}
 is used when creating the job set and setting it to something different than what was generated by
 the uunifast algorithm will change the total utilization of the task set, which is undesirable.
 
@@ -904,7 +933,7 @@ tasks in its output. The necessary information is as follows.
     \item \textbf{Computation min} - The \acrshort{bcet} of the execution-phase
     \item \textbf{Computation max} - The \acrshort{wcet} of the execution-phase
     \item \textbf{Acquisition max} - The \acrshort{wcet} of the acquisition-phase
-    \item \textbf{Restitution mac} - The \acrshort{wcet} of the restitution-phase
+    \item \textbf{Restitution max} - The \acrshort{wcet} of the restitution-phase
     \item \textbf{Deadline} - The relative deadline
     \item \textbf{Priority} - The priority relative to other tasks in the set
     \item \textbf{Period} - The period 
@@ -920,7 +949,7 @@ is that the execution-phase holds no memory-accesses to shared memory and as suc
 directly be taken into account of the scheduler. The way the execution-phase will be used is to
 represent the constraint that the interval between the deadline of the acquisition-phase and the
 earliest release time of the restitution phase must be that of at least the \acrshort{wcet} of the
-execution-phase.
+execution-phase. The jobs are created according to algorithm \ref{algo:task_transformation}.
 
 
 \begin{algorithm}
@@ -930,12 +959,12 @@ execution-phase.
 
         
         \renewcommand{\algorithmicrequire}{\textbf{Input:}}
-        \Require $W \in [0, 1]$: ratio between A and R windows
+        \Require $W \in [0, 1]$: ratio between A and R windows, $\Gamma$: \acrshort{aer} task set
         
 
         \State $hyperperiod \gets 0$
         \ForAll{$\tau \in \Gamma$}
-            \Comment Find the hyperperiod in case its not 200ms
+            \Comment Find the hyperperiod
             \State $hyperperiod \gets lcm(hyperperiod, \tau_T)$
         \EndFor
 
@@ -964,8 +993,6 @@ execution-phase.
                 \State $J^{R}_{id} \gets id$
                 \State $id \gets id + 1$
                 \State $J^{R}_{task\_id} \gets \tau_{id}$
-                % Even though we don't consider jitter in our experiments it can still be considered
-                % in the algorithm
                 \State $J^{R}_{r^{min}} \gets J^{A}_d + \tau_{C^{max}}$
                 \State $J^{R}_{r^{max}} \gets J^{A}_d + \tau_{C^{max}}$
                 \State $J^{R}_{C^{min}} \gets \tau_{restitution}$
@@ -984,8 +1011,19 @@ execution-phase.
 
 
 \subsection{Running benchmarks}
+As part of benchmarking a set of experiments will be ran to test what effect different input
+variables will have on the schedulability. Each variable that will be put into consideration is
+shortly described in the rest of this section.
 %TODO: Explain why the input is chosen the way it will be, 10% a and e cycles, the task amount, the
 %core amount etc.
+
+\subsubsection{Core amount}
+
+\subsubsection{Task amount}
+
+\subsubsection{Window ratio}
+
+\subsubsection{Scheduling algorithms}
 
 \chapter{<Result> Use a self-explaining title}
 
@@ -994,6 +1032,8 @@ execution-phase.
 \section{Task amount}
 
 \section{Core amount}
+
+\section{Scheduling algorithms}
 
 \chapter{<Conclusions> Use a self-explaining title}
 
