@@ -74,6 +74,13 @@
 \newacronym{autosar}{AUTOSAR}{Automotive Open System Architecture}
 \newacronym{ip}{IP}{Intellectual Property}
 \newacronym{np}{NP}{Non-Preemptive}
+\newacronym{dag}{DAG}{Directed Acyclic Graph}
+\newacronym{hulp}{HULP}{High-Utilization-Low-Period}
+\newacronym{huhp}{HUHP}{High-Utilization-High-Period}
+\newacronym{lulp}{LULP}{Low-Utilization-Low-Period}
+\newacronym{luhp}{LUHP}{Low-Utilization-High-Period}
+\newacronym{lu}{LU}{Low-Utilization}
+\newacronym{hu}{HU}{High-Utilization}
 
 
 % Frontmatter includes the title page, abstracts and table-of-contents
@@ -107,9 +114,10 @@
 
 
 \chapter{Introduction} 
+
 Embedded systems in the automotive sector are required to go through a lot of analysis and testing
 before being deemed safe for use in traffic. With the rise of autonomous vehicles these systems are
-becoming more complex as an effect of more computing needed being done.  This has also put
+becoming more complex as an effect of more computing needed being done. This has also put
 requirements on the hardware to become faster and faster, thus the industry is turning to the use of
 multi-core and many-core platforms. These type of platforms present more unpredictability than
 single-core platforms which requires new methods of analysis and deterministic execution of these
@@ -145,9 +153,12 @@ methods.
 
 \subsection{Benefits, Ethics and Sustainability}
 
+
 \section{Methodology / Methods}
 
+
 \section{Delimitations}
+
 
 \section{Outline}
 
@@ -184,7 +195,10 @@ deadline} denoted as $D_i$. For an \acrshort{os} to decide in what order the tas
 when more than one is available at the same time they are each assigned a \textbf{priority}, denoted
 by $P_i$, by a scheduler which is further discussed in section \ref{sec:scheduling}. A task can thus
 be introduced by defining its characteristics as $\tau_i = (C_i, T_i, D_i)$. It is then also possible to
-define a task set as $ \Gamma = \{\tau_1, \tau_2, \tau_3, ..., \tau_n\} $.
+define a task set as $ \Gamma = \{\tau_1, \tau_2, \tau_3, ..., \tau_n\} $. In the case where the
+execution time of the task is defined as a member in the interval from the \acrshort{wcet} to the
+\acrshort{bcet} as such $C_i \in [C_i^{min}, C_i^{max}]$ the task can instead be defined as $\tau_i
+= ([C_i^{min}, C_i^{max}], T_i, D_i)$.
 
 Following the above definitions state can be can ascribed to tasks depending on their status in the
 system at a specific time instance. A task is in the \textit{ready} state when it still needs time
@@ -226,6 +240,7 @@ this thesis.
 
 % TODO: Introduce the notion of offline and online schedulers, start time of tasks (when they start
 % execution)
+% TODO: Mention Job-Level priority (JLP) and Task-Level Priority (TLP)
 \section{Scheduling} \label{sec:scheduling}
 
 Although computers give away the illusion of being able to deal with many things simultaneously this
@@ -400,6 +415,30 @@ deadline later in the schedule in multi-core systems. This also means that exami
 instant of a task is no longer sufficient in determining if a task set is schedulable or not.
 % TODO Example of how earlier release of a task on multicore systems can make the schedule miss a
 % deadline while a later release of the same task may have been able to complete the deadline.
+
+
+\section{Non-Preemptive schedulability test}
+
+The work which this thesis builds upon is presented in \parencite{nasri_exact_2017}. An open-source
+implementation written in c++ by one of the authors is available on
+Github\parencite{brandenburg_implementation_2018} and will further be referred to as the
+\acrfull{np}-test. It presents an exact non-preemptive schedulability test for single-core
+processors. The basic idea is to build a schedule graph that fully represents all possible schedules
+for a given job-input. This isn't a new idea but it brings a novel merge phase that merges all nodes
+of the graph that will lead to the same input in the future making it scale better. It also takes
+into account uncertainties in the job set to better reflect reality by taking both release-time
+jitter and the \acrshort{bcet} and \acrshort{wcet} into consideration. The test is both sufficient, 
+necessary and sustainable. Where sustainable is defined as "A schedulability test is defined to
+be sustainable if any task system deemed schedulable by the test remains so if it behaves 'better' than
+mandated by its system specifications"\parencite{baruah_sustainable_2006}. Thus also making it exact.
+
+The job-set containing 9 unique jobs derived from the tasks $\tau_1=([3,13], 60, 60)$, $\tau_2=([7,
+8], 30, 30)$ and $\tau_3=([1,2], 10, 10)$ is presented in \parencite{nasrt_exact_2017}. These can be
+scheduled according to figure \ref{fig:np-test_schedule} where they all meet their deadlines.
+However, if $J_7$ finishes one time unit earlier $J_2$ will miss its deadline.
+
+The scheduling graph is a \acrshort{dag} where each edge represents a scheduling decision and each
+vertex represents a time-interval. 
 
 
 \section{The AER Execution Model}
@@ -624,7 +663,7 @@ executing, at which the acquisition-phases are all guaranteed to have had their 
 thus the unassigned task will miss its deadline.
 
 
-\section{Idle-time Insertion Policy}
+\section{Idle-time Insertion Policy} \label{sec:iip}
 
 % TODO: Explain IIP in theoretical framework instead?
 % TODO: Mention IIP-eligibility
@@ -697,7 +736,7 @@ described by algorithm \ref{algo:iip_eligibility}, inspired by \parencite{nasri_
 
 
 The scheduling analysis tool was extended by implementing a custom \acrshort{iip}. Scheduling tasks
-using a memory-centric approach can be described as a work-conserving scheduler as cores might be
+using a memory-centric approach can be described as a non-work-conserving scheduler as cores might be
 left idle, even when there is work to be done, if the memory is busy during the release of a task. 
 
 
@@ -726,7 +765,7 @@ called upon again.
 % Write proof of correctness
 
 
-\section{Scheduling algorithms}
+\section{Scheduling algorithms} \label{sec:scheduling_algorithms}
 
 As the described analysis takes a task set to see if they make a feasible schedule by
 scheduling the jobs according to predefined priorities they have to be assigned in some
@@ -739,14 +778,22 @@ results to existing algorithms.
 There are several interesting ways to prioritise the jobs. Existing scheduling algorithms
 \acrshort{edf} and \acrshort{rms} can be used. Note however that using \acrshort{rms} for a job
 set using periods defined by the \acrshort{autosar} standard has its limitations. For a large task
-set a lot of tasks will have the same period, thus their jobs will have the same priority, so is of
-interest to further prioritise the jobs which shares the same period according to some metric. One idea
-is to prioritize jobs within their period group according to their utilization. Prioritizing a low
-or high utilization might prove to improve the schedulability of the system.
+set a lot of tasks will have the same period, thus their jobs will have the same priority, so it is
+of interest to further prioritise the jobs which shares the same period according to some
+tie-breaker. The implementation of \acrshort{np}-test tie-brakes priorities based on task-id and
+job-id where lower id's are given higher priorities. A more  idea is to prioritize jobs within their
+period group according to their utilization as it might prove to increase the schedulability. To
+test this seven different scheduling algorithms are proposed and will be used during benchmarking.
 
-
-% RMS isn't a good choice as there are many tasks with the same period, and they will just be
-% scheduled according to task-id on the task-level
+\begin{itemize}
+    \item \textbf{\acrshort{edf}} - Eearliest Deadline First
+    \item \textbf{\acrshort{lulp}} - Low utilization and low period have the highest priority
+    \item \textbf{\acrshort{luhp}} - Low utilization and high period have the highest priority
+    \item \textbf{\acrshort{hulp}} - High utilization and low period have the highest priority
+    \item \textbf{\acrshort{huhp}} - High utilization and high period have the highest priority
+    \item \textbf{\acrshort{lu}} - Low utilization have the highest priority (period is ignored)
+    \item \textbf{\acrshort{hu}} - High utilization have the highest priority (period is ignored)
+\end{itemize}
 
 \begin{figure}
 
@@ -759,6 +806,20 @@ or high utilization might prove to improve the schedulability of the system.
     \label{fig:scheduling_priorities}
 
 \end{figure}
+
+The general concept of prioritization in this manner is depicted in figure
+\ref{fig:scheduling_priorities} which describes how jobs would be prioritized according to
+\acrshort{hulp}. The priorities are ordered along the x-axis where higher priorities are higher up
+and a job is depicted by a box.
+It is important to remember that all of the restitution-jobs must have a higher priority than all of
+the acquisition-jobs as described in section \ref{sec:iip}. As can be seen in the figure the highest
+priority is given to the restitution-jobs with the lowest periods (10ms) colored orange. Within the
+period the jobs are then prioritized according to their utilization which is depicted by the number
+on the job. 
+
+
+% RMS isn't a good choice as there are many tasks with the same period, and they will just be
+% scheduled according to task-id on the task-level
 
 
 \section{Benchmarking}\label{sec:benchmarking}
@@ -847,7 +908,7 @@ The data has been extracted from a real-world application to a point where it do
 away any \acrshort{ip}-critical information about the actual application. The actual distribution
 for the periods are given in table \ref{tab:period_distribution}. Since we do not consider
 angle-synchronous tasks in this thesis the extra 15\% is simply ignored and the remaining
-percentages are scaled such that their sum equals 100\%.
+percentages are scaled such that their sum equals 100\%. 
 
 \begin{table}
     \centering
@@ -940,16 +1001,17 @@ tasks in its output. The necessary information is as follows.
 \end{itemize}
 
 So all of this information about a task set is then to be transformed into a job set represented by
-the list given in chapter \ref{sec:benchmarking} to be accepted as input to the \acrshort{np}-test.
-The basic idea in transforming the \acrshort{aer}-modeled task set into a regular job set is to make
-the acquisition- and restitution-phase of each period into individual jobs. Although the
-execution-phase is not turned into its own job it still holds vital information. The reason is that
-the jobs are to be scheduled around memory-accesses, and the whole point of the \acrshort{aer}-model
-is that the execution-phase holds no memory-accesses to shared memory and as such doesn't have to
-directly be taken into account of the scheduler. The way the execution-phase will be used is to
-represent the constraint that the interval between the deadline of the acquisition-phase and the
-earliest release time of the restitution phase must be that of at least the \acrshort{wcet} of the
-execution-phase. The jobs are created according to algorithm \ref{algo:task_transformation}.
+the characteristics given in chapter \ref{sec:benchmarking} to be accepted as input to the
+\acrshort{np}-test. The basic idea in transforming the \acrshort{aer}-modeled task set into a
+regular job set is to make the acquisition- and restitution-phases of each period into individual
+jobs. Although the execution-phase is not turned into its own job it still holds vital information.
+The reason is that the jobs are to be scheduled around memory-accesses, and the whole point of the
+\acrshort{aer}-model is that the execution-phase holds no memory-accesses to shared memory and as
+such doesn't have to directly be taken into account of the scheduler. The way the execution-phase
+will be used is to represent the constraint that the interval between the deadline of the
+acquisition-phase and the earliest release time of the restitution phase must be that of at least
+the \acrshort{wcet} of the execution-phase. This ensure that the acquisition job is not scheduled
+until the execution-phase is guaranteed to have finished. 
 
 
 \begin{algorithm}
@@ -999,7 +1061,7 @@ execution-phase. The jobs are created according to algorithm \ref{algo:task_tran
                 \State $J^{R}_{C^{max}} \gets \tau_{restitution}$
                 \State $J^{R}_d \gets t + \tau_D $
 
-                \State $\mathcal{J} \gets \mathcal{J} \cup J^A \cup J^R$
+                \State $\mathcal{J} \gets \mathcal{J} \cup \{J^A\} \cup \{J^R\}$
                 \Comment Add created jobs to the job set
             \EndFor
         \EndFor
@@ -1010,10 +1072,43 @@ execution-phase. The jobs are created according to algorithm \ref{algo:task_tran
 \end{algorithm}
 
 
+The jobs are created according to algorithm \ref{algo:task_transformation}. Since a schedule is
+bound to repeat itself after one hyperperiod it is sufficient to test the schedulability during this
+interval. Thus the algorithm first finds the hyperperiod of the task set by finding the
+least-common-multiple of all the periods. It is then sufficient to create the jobs that are released
+within the hyperperiod, placing an upper-bound on their release times. This ensures that the
+task-transformation will terminate. The jobs are then created from one task at a time until jobs for
+all tasks have been created. The tasks \textbf{window size} is defined as the total time of the
+acquisition-window plus the restitution-window. It is used in conjunction with the window ratio to
+calculate the actual sizes of the windows. Since the \acrshort{np}-test requires absolute time
+(as opposed to relative time which is relative to the start of the period) the start time for each
+period is calculated and used to to transform relative time values to absolute ones. This continues
+until the hyperperiod is reached at which no more jobs is created for that task. Since all The jobs
+are created in pairs of an acquisition-job and a restitution-job where the acquisition-job is
+created first and given an odd job-id as required and further explained in section \ref{REF}. Its
+release time is then transformed from the tasks relative release time to an absolute release time.
+Its worst-time execution time is then assigned according to the execution time of the acquisition
+phase in the task. The deadline is then calculated from the window size and the window ratio which
+is given as input to the algorithm and transformed to an absolute time. The restitution phase is
+then created in a similar manner, but given an even job-id. Its release times are calculated as the
+deadline of the acquisition-job plus the \acrshort{wcet} of the execution-phase. The restitution-job
+gets its execution time from the execution time of the restitution-phase in the task. The deadline
+is then assigned according to the tasks deadline, but transformed into absolute time. When all the
+jobs for every task has been created they are all assigned priorities according to the one of the
+scheduling algorithms describes in section \ref{sec:scheduling_algorithms}. This is because the
+priorities describe a relation between the jobs, thus all the jobs must sometimes be created before
+the priorities can be assigned. 
+
+
 \subsection{Running benchmarks}
+
 As part of benchmarking a set of experiments will be ran to test what effect different input
 variables will have on the schedulability. Each variable that will be put into consideration is
 shortly described in the rest of this section.
+
+The experiments will be running on a "HP Z210 Workstation" with a quad-core Intel Core i7-2600 CPU
+\@3.40GHz and 16 GiB of memory.
+
 %TODO: Explain why the input is chosen the way it will be, 10% a and e cycles, the task amount, the
 %core amount etc.
 
