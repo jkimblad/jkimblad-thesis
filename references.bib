@@ -332,7 +332,41 @@
 	author = {Baruah, S. and Burns, A.},
 	month = dec,
 	year = {2006},
-	keywords = {Computer science, Jitter, periodic task scheduling, Processor scheduling, Real time systems, Robustness, Runtime, schedulability test, scheduling, sporadic task scheduling, Stability, sustainable scheduling analysis, System testing, Timing, uniprocessor scheduling, Yarn},
+	keywords = {scheduling, Timing, Processor scheduling, Real time systems, Runtime, Jitter, Computer science, System testing, periodic task scheduling, Robustness, schedulability test, sporadic task scheduling, Stability, sustainable scheduling analysis, uniprocessor scheduling, Yarn},
 	pages = {159--168},
 	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/QCTPJY34/4032345.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/J4HKET22/Baruah and Burns - 2006 - Sustainable Scheduling Analysis.pdf:application/pdf}
+}
+
+@article{nasri_precautious-rm:_2014,
+	title = {Precautious-{RM}: a predictable non-preemptive scheduling algorithm for harmonic tasks},
+	volume = {50},
+	issn = {1573-1383},
+	shorttitle = {Precautious-{RM}},
+	url = {https://doi.org/10.1007/s11241-014-9203-y},
+	doi = {10.1007/s11241-014-9203-y},
+	abstract = {A major requirement of many real-time embedded systems is to have time-predictable interaction with the environment. More specifically, they need fixed or small sampling and I/O delays, and they cannot cope with large delay jitters. Non-preemptive execution is a known method to reduce the latter delay; however, the corresponding scheduling problem is NP-Hard for periodic tasks. In this paper, we present Precautious-RM as a predictable linear-time online non-preemptive scheduling algorithm for harmonic tasks which can also deal with the former delay, namely sampling delay. We derive conditions of optimality of Precautious-RM and show that satisfying those conditions, tight bounds for best- and worst-case response times of the tasks can be calculated in polynomial-time. More importantly, response time jitter of the tasks is analyzed and it is proven that under specific conditions, each task has either one or two values for response time, which leads to improving the predictability of the system interaction with the environment. Simulation results demonstrate efficiency of Precautious-RM in increasing accuracy of control applications.},
+	language = {en},
+	number = {4},
+	urldate = {2019-05-17},
+	journal = {Real-Time Systems},
+	author = {Nasri, Mitra and Kargahi, Mehdi},
+	month = jul,
+	year = {2014},
+	keywords = {Accuracy enhancement, Control applications, Delay and jitter, Harmonic tasks, Non-preemptive scheduling, Real-time systems},
+	pages = {548--584},
+	file = {Springer Full Text PDF:/home/jacob/Zotero/storage/I7YKIFHQ/Nasri and Kargahi - 2014 - Precautious-RM a predictable non-preemptive sched.pdf:application/pdf}
+}
+
+@inproceedings{nasri_non-work-conserving_2016,
+	title = {Non-work-conserving {Non}-preemptive {Scheduling}: {Motivations}, {Challenges}, and {Potential} {Solutions}},
+	shorttitle = {Non-work-conserving {Non}-preemptive {Scheduling}},
+	doi = {10.1109/ECRTS.2016.11},
+	abstract = {In many real-time systems, preemption is either impossible or prohibitively expensive. The problem of scheduling non-preemptive periodic tasks with known release offsets is known to be NP-Hard. In this paper, we investigate the existing non-preemptive scheduling algorithms in both categories of work-conserving and non-work-conserving algorithms, where in the former, the processing resource is not allowed to be idle as long as there is an unfinished job in the system. While describing the advantages and weaknesses of the existing scheduling solutions we show that using online non-work-conserving algorithms it is possible to schedule more task sets. In our work, we discuss the challenges to design the idle-time insertion policy (IIP) which can be combined with the existing scheduling policies such as the earliest deadline first (EDF), rate monotonic (RM), etc. Further we present a tighter necessary condition for schedulability of non-preemptive tasks. We also provide an IIP for EDF based on looking into a number of jobs in future. Through the experiments we show that the our IIP for EDF significantly increases the schedulability of non-preemptive tasks, particularly in periodic task sets. While our schedulability ratio is more than 80\%, the state of the art work-conserving algorithms are about 15\%.},
+	booktitle = {2016 28th {Euromicro} {Conference} on {Real}-{Time} {Systems} ({ECRTS})},
+	author = {Nasri, M. and Fohler, G.},
+	month = jul,
+	year = {2016},
+	keywords = {computational complexity, Concrete, hard real-time systems, Harmonic analysis, idle-time insertion policy, IIP, non-preemptive scheduling, non-work-conserving scheduling, nonpreemptive periodic task scheduling, NP-hard problem, operating system, operating systems (computers), Optimal scheduling, optimisation, real-time system, real-time systems, Real-time systems, Schedules, scheduling, Scheduling, Scheduling algorithms},
+	pages = {165--175},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/4L5RAMDM/7557878.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/4IIPTPYD/Nasri and Fohler - 2016 - Non-work-conserving Non-preemptive Scheduling Mot.pdf:application/pdf}
 }

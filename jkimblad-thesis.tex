@@ -81,6 +81,9 @@
 \newacronym{luhp}{LUHP}{Low-Utilization-High-Period}
 \newacronym{lu}{LU}{Low-Utilization}
 \newacronym{hu}{HU}{High-Utilization}
+\newacronym{rm}{RM}{Rate-Monotonic}
+\newacronym{p-rm}{P-RM}{Precatious-\acrshort{rm}}
+\newacronym{cw-edf}{CW-EDF}{Critical-Window-\acrshort{edf}}
 
 
 % Frontmatter includes the title page, abstracts and table-of-contents
@@ -170,6 +173,9 @@ methods.
 
 \chapter{<Theoretic Background> Use a self-explaining title}
 
+This chapter aims to give sufficient background such that the reader is able to understand the work
+that the thesis covers. Section \ref{sec:the_task_model} begins by describing the task model used
+within embedded systems.
 
 
 \section{The Task Model} \label{sec:the_task_model}
@@ -432,14 +438,114 @@ necessary and sustainable. Where sustainable is defined as "A schedulability tes
 be sustainable if any task system deemed schedulable by the test remains so if it behaves 'better' than
 mandated by its system specifications"\parencite{baruah_sustainable_2006}. Thus also making it exact.
 
+The analysis tools is also able to deal with non-work-conserving schedulers by accepting an
+\acrshort{iip} function. An \acrfull{iip} is used during scheduling to see if the highest priority
+task is to be scheduled at the present time when there is a free core to schedule the task onto or
+if the core should be left idle. The idea is that a non-work-conserving algorithm can increase
+schedulability by trying to make smarter scheduling choices. Two existing \acrshort{iip}'s are
+already implemented in the \acrshort{np}-test, the first one is \acrfull{p-rm}
+\parencite{nasri_precautious-rm:_2014} and the second \acrfull{cw-edf}
+\parencite{nasri_non-work-conserving_2016}.
+
+
 The job-set containing 9 unique jobs derived from the tasks $\tau_1=([3,13], 60, 60)$, $\tau_2=([7,
-8], 30, 30)$ and $\tau_3=([1,2], 10, 10)$ is presented in \parencite{nasrt_exact_2017}. These can be
-scheduled according to figure \ref{fig:np-test_schedule} where they all meet their deadlines.
-However, if $J_7$ finishes one time unit earlier $J_2$ will miss its deadline.
+8], 30, 30)$ and $\tau_3=([1,2], 10, 10)$, no release jitter is assumed, is presented in
+\parencite{nasri_exact_2017}. These are scheduled according to figure \ref{fig:np-test_schedule}
+when every job executes for its \acrshort{wcet} and the result is that they all meet their
+deadlines. However, if $J_7$ would instead execute for one time unit less it would result in the
+schedule depicted in figure \ref{fig:np-test_schedule_fail} where $J_2$ misses its deadline. This
+example perfectly shows the problem with analysing \acrshort{np} scheduling as it is not sufficient
+to just check if all deadlines are met when all jobs execute for their \acrshort{wcet}. The task-set
+is shown to become feasible if the priorities are reordered as $ p_1 < p_2 < p_3 < p_4 < p_5 < p_5 <
+p_9 < p_7 < p_8$.
+
+
+
+\begin{figure}
+
+    \centering
+
+    \includegraphics[width=1.0\linewidth]{images/np-test_schedule.pdf}
+
+    \caption{Non-preemptive task-set scheduled under \acrshort{edf} or \acrshort{rms}}
+
+    \label{fig:np-test_schedule}
+
+\end{figure}
+
+
+\begin{figure}
+
+    \centering
+
+    \includegraphics[width=1.0\linewidth]{images/np-test_schedule_fail.pdf}
+
+    \caption{Non-preemptive task-set where $J_7$ finishes 1 time unit earlier, scheduled under
+    \acrshort{edf} or \acrshort{rms}}
+
+    \label{fig:np-test_schedule_fail}
+
+\end{figure}
+
 
 The scheduling graph is a \acrshort{dag} where each edge represents a scheduling decision and each
-vertex represents a time-interval. 
+vertex represents a time-interval. The graph is built from the root node by making scheduling
+decisions. Looking back at the previous job-set, part of its scheduling graph would be represented
+by the \acrshort{dag} depicted in figure \ref{fig:scheduling_graph} when scheduled under
+\acrshort{edf}. From the root vertex $v_1$ the highest-priority job of all available jobs is
+scheduled, job $J_1$, and an edge is added to represent it. The other end of the edge is connected
+to a new vertex $v_1$ that represents the interval within the scheduled jobs may finish execution
+within. Since the \acrshort{wcet} is 2 and \acrshort{bcet} is 1 for $J_1$ the interval for the new
+vertex is $[1, 2]$.  For all times within this interval the highest priority-job that has been
+released is job $J_7$ and is thus scheduled.  Its \acrshort{wcet} is 8 and its \acrshort{bcet} is 7.
+These are added to the interval of the possible finish times from the previous vertex and creates
+the new interval $[8,10]$. Now as demonstrated in figures \ref{fig:np-test_schedule} and
+\ref{fig:np-test_schedule_fail} there are two scheduling possibilities that are dependent on when
+the previous jobs have finished execution. If $J_7$ finishes before time 10 then $J_9$ will be the
+highest priority released job, and if $J_7$ finishes at time 10 then $J_2$ is the highest priority
+released job. Since two different scheduling decisions can be made within the interval represented
+by vertex $v_3$ two new edges are branched out from that vertex, each representing one of the two
+scheduling decisions. If $J_2$ is scheduled it must start at time 10, to this is added its
+\acrshort{wcet} 2 and \acrshort{bcet} 1 to create the interval represented by the vertex $v_5$. If
+$J_9$ is scheduled it can start withing the interval $[8, 9]$, and thus its \acrshort{wcet} 13 and
+\acrshort{bcet} 3 is added to that interval to create vertex $v_4$. At this point each of the two
+branches continue scheduling jobs and branch out whenever several options are available until either
+all jobs have been scheduled, or a job fails to meet its deadline as depicted in
+\ref{fig:scheduling_graph}. This will for large job sets create a huge search space that is very
+computation and memory intensive and does not scale very well. However, the novelty of the approach
+presented in \parencite{nasri_exact_2017} is to introduce a merge-phase. The merge phase tries to
+decrease the search space by merging vertices that lead to similar execution scenarios. The
+criteria for merging two vertices is that (a) the same jobs have been scheduled before the vertices
+and (b) the finish-time interval they both represent overlaps, i.e. $v_i \cap v_j \neq \emptyset$.
+When this is the case the new vertex $v_n$ that is created from the merge represents the union of
+finish times from the two merged vertices $v_i$ and $v_j$ as such $v_n \gets v_i \cup v_j$.
 
+
+\begin{figure}
+
+    \centering
+
+    \includegraphics[width=0.8\linewidth]{images/scheduling_graph.pdf}
+
+    \caption{Non-preemptive task-set scheduled under \acrshort{edf} or \acrshort{rms}}
+
+    \label{fig:scheduling_graph}
+
+\end{figure}
+
+
+\begin{figure}
+
+    \centering
+
+    \includegraphics[width=0.8\linewidth]{images/scheduling_graph_merge.pdf}
+
+    \caption{Non-preemptive task-set where $J_7$ finishes 1 time unit earlier, scheduled under
+    \acrshort{edf} or \acrshort{rms}}
+
+    \label{fig:scheduling_graph_merge}
+
+\end{figure}
 
 \section{The AER Execution Model}
 
@@ -573,11 +679,13 @@ basically done by removing all duplicates of schedules that lead to the same ord
 of the jobs.
 
 The implementation of the analysis works by progressively building a tree graph where each edge
-represents a scheduling decision in the form of a specific job assigned to a specific core, thus if
-two jobs are available simultaneously they will be represented as two different edges in the graph,
-even if they are scheduled at the same time instance. Each node represents a state in time of the
-schedule and contains information about the interval between the earliest possible availability and
-latest possible availability of each core (the time at which a core is ready to accept a new job) in
+represents a scheduling decision in the form of a specific job assigned to a specific core. The root
+node represents the start of scheduling when the first job is available, usually at time zero. 
+If two jobs are available simultaneously they will be represented as two different edges in the graph
+stemming from the same vertex, even if they are scheduled at the same time instance. Each node
+represents a state in time of the schedule and contains information about the interval between the
+earliest possible availability and latest possible availability of each core (the time at which a
+core is ready to accept a new job) in
 system. The root node represents time zero in the schedule at which no job yet has been assigned to
 any core. 
 
@@ -667,21 +775,22 @@ thus the unassigned task will miss its deadline.
 
 % TODO: Explain IIP in theoretical framework instead?
 % TODO: Mention IIP-eligibility
-An \acrfull{iip} is used by idle-time insertion policies during scheduling to see if the highest
-priority task is to be scheduled at the present time when there is a free core to schedule the task
-onto or if the core should be left idle. The idea is that a work-conserving algorithm can increase
-schedulability. Imagining a non-preemptive scheduler and a long-running, low-priority task with a
-deadline far into the future that has just been released and is about to be scheduled onto a core.
-If a higher-priority task with a short deadline is released just after the first tasks has been
-scheduled it might miss its deadline as the core wont be available for a long time. In this instance
-it could prove beneficial for the schedulability of the task set to leave a core idle even when
-there is work to be completed to wait for a higher priority task to be released. For the
-\acrshort{iip} to make a decision it is usually provided with three pieces of information. First the
-job-set of jobs that have previously been scheduled and are finished, second it is provided the job
-that just has been released and is to be scheduled, thirdly it is provided the present time at which
-the released job is to be scheduled. The policy then returns a true or false value representing if
-the provided job is schedulable at that time. The functionality of an \acrshort{iip} can thus be
-described by algorithm \ref{algo:iip_eligibility}, inspired by \parencite{nasri_exact_2017}.
+
+% TODO: Move to background "work-conserving vs. non-work-conserving"
+Imagining a non-preemptive scheduler and a long-running, low-priority task with a deadline far into
+the future that has just been released and is about to be scheduled onto a core. If a
+higher-priority task with a short deadline is released just after the first tasks has been scheduled
+it might miss its deadline as the core wont be available for a long time. In this instance it could
+prove beneficial for the schedulability of the task set to leave a core idle even when there is work
+to be completed to wait for a higher priority task to be released. 
+
+For the \acrshort{iip} to make a decision it is provided with three pieces of information. First
+the job-set of jobs that have previously been scheduled and are finished, second it is provided the
+job that just has been released and is to be scheduled, thirdly it is provided the present time at
+which the released job is to be scheduled.  The policy then returns a true or false value
+representing if the provided job is schedulable at that time. The functionality of an \acrshort{iip}
+can thus be described by algorithm \ref{algo:iip_eligibility}, inspired by
+\parencite{nasri_exact_2017}.
 
 \begin{algorithm}
     \caption{IIP eligibility}
