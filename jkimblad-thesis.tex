@@ -84,6 +84,7 @@
 \newacronym{rm}{RM}{Rate-Monotonic}
 \newacronym{p-rm}{P-RM}{Precatious-\acrshort{rm}}
 \newacronym{cw-edf}{CW-EDF}{Critical-Window-\acrshort{edf}}
+\newacronym{us}{US}{United States}
 
 
 % Frontmatter includes the title page, abstracts and table-of-contents
@@ -149,19 +150,32 @@ The purpose is to expand existing analysis methods by adding to the source code 
 model of the read-execute-write task model that is available as input for these formal analysis
 methods.
 
-
 \section{Goal}
 
 
 
 \subsection{Benefits, Ethics and Sustainability}
 
+Benefits of this thesis includes trying to make time-critical systems that exist within systems such
+as airplanes and cars more deterministic. More deterministic system is easier to analyze and test
+for faulty behaviour, which leads to less system failures that may be a cause of human harm. As
+increasing safety of these systems leads to less unnecessary harm being caused to humans which is
+beneficial to society it logically follows through deductive reasoning that the thesis is
+beneficial.
+
+As the projects focus is on avionics and automotive sector which is the largest contributor to
+greenhouse grass emission within the \acrshort{us} totaling at 29\% of all emissions during
+2017\parencite{us_epa_inventory_2017} it does raise some ethical concerns as to whether this is
+something the thesis contributes to and if in that case there are more sustainable alternatives.
 
 \section{Methodology / Methods}
 
 
 \section{Delimitations}
 
+Only covers a special case of the \acrshort{aer}-model presented in section
+\ref{sec:work_task_model} where the acquisition- and restitution-phases both have dedicated windows
+as parts of the total scheduling window within which they are allowed to execute.
 
 \section{Outline}
 
@@ -518,7 +532,9 @@ decrease the search space by merging vertices that lead to similar execution sce
 criteria for merging two vertices is that (a) the same jobs have been scheduled before the vertices
 and (b) the finish-time interval they both represent overlaps, i.e. $v_i \cap v_j \neq \emptyset$.
 When this is the case the new vertex $v_n$ that is created from the merge represents the union of
-finish times from the two merged vertices $v_i$ and $v_j$ as such $v_n \gets v_i \cup v_j$.
+finish times from the two merged vertices $v_i$ and $v_j$ as such $v_n \gets v_i \cup v_j$. Both of
+these criteria are fulfilled for vertices $v_4$ and $v_5$ meaning that they can be merged into a
+single vertex. 
 
 
 \begin{figure}
@@ -710,7 +726,7 @@ one of the nodes effectively making it so that the nodes can be \textit{merged}.
 
 \chapter{<The work> Use a self-explaining title}
 
-\section{Task model}
+\section{Task model} \label{sec:work_task_model}
 
 The term \textit{schedulability window} is used to refer to the time interval within which a task is
 able to be scheduled to not miss its deadline. 
@@ -872,6 +888,17 @@ called upon again.
 
 
 % Write proof of correctness
+
+\subsection{Testing}
+
+Testing of software is always important do make sure it exhibits the desired behaviour. As the
+software developed within the thesis was an extension to already existing software the testing
+focuses only on the extension. The existing software has also been tested extensively using the c++
+testing framework called doctest. To test the developed software a much more basic approach was used
+were well defined input was manually fed as input to the program and checking that the output
+corresponded to the expected outputs. Debugging was also used to check that the internal control
+flow was as expected. The input was chosen to represent both the average-case and edge-cases to
+increase coverage and the chance to catch undesired behaviour and bugs in the code.
 
 
 \section{Scheduling algorithms} \label{sec:scheduling_algorithms}
