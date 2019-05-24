@@ -140,7 +140,7 @@ divided up into three distinct parts, read-execute-write.
 \section{Problem}
 
 An analysis method for resource contention in multi-core real-time systems have been proposed in
-paper [1]. This analysis method is however not customised for the read-execute-write execution model
+paper. This analysis method is however not customised for the read-execute-write execution model
 that is adapted both within the avionics domain and automotive domain.
 
 
@@ -152,6 +152,14 @@ methods.
 
 \section{Goal}
 
+The goals of the project
+
+\begin{itemize}
+    \item Perform a state-of-the-art litterature study within the research area.
+    \item Generate task-sets in a fair way.
+    \item Transform the tasks into apropriate input to the analyis tool.
+    \item Extend the analysis tool to handle the \acrshort{aer}-model.
+\end{itemize}
 
 
 \subsection{Benefits, Ethics and Sustainability}
@@ -170,12 +178,27 @@ something the thesis contributes to and if in that case there are more sustainab
 
 \section{Methodology / Methods}
 
+The theoretical research methods and  methodologies have been chosen following the guidelines
+presented in \textcite{hakansson_portal_2013}. The thesis will take a quantative research approach
+to try and refute or verify the presented theories. Experimental research methods will be applied
+under the fundamental philosocphical assumption of positvism where facts and truths about the world
+is assumed to be gathered through our sensory experiences. A deductive research approach is used
+where data is analyzed to see if the theories can be supported or not. To gather the data an
+experimental research strategy will be used where all factors and variabels that can affect the
+experiment are controlled for to create large data sets that can be analyzed using statistical data
+analysis methods. The data must then be assured to be reliable, valid and replicable to ensure that
+the conclusions made from it is correct.
+
 
 \section{Delimitations}
 
 Only covers a special case of the \acrshort{aer}-model presented in section
 \ref{sec:work_task_model} where the acquisition- and restitution-phases both have dedicated windows
-as parts of the total scheduling window within which they are allowed to execute.
+as parts of the total scheduling window within which they are allowed to execute. Due to the novelty
+of the research there is no other scheduling analysis tool that can be used in order to find a
+comparison of how well it performs. However, since the analysis tool is exact we can expect that
+other analysis tools will either perform the same (being also exact) or worse.
+
 
 \section{Outline}
 
@@ -534,7 +557,8 @@ and (b) the finish-time interval they both represent overlaps, i.e. $v_i \cap v_
 When this is the case the new vertex $v_n$ that is created from the merge represents the union of
 finish times from the two merged vertices $v_i$ and $v_j$ as such $v_n \gets v_i \cup v_j$. Both of
 these criteria are fulfilled for vertices $v_4$ and $v_5$ meaning that they can be merged into a
-single vertex. 
+single vertex. The merging is illustrated in figure \ref{fig:scheduling_graph_merge} which also
+shows the edges that no longer needs to be explored using dashed lines.
 
 
 \begin{figure}
@@ -1256,6 +1280,9 @@ The experiments will be running on a "HP Z210 Workstation" with a quad-core Inte
 
 \subsubsection{Scheduling algorithms}
 
+
+
+
 \chapter{<Result> Use a self-explaining title}
 
 \section{Window sizes}
@@ -1265,6 +1292,13 @@ The experiments will be running on a "HP Z210 Workstation" with a quad-core Inte
 \section{Core amount}
 
 \section{Scheduling algorithms}
+
+\section{Reliability}
+
+\section{Validity}
+
+\section{Replicability}
+
 
 \chapter{<Conclusions> Use a self-explaining title}
 
