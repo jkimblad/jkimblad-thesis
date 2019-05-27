@@ -126,10 +126,10 @@
 
 Requirements on analysis and testing of systems in the automotive industry become of a bigger
 concern with the rise of autonomous vehicles and the scepticism of their abilities to make
-life-saving choises. Due to this research has been focusing on developing safer models that are
-easier to test and are more deterministic whithin different areas of the vehicle. One such area is
+life-saving choices. Due to this research has been focusing on developing safer models that are
+easier to test and are more deterministic within different areas of the vehicle. One such area is
 the access to shared memory by different computers on the car. As modern cars can contain over 100
-different procerssors, known as \acrshort{ecu}'s, internal communication between them is a
+different processors, known as \acrshort{ecu}'s, internal communication between them is a
 necessity. Communication is often done using some type of databus technology such as a
 \acrshort{can}-bus. Sometimes a single \acrshort{ecu} can hold more than a single processing unit
 (core) making it multi-core. Communication is not only necessary between \acrshort{ecu}'s but also
@@ -140,7 +140,7 @@ congestive way decreasing how deterministic the system is.
 
 As an attempt to battle the problem of undeterministic memory-access the \acrshort{aer}-model has
 been proposed by \textcite{durrieu_predictable_2014} for use in the avionics industry. This model
-proposes a new way of scheduling programs on processesing cores to completely avoid memory
+proposes a new way of scheduling programs on processing cores to completely avoid memory
 congestion, making the system easier more deterministic and easier to validate through testing. The
 \acrshort{aer}-model already fits how existing programs are executed under the \acrshort{autosar}
 standard for the automotive industry making the model a great candidate for further exploration into
@@ -148,13 +148,13 @@ its applicability.
 
     %define the terms and scope of the topic
 
-The \achrshort{aer}-model divides each executed program up into three distinct parts, the
-\acrfull{a} phase, \acrfull{e} phase and \acrfull{r} phase. During the \acrshort{a} and \acrshort{r}
-phases the program only accesses the memory. Regular programs are instead allowed to to this
-whenever they like, making it more undeterministic. However, knowing that the model makes programs
-more deterministic is not sufficient to increase the safety. The reason that deterministic programs
-is good is because they become much easier to analyse. However changing how programs execute under
-new models often require different methods of analysis.
+The \acrshort{aer}-model divides each executed program up into three distinct parts, the \acrfull{a}
+phase, \acrfull{e} phase and \acrfull{r} phase. During the \acrshort{a} and \acrshort{r} phases the
+program only accesses the memory. Regular programs are instead allowed to to this whenever they
+like, making it more undeterministic. However, knowing that the model makes programs more
+deterministic is not sufficient to increase the safety. The reason that deterministic programs is
+good is because they become much easier to analyse. However changing how programs execute under new
+models often require different methods of analysis.
 
     %outline the current situation
     %evaluate the current situation (advantages/ disadvantages) and identify the gap
