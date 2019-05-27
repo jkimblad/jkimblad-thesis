@@ -85,6 +85,8 @@
 \newacronym{p-rm}{P-RM}{Precatious-\acrshort{rm}}
 \newacronym{cw-edf}{CW-EDF}{Critical-Window-\acrshort{edf}}
 \newacronym{us}{US}{United States}
+\newacronym{can}{CAN}{Controller Area Network}
+\newacronym{ecu}{ECU}{Electronic Control Unit}
 
 
 % Frontmatter includes the title page, abstracts and table-of-contents
@@ -117,24 +119,79 @@
 \mainmatter
 
 
-\chapter{Introduction} 
+\chapter{Introduction and background} 
 
-Embedded systems in the automotive sector are required to go through a lot of analysis and testing
-before being deemed safe for use in traffic. With the rise of autonomous vehicles these systems are
-becoming more complex as an effect of more computing needed being done. This has also put
-requirements on the hardware to become faster and faster, thus the industry is turning to the use of
-multi-core and many-core platforms. These type of platforms present more unpredictability than
-single-core platforms which requires new methods of analysis and deterministic execution of these
-systems. 
+
+    %state the general topic and give some background
+
+Requirements on analysis and testing of systems in the automotive industry become of a bigger
+concern with the rise of autonomous vehicles and the scepticism of their abilities to make
+life-saving choises. Due to this research has been focusing on developing safer models that are
+easier to test and are more deterministic whithin different areas of the vehicle. One such area is
+the access to shared memory by different computers on the car. As modern cars can contain over 100
+different procerssors, known as \acrshort{ecu}'s, internal communication between them is a
+necessity. Communication is often done using some type of databus technology such as a
+\acrshort{can}-bus. Sometimes a single \acrshort{ecu} can hold more than a single processing unit
+(core) making it multi-core. Communication is not only necessary between \acrshort{ecu}'s but also
+internally between cores on a single \acrshort{ecu}. This is done through shared memory in a
+congestive way decreasing how deterministic the system is.
+
+    %provide a review of the literature related to the topic
+
+As an attempt to battle the problem of undeterministic memory-access the \acrshort{aer}-model has
+been proposed by \textcite{durrieu_predictable_2014} for use in the avionics industry. This model
+proposes a new way of scheduling programs on processesing cores to completely avoid memory
+congestion, making the system easier more deterministic and easier to validate through testing. The
+\acrshort{aer}-model already fits how existing programs are executed under the \acrshort{autosar}
+standard for the automotive industry making the model a great candidate for further exploration into
+its applicability.
+
+    %define the terms and scope of the topic
+
+The \achrshort{aer}-model divides each executed program up into three distinct parts, the
+\acrfull{a} phase, \acrfull{e} phase and \acrfull{r} phase. During the \acrshort{a} and \acrshort{r}
+phases the program only accesses the memory. Regular programs are instead allowed to to this
+whenever they like, making it more undeterministic. However, knowing that the model makes programs
+more deterministic is not sufficient to increase the safety. The reason that deterministic programs
+is good is because they become much easier to analyse. However changing how programs execute under
+new models often require different methods of analysis.
+
+    %outline the current situation
+    %evaluate the current situation (advantages/ disadvantages) and identify the gap
+
+
+
+    %identify the importance of the proposed research
+
+    %state the research problem/ questions
+
+    %state the research aims and/or research objectives
+
+    %state the hypotheses
+
+    %outline the order of information in the thesis
+
+    %outline the methodology
+
+
+%With the increasing popularity of exploration into the capabilities of autonomous vehicles and 
+
+%Embedded systems in the automotive sector are required to go through a lot of analysis and testing
+%before being deemed safe for use in traffic. With the rise of autonomous vehicles these systems are
+%becoming more complex as an effect of more computing needed being done. This has also put
+%requirements on the hardware to become faster and faster, thus the industry is turning to the use of
+%multi-core and many-core platforms. These type of platforms present more unpredictability than
+%single-core platforms which requires new methods of analysis and deterministic execution of these
+%systems. 
 
 
 \section{Background} 
 
 Timing analysis is an important part of real-time systems. However, multi-core platforms often
 implement complicated memory hierarchies that make timing analysis a lot harder. One way to tackle
-this is to schedule the access to shared memory in cooperation with computational tasks. This can
-improve analysis and is employed by industrial domains already where the execution of tasks can be
-divided up into three distinct parts, read-execute-write.
+this is to explicitly schedule the access to shared memory in cooperation with computational tasks
+in a well-defined way. This can improve analysis and is employed by industrial domains already where
+the execution of tasks can be divided up into three distinct parts, read-execute-write.
 
 
 \section{Problem}
@@ -202,13 +259,15 @@ other analysis tools will either perform the same (being also exact) or worse.
 
 \section{Outline}
 
+Chapter \label{ch:theoretic_background} gives a theoretic background to the problem area
+such that the reader becomes equipped to understand the topic at hand in-depth.
 
 %We use the \emph{biblatex} package to handle our references.  We therefore use the command
 %\texttt{parencite} to get a reference in parenthesis, like this \parencite{heisenberg2015}.  It is
 %also possible to include the author as part of the sentence using \texttt{textcite}, like talking
 %about the work of \textcite{einstein2016}.
 
-\chapter{<Theoretic Background> Use a self-explaining title}
+\chapter{<Theoretic Background> Use a self-explaining title}\label{ch:theoretic_background}
 
 This chapter aims to give sufficient background such that the reader is able to understand the work
 that the thesis covers. Section \ref{sec:the_task_model} begins by describing the task model used
@@ -1300,9 +1359,11 @@ The experiments will be running on a "HP Z210 Workstation" with a quad-core Inte
 \section{Replicability}
 
 
-\chapter{<Conclusions> Use a self-explaining title}
+\chapter{<Discussion> Use a self-explaining title}
 
 \section{Scheduling anomaly}
+
+\section{Conclusions}
 
 % Describe how the task model requires that there are not more number of tasks of a given period
 % than the total amount of cores in the system, as it will lead to the schedule being not feasible.
