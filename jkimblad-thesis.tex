@@ -132,13 +132,13 @@ the access to shared memory by different computers on the car. As modern cars ca
 different processors, known as \acrshort{ecu}'s, internal communication between them is a
 necessity. Communication is often done using some type of databus technology such as a
 \acrshort{can}-bus. Sometimes a single \acrshort{ecu} can hold more than a single processing unit
-(core) making it multi-core. Communication is not only necessary between \acrshort{ecu}'s but also
-internally between cores on a single \acrshort{ecu}. This is done through shared memory in a
-congestive way decreasing how deterministic the system is.
+(core) making it multi-core. Communication is then not only necessary between \acrshort{ecu}'s but
+also internally between cores on a single \acrshort{ecu}. This is done through shared memory in a
+non-deterministic way where all cores contest the access to memory creating congestion.
 
     %provide a review of the literature related to the topic
 
-As an attempt to battle the problem of undeterministic memory-access the \acrshort{aer}-model has
+As an attempt to battle the problem of non-deterministic memory-access the \acrshort{aer}-model has
 been proposed by \textcite{durrieu_predictable_2014} for use in the avionics industry. This model
 proposes a new way of scheduling programs on processing cores to completely avoid memory
 congestion, making the system easier more deterministic and easier to validate through testing. The
@@ -148,20 +148,38 @@ its applicability.
 
     %define the terms and scope of the topic
 
-The \acrshort{aer}-model divides each executed program up into three distinct parts, the \acrfull{a}
-phase, \acrfull{e} phase and \acrfull{r} phase. During the \acrshort{a} and \acrshort{r} phases the
-program only accesses the memory. Regular programs are instead allowed to to this whenever they
-like, making it more undeterministic. However, knowing that the model makes programs more
-deterministic is not sufficient to increase the safety. The reason that deterministic programs is
-good is because they become much easier to analyse. However changing how programs execute under new
-models often require different methods of analysis.
+The \acrshort{aer}-model divides each executed task up into three distinct parts, the
+\acrfull{a}-phase, \acrfull{e}-phase and \acrfull{r}-phase. During the \acrshort{a}-phase the task
+reads from shared memory and during the \acrshort{r}-phase the task writes to shared memory. The
+\acrshort{e}-phase is strictly used for execution of the task and the task is not allowed to access
+shared memory during this phase. Regular tasks are in opposite allowed to access shared memory
+whenever they like, making the system less deterministic. However, knowing that the
+\acrshort{aer}-model makes programs more deterministic is not sufficient to increase the safety. The
+reason that deterministic programs is good is because they become much easier to analyse. However
+changing how programs execute under new models often require different methods of analysis.
 
     %outline the current situation
+
+Some analysis of memory-centric scheduling approaches exists such as the paper by
+\textcite{alhammad_schedulability_2014} which explores analysis of an extension of the
+\acrshort{prem} model on multi-core. Under \acrshort{prem} each task is divided into a computation
+phase and memory phase. This is to be compared to the three-phase model \acrshort{aer} but without
+the write phase. The write phase of a task is instead incorporated into the read phase of the task
+running directly after on the same core as the first task creating the memory phase. In this way the
+memory phase can further be divided internally into what the authors refer to as the pre-fetch and
+write-back phases. The authors state the reason for only using two phases is that adding a write
+phase would make analysis much harder for tasks that are dynamically scheduled. Another paper
+written by \textcite{maia_schedulability_2017} focuses on improving the findings in the first paper
+by creating analysis for the \acrshort{aer}-model from a memory-centric approach which reduces the
+problem to single-core analysis which is an easier problem to solve than multi-core analysis.
+
     %evaluate the current situation (advantages/ disadvantages) and identify the gap
 
-
+The existing research does have its shortcomings that could be improved. 
 
     %identify the importance of the proposed research
+
+
 
     %state the research problem/ questions
 
@@ -235,6 +253,7 @@ something the thesis contributes to and if in that case there are more sustainab
 
 \section{Methodology / Methods}
 
+%TODO: How are these things used in practice?
 The theoretical research methods and  methodologies have been chosen following the guidelines
 presented in \textcite{hakansson_portal_2013}. The thesis will take a quantative research approach
 to try and refute or verify the presented theories. Experimental research methods will be applied
