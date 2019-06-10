@@ -175,7 +175,12 @@ problem to single-core analysis which is an easier problem to solve than multi-c
 
     %evaluate the current situation (advantages/ disadvantages) and identify the gap
 
-The existing research does have its shortcomings that could be improved. 
+The existing research does have its shortcomings that could be improved. Since taking a
+memory-centric approach to the problem also reduces it to a single-core problem it opens the
+possibility to adapt existing analysis tools that are less pessimistic and scales better to larger
+task amounts in their approach. One analysis tool proposed by \textcite{nasri_exact_2017} has shown
+promising results for regular single-core scheduling analysis. This analysis is however not
+available for \acrshort{aer}-modeled tasks and therefor would need to be adapted.
 
     %identify the importance of the proposed research
 
@@ -203,37 +208,53 @@ The existing research does have its shortcomings that could be improved.
 %systems. 
 
 
-\section{Background} 
+%\section{Background} 
 
-Timing analysis is an important part of real-time systems. However, multi-core platforms often
-implement complicated memory hierarchies that make timing analysis a lot harder. One way to tackle
-this is to explicitly schedule the access to shared memory in cooperation with computational tasks
-in a well-defined way. This can improve analysis and is employed by industrial domains already where
-the execution of tasks can be divided up into three distinct parts, read-execute-write.
+%Timing analysis is an important part of real-time systems. However, multi-core platforms often
+%implement complicated memory hierarchies that make timing analysis a lot harder. One way to tackle
+%this is to explicitly schedule the access to shared memory in cooperation with computational tasks
+%in a well-defined way. This can improve analysis and is employed by industrial domains already where
+%the execution of tasks can be divided up into three distinct parts, read-execute-write.
 
 
 \section{Problem}
 
-An analysis method for resource contention in multi-core real-time systems have been proposed in
-paper. This analysis method is however not customised for the read-execute-write execution model
-that is adapted both within the avionics domain and automotive domain.
+The problem is that scheduling-analysis is hard and needs to be customized for many different ways
+of scheduling tasks. Analysing embedded systems is hard but very necessary, especially hard are
+multi-core systems that have complicated memory-hierarchies where cores share access creating
+congestion. An emerging and already adopted technology to deal with it is to explicitly schedule the
+access to shared memory using something like the \acrshort{aer}-model. Although some techniques does
+exist to analyse scheduling under the \acrshort{aer}-model they are either not complete,
+pessimistic or only allow for task-level priorities. Good analysis methods do exist for regular
+tasks and can be adapted for the \acrshort{aer} model which is the problem this thesis searches to
+solve.
+
+%An analysis method for resource contention in multi-core real-time systems have been proposed in
+%paper. This analysis method is however not customised for the read-execute-write execution model
+%that is adapted both within the avionics domain and automotive domain.
 
 
 \section{Purpose}
 
-The purpose is to expand existing analysis methods by adding to the source code and/or produce a
-model of the read-execute-write task model that is available as input for these formal analysis
-methods.
+The purpose of the thesis is to expand an existing analysis method by adding to the source code and
+produce a version of the \acrshort{aer}-model that is compatible with the analysis method and to
+evaluate the characteristics of the model when changing different input variables in the tasks.
 
-\section{Goal}
+%The purpose is to expand existing analysis methods by adding to the source code and/or produce a
+%model of the read-execute-write task model that is available as input for these formal analysis
+%methods.
 
-The goals of the project
+\section{Goals}
+
+The goals of the project can be summarized into the following key points.
 
 \begin{itemize}
-    \item Perform a state-of-the-art litterature study within the research area.
+    \item Perform a state-of-the-art literature study within the research area.
     \item Generate task-sets in a fair way.
-    \item Transform the tasks into apropriate input to the analyis tool.
+    \item Transform the tasks into appropriate input to the analysis tool.
     \item Extend the analysis tool to handle the \acrshort{aer}-model.
+    \item Present a customisation to the \acrshort{aer}-model for better compatibility with the analysis tool.
+    \item Present an evaluation to the analysis tool after extension through benchmarking.
 \end{itemize}
 
 
