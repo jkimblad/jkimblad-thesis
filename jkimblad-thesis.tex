@@ -62,7 +62,7 @@
 \newacronym{bcet}{BCET}{Best-Case Execution Time}
 \newacronym{wcet}{WCET}{Worst-Case Execution Time}
 \newacronym{prem}{PREM}{Predictable Execution Model}
-\newacronym{gprem}{gPREM}{global PREM}
+\newacronym{gprem}{gPREM}{global \acrshort{PREM}}
 \newacronym{ilp}{ILP}{Integer Linear Programming}
 \newacronym{dms}{DMS}{Deadline Monotonic Scheduling}
 \newacronym{ecu}{ECU}{Electronic Control Unit}
@@ -1371,12 +1371,35 @@ shortly described in the rest of this section.
 The experiments will be running on a "HP Z210 Workstation" with a quad-core Intel Core i7-2600 CPU
 \@3.40GHz and 16 GiB of memory.
 
-%TODO: Explain why the input is chosen the way it will be, 10% a and e cycles, the task amount, the
+The idea of benchmarking is to recognise the dependent and independent variables of the system, make
+changes to the independent variables and see what effect they have on the dependent variables. The
+dependent variable of most interest is the \textbf{schedulability ratio} which is the ratio between
+schedulable task sets and the total amount of task sets. The independent variables are explained in
+the following list.
+
+\begin{itemize}
+
+    \item \textbf{Task amount} - The total amount of tasks to be scheduled
+    \item \textbf{Core amount} - The amount of cores available for jobs to be scheduled onto.
+    \item \textbf{Scheduling algorithm} - The algorithm used to schedule the system. 
+    \item \textbf{\acrshort{a}-ratio} - The execution time of the \acrshort{a}-phase as a ratio of
+        the tasks utilization.
+    \item \textbf{\acrshort{r}-ratio} - The execution time of the \acrshort{r}-phase as a ratio of
+        the tasks utilization.
+    \item \textbf{Window ratio} - The ratio between the \acrshort{a}-window and \acrshort{r}-window.
+    \item \textbf{Utilization} - The total utilization of all tasks summed.
+
+\end{itemize}
+
+%TODO: Explain why the input is chosen the way it will be, 10% a and r cycles, the task amount, the
 %core amount etc.
 
 \subsubsection{Core amount}
 
 \subsubsection{Task amount}
+
+The idea is to use task amount as a variable and see how the schedulability ratio changes as an
+effect on how many tasks needs to be scheduled when other variables are 
 
 \subsubsection{Window ratio}
 
