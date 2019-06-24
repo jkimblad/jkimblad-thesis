@@ -15,6 +15,7 @@
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \usepackage{amssymb}
+\usepackage{float}
 
 \usepackage[autostyle]{csquotes}
 \usepackage[
@@ -59,10 +60,10 @@
 \newacronym{edf}{EDF}{Earliest Deadline First}
 \newacronym{rms}{RMS}{Rate-Monotonic Scheduling}
 \newacronym{lcm}{LCM}{Least Common Multiple}
+\newacronym{prem}{PREM}{Predictable Execution Model}
 \newacronym{bcet}{BCET}{Best-Case Execution Time}
 \newacronym{wcet}{WCET}{Worst-Case Execution Time}
-\newacronym{prem}{PREM}{Predictable Execution Model}
-\newacronym{gprem}{gPREM}{global \acrshort{PREM}}
+\newacronym{gprem}{gPREM}{global \acrshort{prem}}
 \newacronym{ilp}{ILP}{Integer Linear Programming}
 \newacronym{dms}{DMS}{Deadline Monotonic Scheduling}
 \newacronym{ecu}{ECU}{Electronic Control Unit}
@@ -96,7 +97,6 @@
 
 \begin{abstract} 
 
-    English abstract goes here.
 
 \end{abstract}
 
@@ -1362,7 +1362,7 @@ priorities describe a relation between the jobs, thus all the jobs must sometime
 the priorities can be assigned. 
 
 
-\subsection{Running benchmarks}
+\subsection{Running benchmarks}\label{subsec:running_benchmarks}
 
 As part of benchmarking a set of experiments will be ran to test what effect different input
 variables will have on the schedulability. Each variable that will be put into consideration is
@@ -1394,41 +1394,76 @@ the following list.
 %TODO: Explain why the input is chosen the way it will be, 10% a and r cycles, the task amount, the
 %core amount etc.
 
-\subsubsection{Core amount}
-
-When changing the core amount it is of interest to see how the schedulability ratio is affected,
-especially when the utilization is kept static. Smaller amount of tasks leads to larger execution
-times of each task and vise versa, so imagining the bin-packing problem as explained in chapter
+The following sections describes each experiment that tests a different independent variable and
+what the static values for the untested independent variables are set to.
 
 \subsubsection{Task amount}
 
 The idea is to use task amount as a variable and see how the schedulability ratio changes as an
-effect on how many tasks needs to be scheduled when other variables are 
+effect on how many tasks needs to be scheduled when other variables are set. Smaller amount of tasks
+leads to larger execution times of each task and vise versa and should therefor have an effect on
+the utilization. The experiment will test task sets of size 1 to 1000 with size 100 increments. It
+will also test task sets of size 1 to 150 with size 2 increments for better resolution for smaller
+task sets. The \acrshort{a}-ratio and \acrshort{r}-ratio will be set to 0.1, the window-ratio will
+be set to 0.6, the utilization will be set to 0.5 for both experiments. To make sure that memory
+accesses is the bottleneck the core amount is set to be larger than the amount of tasks, such that
+in worst case each task has its own dedicated core. The used scheduling algorithm will be
+\acrshort{edf}.
 
 \subsubsection{Window ratio}
 
+The window ratio describes the ratio of the size difference between the \acrshort{a}-window and
+\acrshort{r}-window as the two phases doesn't necessarily have to be given the same amount of time
+to complete execution. So this will examine what characteristics the system exhibits for different
+sizes of the windows. Since this can vary greatly depending on the utilization it should also be
+varied. For the window sizes nine different sizes while be tried ranging from 10\% to 90\% of the
+total size allocated to the \acrshort{a}-window, where all of the remaining percentages are
+allocated to the \acrshort{r}-phase. The utilization will range from 0 to 4 with an increment size
+of 0.1, each step iterated 1000 times to create an average. The task amount is set to 15, the The
+scheduling algorithm used is \acrshort{edf} and the core amount is set to be larger than the task
+amount to bottleneck the memory. The \acrshort{a}-ratio and \acrshort{r}-ratio is both set to 0.1.
+
 \subsubsection{Scheduling algorithms}
 
-
+The different scheduling algorithms that will be tested have been explained in section
+\ref{sec:scheduling_algorithms}. Each algorithm will be tested for different utilizations ranging
+from 0 to 4.2 with increments of 0.1. Each incrementation in utilization is iterated 1000 times to
+create an average for that utilization. The \acrshort{a}-ratio and \acrshort{r}-ratio are both
+chosen to 0.1 and the window ratio is set to 0.5. The task amount is set to 15 and the cores are set
+to be larger as to bottleneck the memory and not the cores.
 
 
 \chapter{<Result> Use a self-explaining title}
 
-\section{Window sizes}
+This chapter shows the results from the benchmarkings of the analysis tool explained in section
+\ref{subsec:running_benchmarks}.
 
-\begin{figure}
+\section{Window ratios}\label{sec:result_window_ratios}
+
+\begin{figure}[H]
 
     \centering
 
     \includegraphics[width=1.0\linewidth]{images/window_ratio.pdf}
 
-    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+    \caption{The schedulability ratio of different window ratios as an effect of the total
+        utilization of the task set.}
 
     \label{fig:window_ratio}
 
 \end{figure}
 
-\begin{figure}
+All of the window ratios have a quick initial fall of in schedulability before it planes out to a
+slower decent as shown in figure \ref{fig:window_ratio}. Most of the lines stay clumped together
+throughout except for 10\% which takes on a faster decline than the others throughout. The lines for
+90\% and 20\% are close to each other throughout and fall a bit below the majority of the lines when
+approaching a higher utilization.  Towards higher utilization the 60\% window ratio seems to perform
+better than all others, but during lower utilizations although it being amongst the top ones it is
+sometimes surpassed by both the 50\% and 40\% window ratios which for that utilization provides the
+highest schedulability ratio.
+
+
+\begin{figure}[H]
 
     \centering
 
@@ -1440,9 +1475,15 @@ effect on how many tasks needs to be scheduled when other variables are
 
 \end{figure}
 
+Averaging the schedulability ratio for all tested utilizations for every window ratio shows that a
+window ratio of 60\% has the highest average schedulability ratio overall in figure
+\ref{fig:window_ratio_averages}. Furthermore, choosing a window ratio that give more time to the
+\acrshort{r}-phase (high window ratio) seems to favor the average schedulability ratio compared to
+given the same size of the window to the \acrshort{a}-phase.
+
 \section{Task amount}
 
-\begin{figure}
+\begin{figure}[H]
 
     \centering
 
@@ -1454,7 +1495,16 @@ effect on how many tasks needs to be scheduled when other variables are
 
 \end{figure}
 
-\begin{figure}
+When looking at the task amount from a macro-level as in figure \ref{fig:task_amount_2} it is shown
+that the schedulability ratio have a steady decline as more tasks are added to the task set. It was
+unable to schedule any task sets at all as the sizes approached 1000 tasks. However, when looking at
+the schedulability ratio at a micro-level between 0 and 250 tasks as shown in figure
+\ref{fig:task_amount_1} it is quite difference. There is a quick fall-of in the schedulability ratio
+for task sets of low sizes, but it then halts and the schedulability ratio is then improved again
+and peaking somewhere around a task set size of 100 to 175 tasks before once again falling of, but
+at a much slower tempo.
+
+\begin{figure}[H]
 
     \centering
 
@@ -1466,11 +1516,10 @@ effect on how many tasks needs to be scheduled when other variables are
 
 \end{figure}
 
-\section{Core amount}
 
 \section{Scheduling algorithms}
 
-\begin{figure}
+\begin{figure}[H]
 
     \centering
 
@@ -1482,6 +1531,37 @@ effect on how many tasks needs to be scheduled when other variables are
 
 \end{figure}
 
+The worst scheduling algorithms are shown to be the \acrshort{huhp} and \acrshort{luhp} while the
+best ones were \acrshort{edf}, \acrshort{hulp} and \acrshort{lulp} as can be seen in figure
+\ref{fig:sched_algos}. All of the algorithms had a quick initial drop off in schedulability ratio
+when increasing the utilization from 0 towards 1.0. The drop in schedulability ratio then takes on a
+slower decent, especially slow for \acrshort{edf}, \acrshort{lulp} and \acrshort{hulp} which keeps
+the highest schedulability ratios until they approach 0 schedulability ratio. The \acrshort{huhp}
+and \acrshort{luhp} quickly decent to a schedulability ratio of 0 at around 2 utilization, far
+before any of the other algorithms. In between the top and bottom performers are \acrshort{lu} and
+\acrshort{hu} which of \acrshort{lu} performs better for lower utilizations up until right before a
+utilization of 2 where they then continue to perform equally bad.
+
+As can be seen from figure \ref{fig:sched_algos_averages}, which represents the average
+schedulability ratio of all utilization points tested for each of the scheduling algorithms, the top
+performers are as mentioned earlier \acrshort{edf}, \acrshort{lulp} and \acrshort{hulp} with
+\acrshort{edf} in the absolute top. The worst performers are once again shown to be \acrshort{luhp}
+and \acrshort{huhp} and \acrshort{hu} and \acrshort{lu} being middle performers with \acrshort{lu}
+on top.
+
+\begin{figure}[H]
+
+    \centering
+
+    \includegraphics[width=1.0\linewidth]{images/sched_algos_averages.pdf}
+
+    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+
+    \label{fig:sched_algos_averages}
+
+\end{figure}
+
+
 \section{Reliability}
 
 \section{Validity}
@@ -1491,12 +1571,62 @@ effect on how many tasks needs to be scheduled when other variables are
 
 \chapter{<Discussion> Use a self-explaining title}
 
+% Window ratios
+As discussed in section \ref{sec:result_window_ratios} giving more time to the \acrshort{a}-phase
+rather than the \acrshort{r}-phase favors schedulability ratios. This is probably due to how the
+scheduling algorithms are designed to always give all of the \acrshort{r}-phase jobs a higher
+priority than the highest priority \acrshort{a}-phase job. This has the effect that whenever an
+\acrshort{a}-job and an \acrshort{r}-job are both available the \acrshort{r}-job will always be
+scheduled first. Thus the \acrshort{a}-job will be pushed closer to its deadline, decreasing its
+slack time and also increasing the chance that it will miss its deadline. So if the
+\acrshort{r}-jobs on average will have a larger slack time than the \acrshort{a}-jobs, some of the
+slack time that \acrshort{r}-jobs have can instead be reassigned to the \acrshort{a}-jobs to
+increase their slack times resulting in fewer deadlines missed and a higher schedulability ratio. As
+is shown from the results the optimal window-ratio is to allocate, out of the tried window ratios,
+60\% of the time to the \acrshort{a}-job.
+
+% Task amount
+
+% Scheduling algorithms
+
+When looking at the different tried scheduling algorithms it is evident that \acrshort{edf} is the
+top performing algorithm.  
+
+Seeing that \acrshort{huhp} and \acrshort{luhp} both have the lowest average schedulability ratio of
+all the algorithms and \acrshort{hulp} and \acrshort{lulp} had the highest average schedulability
+ratios after \acrshort{edf} it seems that prioritising jobs with a low priority boosts
+schedulability immensely. Jobs with a lower period are more probable to have its deadline closer
+than a higher period job for job sets where the period equals its relative deadline. Therefor,
+putting a higher priority on the jobs with a lower period should decrease missed deadlines and
+increase schedulability, which is indeed reflected in the results as can be seen in
+\ref{fig:sched_algos}. This is also the theory which the scheduling algorithm \acrshort{rms}
+originates from. And as discussed in section \ref{sec:scheduling_algorithms} the four algorithms
+which take period into account from the ones tested were an extension of the \acrshort{rms}
+algorithm. 
+The results also show that prioritising jobs within their periods according to their utilization
+does not have a significant impact on schedulability. This is likely due to no ordering of the
+\acrshort{a}-jobs within periods 
+
+% A better thing would be to order jobs according to EDF inside of periods
+
+% Probably only the lowest-prio job within a period matters, because thats the one who misses its
+% deadlin. 
+
+
+% EDF outperforms all others
+% Low period seems to be second best, utilization doesn't matter that much when period is taken into account
+
+% Describe how the task model requires that there are not more number of tasks of a given period
+% than the total amount of cores in the system, as it will lead to the schedule being not feasible.
+
 \section{Scheduling anomaly}
 
 \section{Conclusions}
 
-% Describe how the task model requires that there are not more number of tasks of a given period
-% than the total amount of cores in the system, as it will lead to the schedule being not feasible.
+% EDF is best algorithm, 60% is best window ratio, 100-150 tasks is optimal, but anywhere between 0-
+% ~300 is fine. Cores should ideally be larger than the amount of tasks while running in an autosar
+% system.
+
 
 
 \subsection{Future work}
