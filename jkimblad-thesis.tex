@@ -1174,29 +1174,29 @@ percentages are scaled such that their sum equals 100\%.
 
 \begin{table}
     \centering
-    \begin{tabular}{| c | c |} 
+    \begin{tabular}{| c | c | c |} 
         \hline
-        Period & Probability \\
+        Period & Probability & Adjusted probability  \\
         \hline
-        1 ms & 3\% \\
+        1 ms & 3\% & 5\% \\
         \hline
-        2 ms & 2\% \\
+        2 ms & 2\% & 3\% \\
         \hline
-        5 ms & 2\% \\
+        5 ms & 2\% & 3\% \\
         \hline
-        10 ms & 25\% \\
+        10 ms & 25\% & 29\% \\
         \hline
-        20 ms & 25\% \\
+        20 ms & 25\% & 29\% \\
         \hline
-        50 ms & 3\% \\
+        50 ms & 3\% & 5\% \\
         \hline
-        100 ms & 20\% \\
+        100 ms & 20\% & 24\% \\
         \hline
-        200 ms & 1\% \\
+        200 ms & 1\% & 2\% \\
         \hline
-        1000 ms & 4\% \\
+        1000 ms & 4\% & 0\% \\
         \hline
-        Angle-synchronous & 15\% \\
+        Angle-synchronous & 15\% & 0\% \\
         \hline
     \end{tabular}
     \caption{Distribution of periods within a real \acrshort{autosar} system. Taken from \parencite{kramer_real_2015}}
@@ -1395,7 +1395,9 @@ the following list.
 %core amount etc.
 
 The following sections describes each experiment that tests a different independent variable and
-what the static values for the untested independent variables are set to.
+what the static values for the untested independent variables are set to. When generating the task
+sets the random number generator is seeded with the same number to ensure the same task sets are
+used for different experiments and graphs to increase the reliability of the experiments. 
 
 \subsubsection{Task amount}
 
@@ -1409,6 +1411,19 @@ be set to 0.6, the utilization will be set to 0.5 for both experiments. To make 
 accesses is the bottleneck the core amount is set to be larger than the amount of tasks, such that
 in worst case each task has its own dedicated core. The used scheduling algorithm will be
 \acrshort{edf}.
+
+\subsubsection{Core amount}
+
+As the other experiments bottleneck the memory accesses by using more cores than tasks it should
+also be tested what the effects are when the amount of cores are a possible bottleneck. This will be
+done by constraining the amount of cores that are available for tasks to be scheduled onto them. The
+size of the task set is chosen to 10 tasks and as such the core amount will be varied from 10 down
+to a single core. In addition to cores being varied the utilization of the task sets will also be
+varied starting from 0.1 and incremented up to 4.0 with a step size of 0.1. The \acrshort{a}-ratio
+and \acrshort{r}-ratio are both set to 0.1 and the window-ratio is set to 0.6. The scheduling
+algorithm used will be \acrshort{edf}. Each step in utilization will be iterated 100 times to create
+a reliable average schedulability ratio.
+
 
 \subsubsection{Window ratio}
 
@@ -1517,6 +1532,40 @@ at a much slower tempo.
 \end{figure}
 
 
+\section{Core amount}\label{sec:results_core_amount}
+
+\begin{figure}[H]
+
+    \centering
+
+    \includegraphics[width=1.0\linewidth]{images/core_amounts.pdf}
+
+    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+
+    \label{fig:core_amounts}
+
+\end{figure}
+
+The first thing to notice is that a core amount of 4 and below are unable to schedule any task set
+at all, even for a utilization of 0.1. Furthermore it is very clear that the core amount have a
+large impact on the schedulability ratio. Reducing the core amount down from 10 to 9 reduces the
+schedulability ratio by almost 0.4 as seen in figure \ref{fig:core_amounts}. Each reduction in the
+amount of cores then substantially lowers the schedulability ratio at the utilization of 0.1 down
+until the schedulability ratio hits 0 for 4 cores. Figure \ref{fig:core_amounts_averages} also shows
+the steady decline in schedulability ratio as the amount of cores are decreased.
+
+\begin{figure}[H]
+
+    \centering
+
+    \includegraphics[width=1.0\linewidth]{images/core_amounts_averages.pdf}
+
+    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+
+    \label{fig:core_amounts_averages}
+
+\end{figure}
+
 \section{Scheduling algorithms}
 
 \begin{figure}[H]
@@ -1603,11 +1652,34 @@ increase schedulability, which is indeed reflected in the results as can be seen
 originates from. And as discussed in section \ref{sec:scheduling_algorithms} the four algorithms
 which take period into account from the ones tested were an extension of the \acrshort{rms}
 algorithm. 
+
 The results also show that prioritising jobs within their periods according to their utilization
-does not have a significant impact on schedulability. This is likely due to no ordering of the
-\acrshort{a}-jobs within periods 
+does not have a significant impact on schedulability. This could be due to the low amount of tasks
+in the task set. A task set of size 15 means that the amount of tasks with the most common periods
+(10ms or 20ms with a distribution of 29\% of tasks, see table \ref{tab:period_distribution}) is on
+average only 4.35 tasks. The \acrshort{a}-jobs for the tasks of same periods will have different
+deadlines depending on how large the \acrshort{e}-phase of the same task is. A larger
+\acrshort{e}-phase means that both the \acrshort{a}-phase and \acrshort{r}-phase will have shorter
+time to execute as it will effectively shrink their windows within which they are able to be
+scheduled.
+
+When looking at the results of reducing the amount of cores to be less than the amount of tasks in
+the task set presented in section \ref{sec:results_core_amount} it is evident that it has a large
+detrimental effect on the schedulability ratio. Even though this is to be expected to some degree it
+is most likely exaggerated due to the nature of the extended \acrshort{aer} task model (explained in
+section \ref{sec:work_task_model}). A big drawback of the model is that whenever the amount of tasks
+that share any period exceeds the amount of cores in the system it will never be schedulable.
+
 
 % A better thing would be to order jobs according to EDF inside of periods
+%   - Actually prio according to LPHU should mirror EDF (inside periods), as the highest utilization
+%   tasks will also have the earliest deadlines for the A-jobs.
+%       - Not true for R-jobs, hard to draw any conclusions about them, priorities should be same as
+%       least-slacktime first
+
+% Using WCET for the E-phase is very naive
+
+% Prio should not matter for R-jobs, they are either schedulable or they are not
 
 % Probably only the lowest-prio job within a period matters, because thats the one who misses its
 % deadlin. 
