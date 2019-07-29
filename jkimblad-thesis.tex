@@ -121,11 +121,23 @@
 
 \chapter{Introduction and background} 
 
+Embedded systems is everywhere around us, even though they might not be as obvious to us at first,
+but they exist in things such as our cellphones, cars, washing machines, airplanes, TV's and with
+the rise of the internet of things even our fridge and coffee maker. These systems can range in
+complexity and they often interact in different ways with the surrounding world. While a washing
+machine, for example, may only require to read some input from a user pushing its buttons using a
+single embedded processor a car can contain tens, if not hundreds, of processors running millions of
+lines of code that monitor different systems and makes sure that the car operates as desired. One
+could now imagine that a car requires a much higher degree of safety than a coffee maker in the
+sense that the computers in a car cannot crash randomly or exhibit undesirable behaviour.
+
 
     %state the general topic and give some background
 
 
     %Start background here and have an even more general introduction?
+
+\section{background}
 
 Requirements on analysis and testing of systems in the automotive industry become of a bigger
 concern with the rise of autonomous vehicles and the scepticism of their abilities to make
@@ -1448,7 +1460,7 @@ chosen to 0.1 and the window ratio is set to 0.5. The task amount is set to 15 a
 to be larger as to bottleneck the memory and not the cores.
 
 
-\chapter{<Result> Use a self-explaining title}
+\chapter{<Result> Use a self-explaining title} \label{ch:result}
 
 This chapter shows the results from the benchmarkings of the analysis tool explained in section
 \ref{subsec:running_benchmarks}.
@@ -1663,13 +1675,61 @@ deadlines depending on how large the \acrshort{e}-phase of the same task is. A l
 time to execute as it will effectively shrink their windows within which they are able to be
 scheduled.
 
-When looking at the results of reducing the amount of cores to be less than the amount of tasks in
-the task set presented in section \ref{sec:results_core_amount} it is evident that it has a large
-detrimental effect on the schedulability ratio. Even though this is to be expected to some degree it
-is most likely exaggerated due to the nature of the extended \acrshort{aer} task model (explained in
-section \ref{sec:work_task_model}). A big drawback of the model is that whenever the amount of tasks
-that share any period exceeds the amount of cores in the system it will never be schedulable.
+When looking at the results, presented in section \ref{sec:results_core_amount}, of reducing the
+amount of cores to be less than the amount of tasks in the task set it is evident that it has a
+large detrimental effect on the schedulability ratio. Even though this is to be expected to some
+degree it is most likely exaggerated due to the nature of the extended \acrshort{aer} task model
+(explained in section \ref{sec:work_task_model}). A big drawback of the model is that whenever the
+amount of tasks that share any period exceeds the amount of cores in the system it will never be
+schedulable no matter its total utilization. This can be demonstrated by imagining a task set of 3
+tasks that are to be scheduled onto two different cores. The tasks all have the same period of
+100ms, \acrshort{e}-phase (\acrshort{wcet}) of 2ms, \acrshort{a}-phase of 1ms and \acrshort{r}-phase
+of 1ms and a window ratio of 50\%. This makes the \acrshort{a}-window cover the first 49ms of the
+scheduling window and the \acrshort{r}-window cover the last 49ms of the scheduling window. The
+middle 2ms is covered by the \acrshort{e}-phase (\acrshort{wcet}). Two of the tasks are instantly
+scheduled onto the two available processors while the third task is left idle. After 1ms both of the
+scheduled tasks \acrshort{a}-phases will have finished and their \acrshort{e}-phases can start and
+will finish 2ms later. At this point both of the processor will become idle, but the third idle task
+cannot be scheduled onto either of them as their \acrshort{r}-phases are yet to finish. These will
+however not be release until 51ms after the release time of the \acrshort{a}-phases of all three
+tasks. At this point the deadline of the \acrshort{a}-phase of the idle task will already have
+passed and the deadline is missed.
 
+Not only is it a problem that the task sets with more tasks of a single period than the amount of
+cores is unschedulable but also as described that the cores are idle a long time when the
+\acrshort{a}-phase is scheduled early inside the \acrshort{a}-window and cant be utilized. This is
+also true for when the \acrshort{r}-jobs are scheduled late in their \acrshort{r}-window. The
+worst-case scenario being that the \acrshort{a}-job is scheduled just as its released and the
+\acrshort{r}-job is scheduled as close to its deadline as possible. This would leave the processor
+idle without being able to do any actual work for the maximum time. This does not matter when the
+amount of tasks are the same or smaller than the amount of cores, but should be expected to become a
+larger problem when the task set grows or the amount of cores are lowered making them the bottleneck
+instead of the memory.
+
+It is important to realize that the utilization of the task set does not reflect the utilization of
+the memory. In all of the experiments presented in section \ref{ch:result} a \acrshort{a}-ratio and
+\acrshort{r}-ratio of 0.1 was used. This means that out of the total utilization of a job 10\% of it
+comes from the \acrshort{a}-phase, 80\% from the \acrshort{e}-phase and 10\% from the
+\acrshort{r}-phase. When taking all of this into account the utilization of the memory will just be
+the \acrshort{a}-phases and \acrshort{r}-phases which together accounts for 20\% of the total
+utilization. So in the results, chapter \label{ch:results}, when the utilization totals, for
+example, 1.0 this is the total utilization of all the cores. The utilization of the memory will then
+be 20\% of this equalling a factor of 0.2.
+
+As discussed in section \ref{subsec:running_benchmarks} there are a lot of different independent
+variables that all affect the schedulability ratio. Even tough a lot of different values are tried
+for the different variables to show their general affect on the schedulability ratio it is a very
+complex system and different combinations of values are not tried very extensively in this thesis.
+Different results would most definitely have been reached for other combinations of values for the
+variables, but the general affect of changing each of the independent variable has on the
+schedulability ratio would most likely be the same. It was not the goal to find the most or least
+effective combination of values for the independent variables and exhausting each combination would
+be extremely time and computation heavy. It would neither give a very valuable result as the optimal
+case rarely represents the real case.
+
+
+
+% Discuss the utilization only being 20% of what is actually shown
 
 % A better thing would be to order jobs according to EDF inside of periods
 %   - Actually prio according to LPHU should mirror EDF (inside periods), as the highest utilization
@@ -1691,17 +1751,63 @@ that share any period exceeds the amount of cores in the system it will never be
 % Describe how the task model requires that there are not more number of tasks of a given period
 % than the total amount of cores in the system, as it will lead to the schedule being not feasible.
 
-\section{Scheduling anomaly}
+% Complex system, many different dependent variables that can be changed
+
+% Task model in combination with the task periods are probably a poor combination
+
+% A-jobs that are scheduled early in the window and R-jobs scheduled late in their window creates a
+% huge gap were the processors is idle.
 
 \section{Conclusions}
+
+The \acrshort{aer}-task-model has been extended such that it can be used with the state-of-the-art
+schedulability analysis tool. Using the \acrshort{aer}-model has earlier been shown to improve the
+schedulability ratio of task sets using a memory-centric schedulability approach instead of a usual
+core-centric approach used by most multi-core schedulers. This reduces the problem to a single-core
+problem where jobs memory accesses are scheduled (there is only one job accessing the memory at a
+time) which allows for an existing schedulability analysis tool to be used. A new \acrshort{iip} is
+also developed that is used by the analysis tool for it to be useful together with the extended
+task model. The \acrshort{iip} makes sure that no new job can be scheduled while there are no free
+cores for the job to be scheduled onto. 
+
+Different values are tried for the independent variables in the task sets used as input to the
+schedulability analysis tool to check their effect on the schedulability ratio. The results show
+that \acrshort{edf} outperforms all other tested schedulers, and for this a window ratio of 60\% was
+also optimal. There is also a sweet spot in schedulability ratio when the task set contains
+somewhere between 100 to 150 tasks, but 0 to ~300 tasks is fine without decreasing the
+schedulability ratio to much. The task model performs the best when the amount of cores exceed the
+amount of tasks, which is not realistic in all cases, but the performance is quickly decreased when
+the amount of cores are decreased below the amount of tasks.
+
+% Task model has been created that can be used in conjunction with an exact schedulability analysis
+% tool
+
 
 % EDF is best algorithm, 60% is best window ratio, 100-150 tasks is optimal, but anywhere between 0-
 % ~300 is fine. Cores should ideally be larger than the amount of tasks while running in an autosar
 % system.
 
+% How good is it actually? Maybe add this to discussion
+
 
 
 \subsection{Future work}
+
+Since the developed task-model puts heavy constraints on when the \acrshort{a}-jobs and
+\acrshort{r}-jobs can be scheduled by creating windows for them within which they are to be
+scheduled it would be of interest to release this constraint as it can be expected to increase the
+schedulability ratio. The reason for the constraint is for the \acrshort{a}-phase to always execute
+before the \acrshort{e}-phase and \acrshort{r}-phase as well as the \acrshort{e}-phase to always
+execute before the \acrshort{r}-phase starts. This describes precedence constraints in how the jobs
+are scheduled, and is something that the analysis tool already is able to deal with. The task model,
+however, requires a special type of precedence. The \acrshort{e}-phases are not explicitly
+scheduled by the scheduler as they have nothing to do with the memory, but they are still required
+to finish execution before the \acrshort{r}-phase is allowed to begin. An idea then could be to pose
+a special type of precedence constraint where job 2 must not only wait for job 1 to finish, but must
+also wait x amount of time after job 1 has finished before job 2 is allowed to start execution. Time
+x would then be represented by the \acrshort{wcet} of the \acrshort{e}-phase similarly to how the
+task model produced in the thesis works. 
+
 
 %TODO: Mention that implementing precedence-constraints in the timing analysis makes it such that
 %the A and R windows become redundant. Also requires the WCET of E to be added to the A-phase.
