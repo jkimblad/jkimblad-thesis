@@ -661,7 +661,7 @@ scheduling decisions. If $J_2$ is scheduled it must start at time 10, to this is
 $J_9$ is scheduled it can start withing the interval $[8, 9]$, and thus its \acrshort{wcet} 13 and
 \acrshort{bcet} 3 is added to that interval to create vertex $v_4$. At this point each of the two
 branches continue scheduling jobs and branch out whenever several options are available until either
-all jobs have been scheduled, or a job fails to meet its deadline as depicted in
+all jobs have been scheduled, or a job fails to meet its deadline as depicted in figure
 \ref{fig:scheduling_graph}. This will for large job sets create a huge search space that is very
 computation and memory intensive and does not scale very well. However, the novelty of the approach
 presented in \parencite{nasri_exact_2017} is to introduce a merge-phase. The merge phase tries to
@@ -855,13 +855,6 @@ identical sub-trees in the future. Because of this it is only necessary to conti
 one of the nodes effectively making it so that the nodes can be \textit{merged}.
 
 
-\subsection{An Exact and Sustainable Analysis of Non-Preemptive Scheduling}
-
-
-\subsection{Contention-Free Execution of Automotive Applications on a Clustered Many-Core Platform}
-
-
-
 \chapter{<The work> Use a self-explaining title}
 
 \section{Task model} \label{sec:work_task_model}
@@ -910,7 +903,7 @@ execution-phase have yet to finish execution as a property of the model is that 
 restitution-phase will never be released before the execution-phase is guaranteed to have finished
 even in the worst-case. One interesting thing of the model is to chose the \textbf{window-ratio}
 between the acquisition-window and the restitution-window as they necessarily don't have to be of
-the same size. This will be explored further during benchmarking which is explained in chapter
+the same size. This will be explored further during benchmarking which is explained in section
 \ref{sec:benchmarking}.
 
 
@@ -936,7 +929,11 @@ the future that has just been released and is about to be scheduled onto a core.
 higher-priority task with a short deadline is released just after the first tasks has been scheduled
 it might miss its deadline as the core wont be available for a long time. In this instance it could
 prove beneficial for the schedulability of the task set to leave a core idle even when there is work
-to be completed to wait for a higher priority task to be released. 
+to be completed to wait for a higher priority task to be released. This can be done using an
+\acrfull{iip}. An \acrshort{iip} makes a decision about whether or not the highest priority job is
+to be scheduled when the core becomes free or if the core should be idle until another higher
+priority job is released.
+
 
 For the \acrshort{iip} to make a decision it is provided with three pieces of information. First
 the job-set of jobs that have previously been scheduled and are finished, second it is provided the
@@ -960,11 +957,33 @@ can thus be described by algorithm \ref{algo:iip_eligibility}, inspired by
     \end{algorithmic}
 \end{algorithm}
 
+The np-test can be used in conjunction with different \acrshort{iip}'s. To make sure the task model
+described in section \ref{sec:work_task_model} works with the np-test a custom \acrshort{iip} is
+created as scheduling tasks using a memory-centric approach can be described as a
+non-work-conserving scheduler as the memory might be left idle, even when there is work to be done.
+The \acrshort{iip} makes sure of two things when a job is ready to be scheduled. The first thing is
+to check if the job to be scheduled is an \acrshort{r}-job or an \acrshort{a}-job. If it is an
+\acrshort{a}-job there secondly has to be a check if there is an available core for the job to be
+scheduled onto. This is only true for \acrshort{a}-jobs as \acrshort{r}-jobs had their core
+dedicated to them when their respective \acrshort{a}-job was scheduled. To find if a core is
+available an additional argument needs to be passed into the \acrshort{iip}, which is the total
+amount of cores available in the system (whether or not idle). To find out the amount of available
+cores in the system an additional algorithm is called from within the \acrshort{iip} with two
+arguments, the total amount of cores in the system and the job-set that has been scheduled. Since
+whether a job is an \acrshort{a}-job or \acrshort{r}-job is encrypted in its id the amount of cores
+that are currently occupied can be calculated by subtracting the amount of \acrshort{r}-jobs that
+have been scheduled since the beginning from the amount of \acrshort{a}-jobs that have been
+scheduled since the beginning. This is explained by algorithm \ref{algo:available_cores}. After the
+amount of available cores have been found as well as if the job to be scheduled is an
+\acrshort{a}-job or \acrshort{r}-job a decision can be made if it is to be scheduled or not. The
+developed \acrshort{iip} is referred to as the \acrshort{aer} \acrshort{iip} and is explained in
+algorithm \ref{algo:aer_iip}.
+
 \begin{algorithm}
     \caption{AER IIP}
     \label{algo:aer_iip}
     \begin{algorithmic}[1]
-        \Function{$aer_iip$}{$J_i, t, \mathcal{J}^S, c$}
+        \Function{$aer\_iip$}{$J_i, t, \mathcal{J}^S, c$}
             \If{$is\_restitution(J_i)$}
                 \State \Return true
             \Else
@@ -998,11 +1017,6 @@ can thus be described by algorithm \ref{algo:iip_eligibility}, inspired by
 \end{algorithm}
 
 
-The scheduling analysis tool was extended by implementing a custom \acrshort{iip}. Scheduling tasks
-using a memory-centric approach can be described as a non-work-conserving scheduler as cores might be
-left idle, even when there is work to be done, if the memory is busy during the release of a task. 
-
-
 \subsection{Proof}
 
 No changes have been done to the original algorithm presented in \parencite{nasri_exact_2017} which
@@ -1026,6 +1040,42 @@ called upon again.
 
 
 % Write proof of correctness
+
+There are two criteria for any job to be scheduled correctly by a scheduler, the first is that the
+job has a core to execute on, and the second is that the shared memory is free to be used by the job
+to be scheduled. Each time the \acrshort{iip} is invoked the criteria that the shared memory is free
+to be used is guaranteed to be fulfilled, as it is a criteria for the scheduler to be invoked.
+
+There are three different cases for the algorithm to consider. The first is that the job to be
+scheduled is an \acrshort{r}-job. The second is that its an \acrshort{a}-job, in which case there
+are two further cases (totalling three cases), the first is that there is a free core and the second
+being that there is no free core. So the algorithm deals with the following three cases.
+
+\begin {itemize}
+    \item \textbf{\acrshort{r}-job}
+    \item \textbf{\acrshort{a}-job} with a free core
+    \item \textbf{\acrshort{a}-job} with no free cores
+\end {itemize}
+
+The first outcome will always lead to the job being scheduled. When the \acrshort{aer}
+\acrshort{iip} is invoked it is because the memory has just become available allowing the
+\acrshort{r}-job to instantly access it. Since the \acrshort{r}-job has been released we are also
+guaranteed due to the nature of the task-model that the respective \acrshort{a}-job and
+\acrshort{e}-phase of period are guaranteed to have finished. This also means that the task have
+been assigned a processing core already. In short, every time the \acrshort{iip} is called with a
+\acrshort{r}-job it is guaranteed that the job can start execution straight away as it has a core
+and the memory is free to be used (i.e. both criteria are fulfilled). 
+
+The second outcome will also always lead to the job being scheduled. As with the first case, the
+\acrshort{iip} is being invoked because the memory is free and the job with the highest priority is
+eligible for scheduling. Since the \acrshort{a}-job has not been assigned a core in the system
+it is not guaranteed to be able to execute. If there is a free core in the system the job can be
+scheduled. If there is no free core the criteria that there is a core for the job to execute on is
+not fulfilled, thus the job is not scheduled and the shared memory is left idle until a higher
+priority job is released. If instead a core is free, which is equal to the third case, both of the
+criteria that the memory is free to be used and there is a core for the job to be executed on is
+fulfilled. The job is then assigned to the free core, making it busy, and gets uncongested access
+to the shared memory.
 
 \subsection{Testing}
 
@@ -1181,8 +1231,11 @@ free by anyone in the paper "Real World Automotive Benchmarks For Free"\parencit
 The data has been extracted from a real-world application to a point where it doesn't doesn't give
 away any \acrshort{ip}-critical information about the actual application. The actual distribution
 for the periods are given in table \ref{tab:period_distribution}. Since we do not consider
-angle-synchronous tasks in this thesis the extra 15\% is simply ignored and the remaining
-percentages are scaled such that their sum equals 100\%. 
+angle-synchronous tasks in this thesis the extra 15\% is simply ignored. In addition, when pairing
+a 1000ms with any utilization during benchmarking its \acrshort{a}-phase and \acrshort{r}-phase have
+a high chance of having an execution time of above 1ms making it so that no task with a period of
+1ms will ever be schedulable. The remaining percentages are scaled such that their probability sum
+equals 100\% as shown in the third column in table \ref{tab:period_distribution}.
 
 \begin{table}
     \centering
@@ -1219,7 +1272,7 @@ After pairing a utilization with a period to create the tasks execution time the
 how to decide the \acrshort{wcet} and \acrshort{bcet}. Even though the free benchmarks from Bosch
 offers a way to generate these from the average execution time and it is accepted by the
 \acrshort{np}-test it does not provide any additional benefit to the benchmark. This becomes more
-clear in chapter \ref{sub:task_transformation} but the short reason is that only the \acrshort{wcet}
+clear in section \ref{sub:task_transformation} but the short reason is that only the \acrshort{wcet}
 is used when creating the job set and setting it to something different than what was generated by
 the uunifast algorithm will change the total utilization of the task set, which is undesirable.
 
@@ -1255,7 +1308,7 @@ assigns priorities based on the deadlines.
 \subsection{Task transformation} \label{sub:task_transformation}
 
 As the task sets generated thus far does not hold the information that is required by the analysis
-tool, explained in \ref{sec:benchmarking}, they have to be transformed into a regular job-set. This
+tool, explained in section \ref{sec:benchmarking}, they have to be transformed into a regular job-set. This
 job-set does not hold any explicit data that would separate it from a regular job-set even though it
 actually represents tasks under the \acrshort{aer} model, all this information is instead implicit.
 This can be done as long as the task generation phase provides sufficient information about the
@@ -1275,7 +1328,7 @@ tasks in its output. The necessary information is as follows.
 \end{itemize}
 
 So all of this information about a task set is then to be transformed into a job set represented by
-the characteristics given in chapter \ref{sec:benchmarking} to be accepted as input to the
+the characteristics given in section \ref{sec:benchmarking} to be accepted as input to the
 \acrshort{np}-test. The basic idea in transforming the \acrshort{aer}-modeled task set into a
 regular job set is to make the acquisition- and restitution-phases of each period into individual
 jobs. Although the execution-phase is not turned into its own job it still holds vital information.
@@ -1357,21 +1410,21 @@ acquisition-window plus the restitution-window. It is used in conjunction with t
 calculate the actual sizes of the windows. Since the \acrshort{np}-test requires absolute time
 (as opposed to relative time which is relative to the start of the period) the start time for each
 period is calculated and used to to transform relative time values to absolute ones. This continues
-until the hyperperiod is reached at which no more jobs is created for that task. Since all The jobs
+until the hyperperiod is reached at which no more jobs is created for that task. Since all the jobs
 are created in pairs of an acquisition-job and a restitution-job where the acquisition-job is
-created first and given an odd job-id as required and further explained in section \ref{REF}. Its
-release time is then transformed from the tasks relative release time to an absolute release time.
-Its worst-time execution time is then assigned according to the execution time of the acquisition
-phase in the task. The deadline is then calculated from the window size and the window ratio which
-is given as input to the algorithm and transformed to an absolute time. The restitution phase is
-then created in a similar manner, but given an even job-id. Its release times are calculated as the
-deadline of the acquisition-job plus the \acrshort{wcet} of the execution-phase. The restitution-job
-gets its execution time from the execution time of the restitution-phase in the task. The deadline
-is then assigned according to the tasks deadline, but transformed into absolute time. When all the
-jobs for every task has been created they are all assigned priorities according to the one of the
-scheduling algorithms describes in section \ref{sec:scheduling_algorithms}. This is because the
-priorities describe a relation between the jobs, thus all the jobs must sometimes be created before
-the priorities can be assigned. 
+created first and given an odd job-id as required and further explained in section
+\ref{sec:scheduling_algorithms}. Its release time is then transformed from the tasks relative
+release time to an absolute release time.  Its worst-time execution time is then assigned according
+to the execution time of the acquisition phase in the task. The deadline is then calculated from the
+window size and the window ratio which is given as input to the algorithm and transformed to an
+absolute time. The restitution phase is then created in a similar manner, but given an even job-id.
+Its release times are calculated as the deadline of the acquisition-job plus the \acrshort{wcet} of
+the execution-phase. The restitution-job gets its execution time from the execution time of the
+restitution-phase in the task. The deadline is then assigned according to the tasks deadline, but
+transformed into absolute time. When all the jobs for every task has been created they are all
+assigned priorities according to the one of the scheduling algorithms describes in section
+\ref{sec:scheduling_algorithms}. This is because the priorities describe a relation between the
+jobs, thus all the jobs must sometimes be created before the priorities can be assigned. 
 
 
 \subsection{Running benchmarks}\label{subsec:running_benchmarks}
@@ -1622,14 +1675,6 @@ on top.
 
 \end{figure}
 
-
-\section{Reliability}
-
-\section{Validity}
-
-\section{Replicability}
-
-
 \chapter{<Discussion> Use a self-explaining title}
 
 % Window ratios
@@ -1644,22 +1689,27 @@ slack time and also increasing the chance that it will miss its deadline. So if 
 slack time that \acrshort{r}-jobs have can instead be reassigned to the \acrshort{a}-jobs to
 increase their slack times resulting in fewer deadlines missed and a higher schedulability ratio. As
 is shown from the results the optimal window-ratio is to allocate, out of the tried window ratios,
-60\% of the time to the \acrshort{a}-job.
+60\% of the time to the \acrshort{a}-job. Even though this thesis assumes a very deterministic
+execution time for the \acrshort{e}-phase, a drawback of the model when relaxing this assumption is
+the naive use of \acrshort{wcet} as the gap between the \acrshort{a}-window and \acrshort{r}-window.
+In a real application the \acrshort{wcet} can be many orders of magnitudes larger than the
+average-case, which means that the \acrshort{a}-window and \acrshort{r}-window would be left
+significantly smaller than what is necessary for the average case, thus decreasing schedulability.
+This can be improved upon by further extension of the task model which is discussed in chapter
+\ref{sec:future_work} future work.
 
 % Task amount
 
 % Scheduling algorithms
 
 When looking at the different tried scheduling algorithms it is evident that \acrshort{edf} is the
-top performing algorithm.  
-
-Seeing that \acrshort{huhp} and \acrshort{luhp} both have the lowest average schedulability ratio of
-all the algorithms and \acrshort{hulp} and \acrshort{lulp} had the highest average schedulability
-ratios after \acrshort{edf} it seems that prioritising jobs with a low priority boosts
-schedulability immensely. Jobs with a lower period are more probable to have its deadline closer
-than a higher period job for job sets where the period equals its relative deadline. Therefor,
-putting a higher priority on the jobs with a lower period should decrease missed deadlines and
-increase schedulability, which is indeed reflected in the results as can be seen in
+top performing algorithm. Seeing that \acrshort{huhp} and \acrshort{luhp} both have the lowest
+average schedulability ratio of all the algorithms and \acrshort{hulp} and \acrshort{lulp} had the
+highest average schedulability ratios after \acrshort{edf} it seems that prioritising jobs with a
+low priority boosts schedulability immensely. Jobs with a lower period are more probable to have its
+deadline closer than a higher period job for job sets where the period equals its relative deadline.
+Therefor, putting a higher priority on the jobs with a lower period should decrease missed deadlines
+and increase schedulability, which is indeed reflected in the results as can be seen in figure
 \ref{fig:sched_algos}. This is also the theory which the scheduling algorithm \acrshort{rms}
 originates from. And as discussed in section \ref{sec:scheduling_algorithms} the four algorithms
 which take period into account from the ones tested were an extension of the \acrshort{rms}
@@ -1707,7 +1757,7 @@ larger problem when the task set grows or the amount of cores are lowered making
 instead of the memory.
 
 It is important to realize that the utilization of the task set does not reflect the utilization of
-the memory. In all of the experiments presented in section \ref{ch:result} a \acrshort{a}-ratio and
+the memory. In all of the experiments presented in chapter \ref{ch:result} a \acrshort{a}-ratio and
 \acrshort{r}-ratio of 0.1 was used. This means that out of the total utilization of a job 10\% of it
 comes from the \acrshort{a}-phase, 80\% from the \acrshort{e}-phase and 10\% from the
 \acrshort{r}-phase. When taking all of this into account the utilization of the memory will just be
@@ -1791,7 +1841,7 @@ the amount of cores are decreased below the amount of tasks.
 
 
 
-\subsection{Future work}
+\subsection{Future work}\label{sec:future_work}
 
 Since the developed task-model puts heavy constraints on when the \acrshort{a}-jobs and
 \acrshort{r}-jobs can be scheduled by creating windows for them within which they are to be
@@ -1800,18 +1850,35 @@ schedulability ratio. The reason for the constraint is for the \acrshort{a}-phas
 before the \acrshort{e}-phase and \acrshort{r}-phase as well as the \acrshort{e}-phase to always
 execute before the \acrshort{r}-phase starts. This describes precedence constraints in how the jobs
 are scheduled, and is something that the analysis tool already is able to deal with. The task model,
-however, requires a special type of precedence. The \acrshort{e}-phases are not explicitly
-scheduled by the scheduler as they have nothing to do with the memory, but they are still required
-to finish execution before the \acrshort{r}-phase is allowed to begin. An idea then could be to pose
-a special type of precedence constraint where job 2 must not only wait for job 1 to finish, but must
-also wait x amount of time after job 1 has finished before job 2 is allowed to start execution. Time
-x would then be represented by the \acrshort{wcet} of the \acrshort{e}-phase similarly to how the
-task model produced in the thesis works. 
+however, requires a special type of precedence. The \acrshort{e}-phases are not explicitly scheduled
+by the scheduler as they have nothing to do with the memory, but they are still required to finish
+execution before the \acrshort{r}-phase is allowed to begin. An idea then could be to pose a special
+type of precedence constraint where job 2 must not only wait for job 1 to finish, but must also wait
+x amount of time after job 1 has finished before job 2 is allowed to start execution. Time x would
+then be represented by the \acrshort{wcet} of the \acrshort{e}-phase similarly to how the task model
+produced in the thesis works. 
 
+The limitation that the amount of tasks with the same period cant be larger than the amount of cores
+in the system has been discussed. This is an effect of the \acrshort{e}-phase of each task being
+placed at the same point in time for each task. It could thus be of interest to see what effect
+moving the \acrshort{e}-phase around within the schedulability ratio (i.e. changing the tasks
+window-ratio) to be different for each individual task within the same period. It would be expected
+to have an effect on the schedulability ratio as it would, theoretically, allow for more tasks with
+the same period than the amount of cores to be schedulable.
 
-%TODO: Mention that implementing precedence-constraints in the timing analysis makes it such that
-%the A and R windows become redundant. Also requires the WCET of E to be added to the A-phase.
-    % NOT TRUE. The WCET of E cant be added as it will seem to occupy the memory while its really
+The model can further be extended to make it more accurate represent reality. Release jitter can be
+added to the tasks by adding it to the \acrshort{a}-job, the naive way of using the \acrshort{wcet}
+of the \acrshort{e}-job to model the time-interval required from the latest possible completion of
+the \acrshort{a}-job to the earliest possible scheduling of the \acrshort{r}-job can be improved
+upon by modelling the \acrshort{wcet} and \acrshort{bcet} of the \acrshort{e}-job as release jitter
+for the \acrshort{r}-job. The deadline of the \acrshort{a}-job plus the \acrshort{bcet} of the
+\acrshort{e}-job is the earliest possible starting time of the \acrshort{r}-job and the deadline of
+the \acrshort{a}-job plus the \acrshort{wcet} of the \acrshort{e}-job is the latest time at which
+the \acrshort{r}-job will be available for scheduling. This time interval can simply be modeled as
+the release jitter for the \acrshort{r}-job. Furthermore, relaxing the assumption that the
+\acrshort{a}-jobs and \acrshort{r}-jobs are always constant in time is possible by modelling them
+with a \acrshort{wcet} and \acrshort{bcet} of their own. All of these proposals are already
+implemented for the schedulability test and only requires an extension of the task model.
 
 
 % Print the bibliography (and make it appear in the table of contents)
