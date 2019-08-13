@@ -322,16 +322,23 @@ reader becomes equipped to understand the topic at hand in-depth.
 %also possible to include the author as part of the sentence using \texttt{textcite}, like talking
 %about the work of \textcite{einstein2016}.
 
-\chapter{<Theoretic Background> Use a self-explaining title}\label{ch:theoretic_background}
+\chapter{Theoretic Background}\label{ch:theoretic_background}
 
 This chapter aims to give sufficient background such that the reader is able to understand the work
-that the thesis covers. Section \ref{sec:the_task_model} begins by describing the task model used
-within embedded systems.
+that the thesis covers. Section \ref{sec:the_task_model} begins by describing a common task model
+used within embedded systems to describe task sets. Section \ref{sec:scheduling} describes the basic
+ways to schedule tasks onto cores in embedded systems for single core as well as multi-core systems.
+When used in a real product it is important that a scheduling algorithm is able to scheduled a task
+set without any missed deadlines, section \ref{sec:schedulability_analysis} covers how schedulers
+can be analysed to make sure this requirement is fulfilled. Section \ref{sec:np-test} presents the
+most important paper which this thesis build onto, which is a schedulability analysis tool. Section
+\ref{sec:aer_execution_model} presents an execution model used to combat undeterministic behaviour
+in scheduling in embedded systems caused by shared memory. Section \ref{sec:related_work} presents
+related work.
 
 
 \section{The Task Model} \label{sec:the_task_model}
 
-%TODO: Maybe add a picture that shows all the characteristics of a job/task
 %TODO: Show that this is something that can actually be used in AUTOSAR as they already to the
 %fetch-execute-write cycle for some of their streaming applications using runnables. Called
 %"implicit access" in autosar. Depicted in Real World Automotive Benchmarks for Free pp-slides.
@@ -498,7 +505,7 @@ such as \acrshort{rms} and \acrshort{edf}, but they will have different behaviou
 decreases the determinism of the system and creates more combinations of possible schedules for each
 task set.
 
-\section{Schedulability analysis}
+\section{Schedulability analysis} \label{sec:schedulability_analysis}
 
 %TODO mention brute-forcing analysis by simulating one hyper period of the schedule. And this seems
 %easy in theory, but in practice there can be hundreds of tasks and super long hyper period.
@@ -574,12 +581,12 @@ instant of a task is no longer sufficient in determining if a task set is schedu
 % deadline while a later release of the same task may have been able to complete the deadline.
 
 
-\section{Non-Preemptive schedulability test}
+\section{Non-Preemptive schedulability test} \label{sec:np-test}
 
 The work which this thesis builds upon is presented in \parencite{nasri_exact_2017}. An open-source
 implementation written in c++ by one of the authors is available on
 Github\parencite{brandenburg_implementation_2018} and will further be referred to as the
-\acrfull{np}-test. It presents an exact non-preemptive schedulability test for single-core
+\acrfull{np}-test. It presents an \textbf{exact} non-preemptive schedulability test for single-core
 processors. The basic idea is to build a schedule graph that fully represents all possible schedules
 for a given job-input. This isn't a new idea but it brings a novel merge phase that merges all nodes
 of the graph that will lead to the same input in the future making it scale better. It also takes
@@ -701,7 +708,7 @@ shows the edges that no longer needs to be explored using dashed lines.
 
 \end{figure}
 
-\section{The AER Execution Model}
+\section{The AER Execution Model} \label{sec:aer_execution_model}
 
 The \acrfull{aer} execution model was first proposed in \parencite{durrieu_predictable_2014} to
 improve performance and predictability while using \acrshort{cots} multi-core processors with shared
@@ -751,7 +758,7 @@ optimal \acrshort{ilp} algorithm in a fraction of the time.
 % to be paused while running critical tasks on a single core.
 
 
-\section{Related Work}
+\section{Related Work} \label{sec:related_work}
 
 The most important paper to discuss is \parencite{nasri_response-time_2018} which provides a
 state-of-the-art schedulability analysis method for non-preemptive static-priority tasks sets under global
@@ -855,7 +862,17 @@ identical sub-trees in the future. Because of this it is only necessary to conti
 one of the nodes effectively making it so that the nodes can be \textit{merged}.
 
 
-\chapter{<The work> Use a self-explaining title}
+\chapter{Method}
+
+This chapter explains the work that has been done to reach the conclusions in the thesis. Section
+\ref{sec:work_task_model} presents an extended version of the \acrshort{aer} task model that has
+been produced. Section \ref{sec:iip} presents a new \acrshort{iip} that can be used in conjunction
+with the \acrshort{np}-test in order for the test to accept job-sets of the task model presented in
+section \ref{sec:work_task_model}. Section \ref{sec:scheduling_algorithms} presents the scheduling
+algorithms that will be used during benchmarking to prioritize the jobs. Section
+\ref{sec:benchmarking} discusses how benchmarking was done to get correct results for evaluating the
+task model presented in section \ref{sec:work_task_model} and the different scheduling algorithms
+presented in \ref{sec:scheduling_algorithms}.
 
 \section{Task model} \label{sec:work_task_model}
 
