@@ -315,7 +315,11 @@ other analysis tools will either perform the same (being also exact) or worse.
 \section{Outline}
 
 Chapter \ref{ch:theoretic_background} gives a theoretic background to the problem area such that the
-reader becomes equipped to understand the topic at hand in-depth.
+reader becomes equipped to understand the topic at hand in-depth. Chapter \ref{ch:method} explains
+all of the new concepts and work that has been developed in the space of this thesis. Chapter
+\ref{ch:results} purely shows and puts into context the results gathered during running experiments.
+Chapter \ref{ch:discussion} discusses the implications of the results shown in the earlier chapter
+as well as gives conclusions and further work.
 
 %We use the \emph{biblatex} package to handle our references.  We therefore use the command
 %\texttt{parencite} to get a reference in parenthesis, like this \parencite{heisenberg2015}.  It is
@@ -416,9 +420,12 @@ tasks in and out of the core during runtime. For the \acrshort{os} to switch tas
 out of the core it needs to schedule the tasks according to some order. This is where the priority
 of tasks come in handy, by scheduling tasks and switching them in and out of the processor very
 quickly depending on their priority the \acrshort{os} is able to perform more than one task seemingly in
-parallel than what is actually allowed for by hardware. The rest of this section up until section
-\ref{subsec:multiprocessor_scheduling} is only concerned with the scheduling of single core
-processors.
+parallel than what is actually allowed for by hardware. For embedded systems it is also of extra
+importance that every task is scheduled with enough time to finish before its deadline, as not
+possibly break the system. The interval from a tasks release time until its deadline is referred to
+as its \textbf{schedulability window} within which the task must be scheduled to meet its
+deadline.The rest of this section up until section \ref{subsec:multiprocessor_scheduling} is only
+concerned with the scheduling of single core processors.
 
 % TODO Maybe add other measurements of how good schedulers are, least-slack time etc.
 The order in which tasks are executed is determined by the scheduler which in of itself is a special
@@ -862,7 +869,7 @@ identical sub-trees in the future. Because of this it is only necessary to conti
 one of the nodes effectively making it so that the nodes can be \textit{merged}.
 
 
-\chapter{Method}
+\chapter{Method} \label{ch:method}
 
 This chapter explains the work that has been done to reach the conclusions in the thesis. Section
 \ref{sec:work_task_model} presents an extended version of the \acrshort{aer} task model that has
@@ -876,27 +883,29 @@ presented in \ref{sec:scheduling_algorithms}.
 
 \section{Task model} \label{sec:work_task_model}
 
-The term \textit{schedulability window} is used to refer to the time interval within which a task is
-able to be scheduled to not miss its deadline. 
+When the interval between the worst-case finish time of the \acrshort{a}-phase and the best-case
+release time of the \acrshort{r}-phase is less than the \acrshort{wcet} of the \acrshort{e}-phase a
+problem arises. The analysis can't make the guarantee that the interval between the finish time of
+the \acrshort{a}-phase and the start time of the \acrshort{r}-phase is sufficient for the
+\acrshort{e}-phase to finish its execution. The problem becomes even worse as the schedulability
+windows of the \acrshort{a}-phase and \acrshort{r}-phase overlaps as the analysis doesn't handle any
+precedence constraints among jobs. This means that it would be possible for an \acrshort{r}-phase
+to be scheduled before the \acrshort{a}-phase belonging to the same job.
 
-A problem arises when the interval between the worst-case finish time of the A-phase and the
-best-case release time of the R-phase is less than the \acrshort{wcet} of the E-phase. The analysis
-can't make the guarantee that the interval between the finish time of the A-phase and the start time
-of the R-phase is sufficient for the E-phase to finish its execution. The problem becomes even worse
-as the schedulability windows of the A-phase and R-phase overlaps as the analysis doesn't handle any
-precedence constraints among jobs. This means that it would be possible for and R-phase to be
-scheduled before the A-phase belonging to the same job.
-
-It is a property of the model that A-phases must always precede the R-phase belonging to the same
-task. It also becomes more complicated than a simple precedence constraint as the analysis must
-leave sufficient time between the finish time of the A-phase and the start time of the R-phase for
-the E-phase to finish execution. This can be circumvented by constraining the model. The interval
-from release to deadline of a job can be divided into three distinct intervals that can be thought of
-as sub-windows of the schedulability window of a task. These windows are referred to as the
-acquisition-window, the execution-phase and the restitution-window. The execution-phase is still
-referred to the same as it will have a static placement within the scheduling window as opposite to
-the other two phases which will be schedulable anywhere within their window. This idea is
-illustrated in figure \ref{fig:aer_window_model}.
+It is a property of the model that an \acrshort{a}-phase must always precede its matching
+\acrshort{r}-phase belonging to the same task. It also becomes more complicated than a simple
+precedence constraint as the analysis must leave sufficient time between the finish time of the
+A-phase and the start time of the R-phase for the E-phase to finish execution. This can be
+circumvented by introducing new concepts to the \acrshort{aer}-model. The schedulability window of a
+task can be divided into three non-overlapping intervals that can be thought of as sub-windows of
+the schedulability window. The first window is referred to as the acquisition-window and is the
+interval within which the \acrshort{a}-phase is allowed to execute within. The second interval
+begins right after the first and is the size of the \acrshort{wcet} of the \acrshort{e}-phase as it
+is the required time before the \acrshort{r}-phase is allowed to start execution. After the second
+interval is the \acrshort{r}-window within which the \acrshort{r}-phase is allowed to execute.So
+each phase has a predetermined interval as a part of the whole schedulability-window where no
+intervals are allowed to overlap. This concepts is better illustrated in figure
+\ref{fig:aer_window_model}.
 
 
 \begin{figure}
@@ -918,21 +927,30 @@ separated by the \acrshort{wcet} of the task. Each individual job can the be sch
 the memory access and the restitution-phase does not have to worry if the acquisition-phase and the
 execution-phase have yet to finish execution as a property of the model is that the
 restitution-phase will never be released before the execution-phase is guaranteed to have finished
-even in the worst-case. One interesting thing of the model is to chose the \textbf{window-ratio}
-between the acquisition-window and the restitution-window as they necessarily don't have to be of
-the same size. This will be explored further during benchmarking which is explained in section
-\ref{sec:benchmarking}.
+even in the worst-case. One interesting thing of the model is that the interval for the
+\acrshort{a}-phase and \acrshort{r}-phase doesn't necessarily have to be of the same size, but more
+time could for example be allocated for the \acrshort{a}-window with a cost of shrinking the
+\acrshort{r}-window. The relationship between the size of the two intervals is called the
+\textbf{window-ratio} and is equal to the size of the \acrshort{a}-windows size divided by the
+sum of the \acrshort{a}-window and \acrshort{r}-window sizes. This is explored further during
+benchmarking in section \ref{sec:benchmarking}.
 
 
 It quickly becomes obvious however that the model has some disadvantages. The most obvious one being
-that the core which the task is assigned to might idle for a long time when the acquisition and
-execution phases finish executing, especially in the best case, as the restitution phase is yet to
-be released. Another problem is that the number of tasks with the same period can never be larger
+that the core which the task is assigned to might idle for a long time during certain circumstances.
+For instance, even though enough space is allocated between the \acrshort{a}-window and
+\acrshort{r}-window for the \acrshort{e}-phase to finish there is nothing prohibiting the
+\acrshort{e}-phase from starting execution as soon as the \acrshort{a}-phase is complete, even if
+this is well before its deadline. So when the \acrshort{a}-phase and \acrshort{e}-phase finish
+executing, especially in the best case, the restitution phase is yet to be released for what may be
+a very long time, thus leaving the allocated core idle for all of this time unable to take on any
+other work. Another problem is that the number of tasks with the same period can never be larger
 than the amount of physical cores as the task set would never be schedulable then. Imagine all but
 one task of the same periods and same window-ratio being assigned cores at the same time such that
 all cores are busy. The occupied cores would then be busy until the restitution-phases are finished
 executing, at which the acquisition-phases are all guaranteed to have had their deadlines passed,
-thus the unassigned task will miss its deadline.
+thus the unassigned task will miss its deadline. The effect of these disadvantages are further
+discussed in chapter \ref{ch:results}.
 
 
 \section{Idle-time Insertion Policy} \label{sec:iip}
@@ -1300,10 +1318,10 @@ for the phases and it is not trivial. The paper "Scheduling Multi-Rate Real-Time
 Clustered Many-Core Architectures with Memory Constraints"\parencite{becker_scheduling_2018} contains
 information about the execution times of the acquisition and restitution phases of 18 different
 tasks in an engine management system in a car. These could be used to make approximations of the
-ratios between the execution times of the three different phases. It is however of interest to
-benchmark how the schedulability of the job sets is affected by varying the ratios between the three
-phases. These ratios are thus instead provided during benchmarking as an input to the task
-generator.
+ratios between the execution times of the three different phases. However, it could be of interest
+to benchmark how the schedulability of the job sets is affected by varying the ratios between the
+three phases. These ratios are thus instead provided during benchmarking as an input to the task
+generator, further explained in section \ref{sec:benchmarking}
 
 The ratios determine how much of the total execution phase, which was determined earlier by the
 utilization and period, should be allocated to the \acrshort{a} and the \acrshort{r} phases, where
@@ -1530,10 +1548,15 @@ chosen to 0.1 and the window ratio is set to 0.5. The task amount is set to 15 a
 to be larger as to bottleneck the memory and not the cores.
 
 
-\chapter{<Result> Use a self-explaining title} \label{ch:result}
+\chapter{Results} \label{ch:result}
 
-This chapter shows the results from the benchmarkings of the analysis tool explained in section
-\ref{subsec:running_benchmarks}.
+This chapter shows the results from the benchmarking of the analysis tool explained in section
+\ref{subsec:running_benchmarks}. Section \ref{sec:result_window_ratios} show the resulting
+schedulability ratio from testing a variety of window ratios for the \acrshort{aer}-tasks, section
+\ref{sec:task_amount} shows the schedulability ratio when varying the amount of tasks in the task
+set, section \ref{sec:results_core_amount} shows the schedulability ratio when differing the amount of cores
+available in the system and section \ref{sec:results_scheduling_algorithms} shows the schedulability
+ratio for different tested scheduling algorithms when varying the utilization of the task set.
 
 \section{Window ratios}\label{sec:result_window_ratios}
 
@@ -1578,7 +1601,7 @@ window ratio of 60\% has the highest average schedulability ratio overall in fig
 \acrshort{r}-phase (high window ratio) seems to favor the average schedulability ratio compared to
 given the same size of the window to the \acrshort{a}-phase.
 
-\section{Task amount}
+\section{Task amount} \label{sec:task_amount}
 
 \begin{figure}[H]
 
@@ -1648,7 +1671,7 @@ the steady decline in schedulability ratio as the amount of cores are decreased.
 
 \end{figure}
 
-\section{Scheduling algorithms}
+\section{Scheduling algorithms} \label{sec:results_scheduling_algorithms}
 
 \begin{figure}[H]
 
@@ -1692,7 +1715,7 @@ on top.
 
 \end{figure}
 
-\chapter{<Discussion> Use a self-explaining title}
+\chapter{Discussion} \label{ch:discussion}
 
 % Window ratios
 As discussed in section \ref{sec:result_window_ratios} giving more time to the \acrshort{a}-phase
