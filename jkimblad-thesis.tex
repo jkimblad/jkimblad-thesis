@@ -345,7 +345,7 @@ amount of time after its start known as its \textbf{computation time}, denoted a
 has finished executing it will usually wait for some amount of time before it is ready to execute
 again, this is known as the tasks \textbf{period}, denoted by $T_i$. The earliest time where a task
 is ready to start execution within a new period is called the \textbf{arrival time} of the task and
-is denoted $ a_i $. For all purposes in this thesis the tasks arrival time can be assumed to be the
+is denoted $ a_i $.  For all purposes in this thesis the tasks arrival time can be assumed to be the
 same as the start of each new period.
 
 The \acrshort{lcm} of the periods for all the tasks in a task set is known as the task set's
@@ -370,7 +370,10 @@ times there are also uncertainties in the arrival time of tasks known as release
 of earliest arrival time, denoted $ a_i^{min} $, is the  absolute earliest time at which a task may
 be able to start executing within the period and likewise the latest arrival time, denoted $
 a_i^{max} $ is the time when the task is guaranteed to be able to start execution. Thus an extended
-more precis task could be described by $ \tau_i = ( [C_i^{min}, C_i^{max}], T_i, D_i) $.
+more precis task could be described by $ \tau_i = ( [C_i^{min}, C_i^{max}], T_i, D_i) $. An
+individual instance of a task within a period is referred to as a single job and can be defined by
+many of the same characteristics as a task but with time being absolute and not relative to the
+start of the period.
 
 Following the above definitions different states can be ascribed to tasks depending on their
 status in the system at a specific time instance. When a task arrives at the start of a new period
@@ -411,56 +414,60 @@ finished without ever making any other transitions.
 % TODO: Mention Job-Level priority (JLP) and Task-Level Priority (TLP)
 \section{Scheduling} \label{sec:scheduling}
 
-Although computers give away the illusion of being able to deal with many things simultaneously this
+Although computers give the illusion of being able to do many things simultaneously this
 is actually not the case. Computers are limited to how much parallel computing they are able to do
-by the hardware, specifically the amount of cores within the \acrshort{cpu}. A computer with, for
-example, a single core \acrshort{cpu} is only able to execute one task at a time. For a computer
-with a single core to deal with more than a single task at the same time requires switching ongoing
-tasks in and out of the core during runtime. For the \acrshort{os} to switch tasks quickly in and
-out of the core it needs to schedule the tasks according to some order. This is where the priority
-of tasks come in handy, by scheduling tasks and switching them in and out of the processor very
-quickly depending on their priority the \acrshort{os} is able to perform more than one task seemingly in
-parallel than what is actually allowed for by hardware. For embedded systems it is also of extra
-importance that every task is scheduled with enough time to finish before its deadline, as not
-possibly break the system. The interval from a tasks release time until its deadline is referred to
-as its \textbf{schedulability window} within which the task must be scheduled to meet its
-deadline.The rest of this section up until section \ref{subsec:multiprocessor_scheduling} is only
-concerned with the scheduling of single core processors.
+by the hardware, specifically the amount of cores within the \acrshort{cpu}. A computer with a
+single core \acrshort{cpu}, for example, is only able to execute one task at a time. In order for a
+computer with a single core to deal with more than a single task at the same time it needs to switch
+ongoing tasks in and out of the core during runtime. For the \acrshort{os} to switch tasks quickly
+in and out of the core it needs to schedule the tasks according to some order. This is where the
+priority of tasks come in handy, by scheduling tasks and switching them in and out of the processor
+very quickly depending on their priority the \acrshort{os} is able to execute more than one task,
+seemingly in parallel, than what is actually allowed for by the hardware. For embedded systems it is
+also often of extra importance that every task is scheduled with enough time to finish before its
+deadline, as not to potentially crash the system. The interval from a tasks release time until its
+deadline is referred to as its \textbf{schedulability window} within which the task must be
+scheduled to meet its deadline.The rest of this section up until section
+\ref{subsec:multiprocessor_scheduling} is only concerned with the scheduling of single core
+processors.
 
 % TODO Maybe add other measurements of how good schedulers are, least-slack time etc.
 The order in which tasks are executed is determined by the scheduler which in of itself is a special
 type of task executed by the \acrshort{os}. The scheduler is invoked by specific events happening in
 the system. It could for example be that a task is finished executing or that it has begun waiting
-on some resource that is not yet available. As not all scheduling algorithms were created equal they
-vary in how good of a task they do when scheduling the same task sets. Because of this some
-measurements must be introduced in order to have a fair comparison of how well they work. The
-processor utilization factor, denoted as $ U $, is such a measurement introduced to show to what
-percentage a specific task set would keep the processor busy. The utilization can be calculated as
-$ U = \sum_{i=1}^n \frac{C_i}{T_i} $.
+on some resource that is not yet available or a new task is released and ready to start execution.
+As not all scheduling algorithms were created equal they vary in how good they manage to schedule
+the same task sets. Because of this some measurements must be introduced in order to make a fair
+comparison of how well they work. The processor utilization ratio, denoted as $ U $, is such a
+measurement introduced to show to what percentage a specific task set would keep the processor busy.
+The utilization can be calculated as $ U = \sum_{i=1}^n \frac{C_i}{T_i} $. So a very good scheduling
+algorithm would be able to schedule task sets with a high utilization ratio without any of the tasks
+missing their deadline. 
 
 For embedded systems there exists a set of well known scheduling algorithms such as \acrshort{edf}
 and \acrshort{rms}. Imagining a single-core \acrshort{cpu} the algorithm \acrshort{rms} works by
-setting the priority of each task equals to its period. This means that the task with the lowest
+setting the priority of each task equal to its period. This means that the task with the lowest
 period is given the highest priority and always scheduled first once it is in the ready state. Since
-periods of tasks never changes during execution, the priorities of the individual tasks will never
+periods of tasks never change during execution, the priorities of the individual tasks will never
 change either, thus \acrshort{rms} is said to be a \textbf{static-priority scheduler}. If a
-scheduler instead changes the priorities of the task during execution it is a
+scheduler instead changes the priorities of the task during execution, such as \acrshort{edf}, it is a
 \textbf{dynamic-priority scheduler}. 
 
-Instead of setting priorities according to the periods, \acrshort{edf} works by setting the
+Instead of setting priorities according to the periods \acrshort{edf} works by setting the
 priorities according to how close a task is to its deadline. This means that the task closest to
-exceeding its deadline will always be executing first on the processor. If some task $ \tau_a $ is
+missing its deadline will always be executing first on the processor. If some task $ \tau_a $ is
 executing with a deadline further away in time than another task $ \tau_b $, that was just released,
 then $ \tau_a $ will get preempted and the newly released $ \tau_b $ will be allowed to execute
-instead. This behaviour makes \acrshort{edf} a \textbf{preemptive scheduling algorithm}, the
-opposite of which is a \textbf{non-preemptive scheduling algorithm} which lets each task finish
-before scheduling the next highest priority task.
+instead. This version of \acrshort{edf} is known as a \textbf{preemptive scheduling algorithm}, the
+opposite of which is a \textbf{non-preemptive scheduling algorithm} which lets each task finish its
+execution, even when higher priority tasks are ready to execute. The timing analysis explored in
+later parts of the thesis only deals with scheduling algorithms that are non-preemptive.
 
 An example of how \acrshort{rms} would schedule a task set can be seen in figure
 \ref{fig:rate_monotonic_scheduling}. A special point of interest is at time 4 when $T_3$ is
-executing since earlier as $T_1$ is released. Due to $T_1$ having a lower period than $T_3$ it also
-has a higher priority. The scheduler preempts $T_3$ and lets $T_1$ execute instead. $T_3$ is later
-allowed to resume execution of $j_3$ at time 5.
+executing while $T_1$ is released. Due to $T_1$ having a lower period than $T_3$ it also has a
+higher priority. The scheduler preempts $T_3$ and lets $T_1$ execute instead. $T_3$ is later allowed
+to resume execution of $j_3$ at time 5. This is what is meant by a pre-emptive scheduling algorithm.
 
 \begin{figure}
 
@@ -475,12 +482,13 @@ allowed to resume execution of $j_3$ at time 5.
 
 \end{figure}
 
-When dealing with non-preemptive single-core systems where the tasks periods equal the tasks
-deadlines \acrshort{rms} guarantees finding a feasible schedule if such a schedule exists, making it
-an \textbf{optimal} scheduling algorithm. For preemptive single-core systems, \acrshort{edf} has
-been proven to always find a feasible schedule if one exists, making it optimal in those
-circumstances. If an algorithm however is unable to find a feasible schedule, even when such a
-schedule exists, it is considered a \textbf{heuristic}.
+When considering preemptive single-core systems with static-priority assignments where the tasks
+periods equal the tasks deadlines the scheduling algorithm \acrshort{rms} is guaranteed to find a
+feasible schedule if such a schedule exists, making it an \textbf{optimal} scheduling algorithm
+under these circumstances. For preemptive dynamic-priority assignment single-core systems
+\acrshort{edf} has been proven to always find a feasible schedule if one exists, making it optimal
+in those circumstances. If an algorithm however is unable to find a feasible schedule, even when
+such a schedule exists, it is considered a \textbf{heuristic}.
 
 \subsection{Multiprocessor scheduling} \label{subsec:multiprocessor_scheduling}
 
@@ -488,29 +496,41 @@ When considering multi-core processors life for schedulers become a little harde
 processor the scheduler only needs to consider temporal allocation of the task, as in
 \underline{when} they should run. Scheduling tasks on a multi-core system also requires the
 scheduler to consider spatial allocation of the tasks, as in \underline{where} they should run
-(on what core). Schedulers deal with these allocations in two different ways, either through what is
-known as \textbf{global scheduling} or through \textbf{partitioned scheduling}. 
+(on what core). Schedulers can deal with these allocations in two different ways, either through
+what is known as \textbf{global scheduling} or through \textbf{partitioned scheduling}. 
 
 %TODO: Mention some examples of multi-core scheduling algorithms (gEDF, RMS, etc)
 %TODO: maybe have pros and cons for partitioned and global scheduling
 %TODO: Maybe have a picture to help explain the differences between partitioned and global
 %scheduling. This contains a good example:
 %http://retis.sssup.it/~giorgio/slides/cbsd/mc3-global-2p.pdf
-Partitioned scheduling entails that each task is assigned to a dedicated core where it always will
-be running. Due to this any single-core scheduling algorithm can be used individually on each core
-during runtime. It is then possible to also use the existing scheduling analysis methods for the
-respective scheduling algorithm.  This sounds easy enough, but in reality assigning tasks to cores
-is a version of the bin packing problem which is known to be a NP-hard problem meaning that there
-exists no algorithm to solve it in less than polynomial time. However, good heuristics
+Partitioned scheduling entails that each task is assigned to a dedicated core which is the only core
+the task is allowed to execute on, even when other cores are free. Due to this any single-core
+scheduling algorithm can be used individually on each core during runtime. It is then possible to
+also use the existing scheduling analysis methods for the respective scheduling algorithm. This
+sounds easy enough, but in reality assigning tasks to cores is a version of the bin packing problem
+which is known to be a NP-hard problem meaning that there exists no algorithm to solve it in less
+than polynomial time. However, good heuristics
 \parencite{johnson_fast_1974}\parencite{coffman_application_1978} exists that find good solutions
-fast and since tasks can be allocated to cores offline more computing power can be used to find
-close to optimal solutions in reasonable time.
+fast and since tasks can be allocated to cores offline more computing power and time can be used to
+find close to optimal solutions than if it had to be done during runtime.
 
 Global scheduling means that the scheduler takes into account both spatial and temporal allocation
 when scheduling each task. Algorithms from sing-core scheduling can be applied to global scheduling
 such as \acrshort{rms} and \acrshort{edf}, but they will have different behaviour. Global scheduling
 decreases the determinism of the system and creates more combinations of possible schedules for each
-task set.
+task set. This makes global scheduling much harder to run analysis on.
+
+All of the algorithms explored this far have taken a \textbf{core-centric} approach to scheduling tasks,
+meaning they see the cores as the resources and tries to assign tasks to them as efficiently as
+possible. Another possibility is to take a \textbf{memory-centric} approach to scheduling instead.
+As the amount of cores in a processor increases so does the usage of shared memory to a point where
+increasing the cores further will not increase the schedulability ratio as the shared memory
+bottlenecks the system by being busy non-stop. Memory accesses can then be scheduled explicitly such
+that tasks have assigned time slots within which they are allowed to access the shared memory. Since
+there usually is only one shared memory this also reduced the problems of multi-processor scheduling
+down to  single-processor scheduling as there is a single resource to for the tasks to be scheduled
+on. How a memory-centric approach can be implemented is discussed in the rest of the thesis.
 
 \section{Schedulability analysis} \label{sec:schedulability_analysis}
 
@@ -523,14 +543,17 @@ missed deadlines could mean fatal outcome. For example, \acrshort{rms} can be an
 mathematically and has been proven to be able to schedule any task set that fulfills the constraint
 $ U \le n(2^{\frac{1}{n}}-1) $ where $ n $ is the amount of tasks \parencite{liu_scheduling_1973}.
 This is only a \textbf{sufficient} condition, meaning that \acrshort{rms} might be able to schedule
-task sets that do not fulfill the condition, but it is not guaranteed to. A condition that must be
-fulfilled for the task set to have a feasible schedule, but does not guarantee such a schedule
-exists, is known as a \textbf{necessary} condition. If a condition is both necessary and sufficient
-it is said to be \textbf{exact}. An example of an exact condition for \acrshort{edf} is $ U(\Gamma)
-\leq 1 $ which states that the utilization of the task set must be one or less. Finding good
-conditions is not always trivial as shown by \parencite{bini_hyperbolic_2001} which presents a less
-pessimistic sufficient condition of the same complexity $ O(n) $ for \acrshort{rms} almost 30 years
-after the earlier presented condition was introduced. 
+task sets that do not fulfill the condition, but it is not guaranteed to. On the contrary, a
+condition that must be fulfilled for the task set to have a feasible schedule, but does not
+guarantee such a schedule exists, is known as a \textbf{necessary} condition. If a condition is both
+necessary and sufficient it is said to be \textbf{exact} which means that if the analysis deems a
+task set to be schedulable it is guaranteed to be schedulable, and if it deems it not to be
+schedulable it is guaranteed not to be schedulable. An example of an exact condition for
+\acrshort{edf} one single-core processors is $ U(\Gamma) \leq 1 $ which states that the utilization
+of the task set must be one or less. Finding good conditions is not always trivial as shown by
+\parencite{bini_hyperbolic_2001} which presents a less pessimistic sufficient condition for
+\acrshort{rms} of the same complexity $ O(n) $ almost 30 years after the first presented condition
+was introduced. 
 
 %TODO: Mention that increase of tasks leads to harder schedulability
 %TODO: Mention that the illustration is mostly to get and idea of the problem trying to be solved,
@@ -539,14 +562,14 @@ after the earlier presented condition was introduced.
 The gap between sufficient conditions and necessary conditions where the tasks sets are undetermined
 if they are able to be scheduled is illustrated in figure
 \ref{fig:sufficient_necessary_schedulability}. A lot of research is being aimed towards finding less
-pessimistic necessary and sufficient conditions for multi-core scheduling algorithms to close the
-gap between them which is still not a solved problem. In addition, each unique scheduling algorithm
+pessimistic necessary and sufficient conditions for scheduling algorithms to close the gap between
+them which is still not a solved problem in all cases. In addition, each unique scheduling algorithm
 may require its own set of unique conditions for analysis. All conditions are also not as simple as
-the one presented for \acrshort{rms} especially when considering multi-core. The conditions have
-varying complexity and they often need to make the trade-off between complexity and how pessimistic
-they are. The paper \parencite{bertogna_tests_2011} shows examples of conditions that are of $
-O(n^3) $ complexity which can be alright when analysing small task sets, but is too complex as the
-task sets grow or if it has to be calculated online with limited computation power.
+the one presented for \acrshort{rms} especially when also considering multi-core. The conditions
+have varying complexity and they often need to make the trade-off between complexity and how
+pessimistic they are. The paper \parencite{bertogna_tests_2011} shows examples of conditions that
+are of $ O(n^3) $ complexity which can be alright when analysing small task sets, but is too complex
+as the task sets grow or if it has to be calculated during runtime with limited computation power.
 
 \begin{figure}
 
@@ -572,18 +595,20 @@ at the same time as the task. This pushes the task completion time as far away f
 as it ever will be in the given task set. If the task doesn't miss its deadline after the critical
 instant it is guaranteed to never miss its deadline for any other instance in the schedule. As an
 effect of this, each task can be examined during its critical instant, and if all tasks meet their
-deadlines the task set is guaranteed to be schedulable. This facilitates analysis considerably as
+deadlines the task set is guaranteed to be schedulable. This simplifies analysis considerably as
 only a small part of the schedule needs to be analysed.
 
-Having the arrival and computation time defined as intervals creates the possibility of different
-schedules for the same task set using the same scheduler. This makes analysis more difficult as
-simulation requires testing several of the combinations of release and computation times. It is
-intuitive to think that it is sufficient to analyse the worst-case times of all tasks to find if the
-schedule is feasible. This is however not true for non-preemptive systems as two jobs released
-within the same interval can lead to either being scheduled until its completion before the other.
-For some task sets with this property an earlier release of a certain job can lead to a missed
-deadline later in the schedule in multi-core systems. This also means that examining the critical
-instant of a task is no longer sufficient in determining if a task set is schedulable or not.
+However, having the arrival and computation time defined as intervals creates the possibility of
+different schedules for the same task set using the same scheduler. This makes analysis more
+difficult as analysis requires testing several of the combinations of release and computation times.
+It is intuitive to think that it is sufficient to analyse the worst-case times of all tasks to find
+if the schedule is feasible. This is however not true for non-preemptive systems as two jobs with
+the same arrival-time interval can lead to either being scheduled before the other until its
+completion. For some task sets with this property a later or earlier release of a certain job may
+lead to a missed deadline later in the schedule. This also means that examining the critical instant
+of a task is no longer sufficient in determining if a task set is schedulable or not. An example of
+this phenomena can be seen in fig \ref{fig:np-test_schedule} and is further explored in the next
+section.
 % TODO Example of how earlier release of a task on multicore systems can make the schedule miss a
 % deadline while a later release of the same task may have been able to complete the deadline.
 
@@ -594,36 +619,38 @@ The work which this thesis builds upon is presented in \parencite{nasri_exact_20
 implementation written in c++ by one of the authors is available on
 Github\parencite{brandenburg_implementation_2018} and will further be referred to as the
 \acrfull{np}-test. It presents an \textbf{exact} non-preemptive schedulability test for single-core
-processors. The basic idea is to build a schedule graph that fully represents all possible schedules
-for a given job-input. This isn't a new idea but it brings a novel merge phase that merges all nodes
-of the graph that will lead to the same input in the future making it scale better. It also takes
-into account uncertainties in the job set to better reflect reality by taking both release-time
-jitter and the \acrshort{bcet} and \acrshort{wcet} into consideration. The test is both sufficient, 
-necessary and sustainable. Where sustainable is defined as "A schedulability test is defined to
-be sustainable if any task system deemed schedulable by the test remains so if it behaves 'better' than
-mandated by its system specifications"\parencite{baruah_sustainable_2006}. Thus also making it exact.
+processors. The basic idea is to build a schedule graph, using vertices and edges, that fully
+represents all possible schedules for a given job set input. A job set contains all the individual
+schedulable instances of each periodic task in a task set and all tasks can easily be converted into
+their corresponding jobs. This analysis isn't a new idea but it brings a novel merge phase that
+merges all nodes of the graph that will lead to the same outcome in the future making it scale better
+both in size and time. It is also able to take into account uncertainties in the job set to better
+reflect reality by taking both release-time jitter and the \acrshort{bcet} and \acrshort{wcet} into
+consideration. The test is both sufficient, necessary and sustainable. Where sustainable is defined
+as "A schedulability test is defined to be sustainable if any task system deemed schedulable by the
+test remains so if it behaves 'better' than mandated by its system
+specifications"\parencite{baruah_sustainable_2006}. Thus also making it exact.
 
-The analysis tools is also able to deal with non-work-conserving schedulers by accepting an
+The analysis tool is also able to deal with non-work-conserving schedulers by accepting an
 \acrshort{iip} function. An \acrfull{iip} is used during scheduling to see if the highest priority
 task is to be scheduled at the present time when there is a free core to schedule the task onto or
 if the core should be left idle. The idea is that a non-work-conserving algorithm can increase
-schedulability by trying to make smarter scheduling choices. Two existing \acrshort{iip}'s are
+schedulability by trying to make smarter scheduling choices such as delaying a low priority job if a
+high priority job is expected to be released in the near future. Two existing \acrshort{iip}'s are
 already implemented in the \acrshort{np}-test, the first one is \acrfull{p-rm}
 \parencite{nasri_precautious-rm:_2014} and the second \acrfull{cw-edf}
 \parencite{nasri_non-work-conserving_2016}.
 
-
-The job-set containing 9 unique jobs derived from the tasks $\tau_1=([3,13], 60, 60)$, $\tau_2=([7,
+A job-set containing 9 unique jobs derived from the tasks $\tau_1=([3,13], 60, 60)$, $\tau_2=([7,
 8], 30, 30)$ and $\tau_3=([1,2], 10, 10)$, no release jitter is assumed, is presented in
 \parencite{nasri_exact_2017}. These are scheduled according to figure \ref{fig:np-test_schedule}
 when every job executes for its \acrshort{wcet} and the result is that they all meet their
 deadlines. However, if $J_7$ would instead execute for one time unit less it would result in the
 schedule depicted in figure \ref{fig:np-test_schedule_fail} where $J_2$ misses its deadline. This
-example perfectly shows the problem with analysing \acrshort{np} scheduling as it is not sufficient
+example perfectly shows the problem with analysing non-preemptive scheduling as it is not sufficient
 to just check if all deadlines are met when all jobs execute for their \acrshort{wcet}. The task-set
 is shown to become feasible if the priorities are reordered as $ p_1 < p_2 < p_3 < p_4 < p_5 < p_5 <
 p_9 < p_7 < p_8$.
-
 
 
 \begin{figure}
@@ -654,40 +681,38 @@ p_9 < p_7 < p_8$.
 
 
 The scheduling graph is a \acrshort{dag} where each edge represents a scheduling decision and each
-vertex represents a time-interval. The graph is built from the root node by making scheduling
-decisions. Looking back at the previous job-set, part of its scheduling graph would be represented
-by the \acrshort{dag} depicted in figure \ref{fig:scheduling_graph} when scheduled under
-\acrshort{edf}. From the root vertex $v_1$ the highest-priority job of all available jobs is
-scheduled, job $J_1$, and an edge is added to represent it. The other end of the edge is connected
-to a new vertex $v_1$ that represents the interval within the scheduled jobs may finish execution
-within. Since the \acrshort{wcet} is 2 and \acrshort{bcet} is 1 for $J_1$ the interval for the new
-vertex is $[1, 2]$.  For all times within this interval the highest priority-job that has been
-released is job $J_7$ and is thus scheduled.  Its \acrshort{wcet} is 8 and its \acrshort{bcet} is 7.
-These are added to the interval of the possible finish times from the previous vertex and creates
-the new interval $[8,10]$. Now as demonstrated in figures \ref{fig:np-test_schedule} and
-\ref{fig:np-test_schedule_fail} there are two scheduling possibilities that are dependent on when
-the previous jobs have finished execution. If $J_7$ finishes before time 10 then $J_9$ will be the
-highest priority released job, and if $J_7$ finishes at time 10 then $J_2$ is the highest priority
-released job. Since two different scheduling decisions can be made within the interval represented
-by vertex $v_3$ two new edges are branched out from that vertex, each representing one of the two
-scheduling decisions. If $J_2$ is scheduled it must start at time 10, to this is added its
-\acrshort{wcet} 2 and \acrshort{bcet} 1 to create the interval represented by the vertex $v_5$. If
-$J_9$ is scheduled it can start withing the interval $[8, 9]$, and thus its \acrshort{wcet} 13 and
-\acrshort{bcet} 3 is added to that interval to create vertex $v_4$. At this point each of the two
-branches continue scheduling jobs and branch out whenever several options are available until either
-all jobs have been scheduled, or a job fails to meet its deadline as depicted in figure
-\ref{fig:scheduling_graph}. This will for large job sets create a huge search space that is very
-computation and memory intensive and does not scale very well. However, the novelty of the approach
-presented in \parencite{nasri_exact_2017} is to introduce a merge-phase. The merge phase tries to
-decrease the search space by merging vertices that lead to similar execution scenarios. The
-criteria for merging two vertices is that (a) the same jobs have been scheduled before the vertices
-and (b) the finish-time interval they both represent overlaps, i.e. $v_i \cap v_j \neq \emptyset$.
-When this is the case the new vertex $v_n$ that is created from the merge represents the union of
-finish times from the two merged vertices $v_i$ and $v_j$ as such $v_n \gets v_i \cup v_j$. Both of
-these criteria are fulfilled for vertices $v_4$ and $v_5$ meaning that they can be merged into a
-single vertex. The merging is illustrated in figure \ref{fig:scheduling_graph_merge} which also
-shows the edges that no longer needs to be explored using dashed lines.
-
+node represents a time-interval. The graph is built from the root node by making scheduling
+decisions. Looking back at the job-set from the previous paragraph, part of its scheduling graph
+would be represented by the \acrshort{dag} depicted in figure \ref{fig:scheduling_graph} when
+scheduled under \acrshort{edf}. From the root node $v_1$ the highest-priority job of all available
+jobs is scheduled, job $J_1$, and an edge is added to represent it. The other end of the edge is
+connected to a new node $v_1$ that represents the interval within which the scheduled jobs may
+finish execution. Since the \acrshort{wcet} is 2 and \acrshort{bcet} is 1 for $J_1$ the interval for
+the new node is $[1, 2]$. For all points in time within this interval the highest priority-job that
+has been released is job $J_7$ and is thus scheduled. Its \acrshort{wcet} is 8 and its
+\acrshort{bcet} is 7.  These are added to the interval of the possible finish times from the
+previous node and creates the new interval $[8,10]$. Now there are two scheduling possibilities that
+are dependent on when the previous jobs have finished execution. If $J_7$ finishes before time 10
+then $J_9$ will be the highest priority released job, and if $J_7$ finishes at time 10 then $J_2$ is
+the highest priority released job. Since two different scheduling decisions can be made within the
+interval represented by node $v_3$ two new edges are branched out from that node, each representing
+one of the two scheduling decisions. If $J_2$ is scheduled it must start at time 10, to this is
+added its \acrshort{wcet} 2 and \acrshort{bcet} 1 to create the interval represented by the node
+$v_5$. If $J_9$ is scheduled it can start within the interval $[8, 9]$, and thus its \acrshort{wcet}
+13 and \acrshort{bcet} 3 is added to that interval to create node $v_4$. At this point each of the
+two branches continue scheduling jobs and branch out whenever several options are available until
+either all jobs have been scheduled, or a job fails to meet its deadline. This will for large job
+sets create a huge search space that is very computation and memory intensive and does not scale
+very well. However, the novelty of the approach presented in \parencite{nasri_exact_2017} is to
+introduce a merge-phase. The merge phase tries to decrease the search space by merging vertices that
+lead to similar execution scenarios. The criteria for merging two vertices is that (a) the same jobs
+have been scheduled before the vertices and (b) the finish-time interval they both represent
+overlaps, i.e. $v_i \cap v_j \neq \emptyset$.  When this is the case the new vertex $v_n$ that is
+created from the merge represents the union of finish times from the two merged vertices $v_i$ and
+$v_j$ as such $v_n \gets v_i \cup v_j$. Both of these criteria are fulfilled for vertices $v_4$ and
+$v_5$ meaning that they can be merged into a single vertex. The merging is illustrated in figure
+\ref{fig:scheduling_graph_merge} which also shows the edges that no longer needs to be explored
+using dashed lines.
 
 \begin{figure}
 
@@ -717,7 +742,7 @@ shows the edges that no longer needs to be explored using dashed lines.
 
 \section{The AER Execution Model} \label{sec:aer_execution_model}
 
-The \acrfull{aer} execution model was first proposed in \parencite{durrieu_predictable_2014} to
+The \acrfull{aer} execution model was first presented in \parencite{durrieu_predictable_2014} to
 improve performance and predictability while using \acrshort{cots} multi-core processors with shared
 and private memory in the avionics industry. It builds on top of the \acrfull{prem} first presented
 in \parencite{pellizzoni_predictable_2011} which introduces the idea of dividing tasks into a memory
@@ -726,30 +751,29 @@ become the contention in access to shared memory when introducing an increasing 
 \acrshort{aer} focuses on making shared memory access more deterministic and easier to analyse. This
 is done by dividing up each task into three distinct parts. The \textbf{acquisition} (A) part reads all
 the data necessary for execution of the task such as code and shared variables into the private
-memory of the core dedicated for execution. The \textbf{execution} (E) phase then executes the code,
-without making any further read or write instructions to the shared memory, operating on local
-copies of the shared variables. The \textbf{restitution} (R) phase then writes back all of the acquired
-results of the task to the shared memory. Since the A-phase only is allowed to execute before
-execution of the task actually starts a pre-requisite of the model is that each core has a separate
-private memory, such as a cache or a scratchpad. Since these types of memory often are constrained
-in size it puts a limit to how many instructions a task can consist of in addition with the amount
-of share variables that is used as they all must fit in the private memory of the core.
+memory of the core dedicated for execution. The \textbf{execution} (E) phase then executes the code
+operating on local copies of any shared variables without making any further read or write
+instructions to the shared memory. The \textbf{restitution} (R) phase then writes back all of the
+acquired results that may be needed of the task to the shared memory. Since the \acrshort{a}-phase
+only is allowed to execute before execution of the task actually starts a pre-requisite of the model
+is that each core has a separate private memory, such as a cache or a scratchpad. Since these types
+of memories often are constrained in size it puts a limit to how many instructions a task can
+consist of in addition with the amount of shared variables that is used as they all must fit in
+the private memory of the core.
 
 The idea of this model is to enable scheduling of the read and write accesses to the shared memory
-instead of scheduling the tasks onto cores. Since contention of the shared memory is what limits the
-utilization of the cores it is more important to combat this instead of trying to find the optimal
-assignment of tasks onto cores since it wont increase utilization anyways. \acrshort{aer} can be
-said to employ a \textit{memory-centric} approach to scheduling instead of a \textit{core-centric}
-approach that schedulers usually employ. Since no reads and writes to shared memory is allowed
-outside of the allocated phases a non-preemptive scheduling algorithm is a pre-requisite for the
-\acrfull{aer} model. This model also have the advantage of easier analysis by being more
-deterministic. When several cores compete for resources and create congestion which leads to timing
-deviations the system model becomes more complex thus harder to analyse. Timing that was calculated
-offline, for example the \acrshort{wcet}, may not match reality or require very pessimistic
-approximations that exaggerate the timings, both of which decreases the certainty or predictability
-of the design and analysis.
+instead of scheduling the tasks onto cores. Since contention of the shared memory may be what limits
+the utilization of the cores it is more important to combat this instead of trying to find the
+optimal assignment of tasks onto cores since it wont increase utilization anyways. \acrshort{aer}
+can be said to employ a \textit{memory-centric} approach to scheduling instead of a
+\textit{core-centric} approach that schedulers usually employ. This model also have the advantage of
+easier analysis by being more deterministic. When several cores compete for resources and create
+congestion which leads to timing deviations the system model becomes more complex thus harder to
+analyse. Timing that was calculated offline, for example the \acrshort{wcet}, may not match reality
+or require very pessimistic approximations that exaggerate the timings, both of which decreases the
+certainty or predictability of the design and analysis.
 
-The scheduling algorithm proposed in \parencite{durrieu_predictable_2014} to schedule the memory
+The scheduling algorithm proposed in \parencite{durrieu_predictable_2014} schedules the memory
 accesses is a partitioned non-preemptive offline algorithm. The paper \parencite{maia_closer_2016}
 further evaluates the \acrshort{aer} model by testing different scheduling algorithms. Instead of
 using offline partial scheduling it proposes five different heuristic algorithms under online global
@@ -768,11 +792,11 @@ optimal \acrshort{ilp} algorithm in a fraction of the time.
 \section{Related Work} \label{sec:related_work}
 
 The most important paper to discuss is \parencite{nasri_response-time_2018} which provides a
-state-of-the-art schedulability analysis method for non-preemptive static-priority tasks sets under global
-scheduling. The analysis is sufficient for multi-core systems and a corresponding precise method for
-uni-core systems by the same authors is presented in \parencite{nasri_exact_2017}. The paper is
-explained in detail in section \ref{subsec:artafnpjsug}. Since the thesis builds on top of the
-concept of the \acrshort{aer} model it is necessary to be familiar with the paper
+state-of-the-art schedulability analysis method for non-preemptive static-priority tasks sets under
+global scheduling. The analysis is sufficient for multi-core systems and a corresponding precise
+method for uni-core systems by the same authors is presented in \parencite{nasri_exact_2017}. The
+paper is explained in detail in section \ref{subsec:artafnpjsug}. Since the thesis builds on top of
+the concept of the \acrshort{aer} model it is necessary to be familiar with the paper
 \parencite{durrieu_predictable_2014} which was the first to present this model and presents an
 offline non-preemptive partitioned scheduling algorithm to schedule the memory accesses. The idea to divide
 up tasks into distinct execution phases is not a novel one as \acrshort{aer} builds on top of the
