@@ -373,7 +373,7 @@ a_i^{max} $ is the time when the task is guaranteed to be able to start executio
 more precis task could be described by $ \tau_i = ( [C_i^{min}, C_i^{max}], T_i, D_i) $. An
 individual instance of a task within a period is referred to as a single job and can be defined by
 many of the same characteristics as a task but with time being absolute and not relative to the
-start of the period.
+start of the period and is denoted by $J$.
 
 Following the above definitions different states can be ascribed to tasks depending on their
 status in the system at a specific time instance. When a task arrives at the start of a new period
@@ -773,17 +773,18 @@ analyse. Timing that was calculated offline, for example the \acrshort{wcet}, ma
 or require very pessimistic approximations that exaggerate the timings, both of which decreases the
 certainty or predictability of the design and analysis.
 
-The scheduling algorithm proposed in \parencite{durrieu_predictable_2014} schedules the memory
-accesses is a partitioned non-preemptive offline algorithm. The paper \parencite{maia_closer_2016}
-further evaluates the \acrshort{aer} model by testing different scheduling algorithms. Instead of
-using offline partial scheduling it proposes five different heuristic algorithms under online global
-scheduling. These algorithms assign a higher task priority according to period (\acrshort{rms}),
-shortest acquisition phase, longest acquisition phase, shortest restitution time and longest
-restitution time. It is shown through analysis that the \acrshort{rms} scheduler is far best in
-terms of schedulable task sets as their utilization increases. The paper
-\parencite{becker_contention-free_2016} explores further ways of scheduling under an \acrshort{aer}
-model by proposing a global scheduling algorithm that is shown to only behave 0.5\% worse than an
-optimal \acrshort{ilp} algorithm in a fraction of the time.
+There exists some scheduling algorithms and timing analysis tools developed for the \acrshort{aer}
+model such as the one proposed in \parencite{durrieu_predictable_2014} that is a partitioned
+non-preemptive offline scheduler. The paper \parencite{maia_closer_2016} further evaluates the
+\acrshort{aer} model by testing different scheduling algorithms. Instead of using offline partial
+scheduling it proposes five different heuristic algorithms under online global scheduling. These
+algorithms assign a higher task priority according to period (\acrshort{rms}), shortest acquisition
+phase, longest acquisition phase, shortest restitution time and longest restitution time. It is
+shown through analysis that the \acrshort{rms} scheduler is far best in terms of schedulable task
+sets as their utilization increases. The paper \parencite{becker_contention-free_2016} explores
+further ways of scheduling under an \acrshort{aer} model by proposing a global scheduling algorithm
+that is shown to only behave 0.5\% worse than an optimal \acrshort{ilp} algorithm in a fraction of
+the time.
 
 % AER is an improvement over other models such as proposed by pikeOS which enables all other cores
 % to be paused while running critical tasks on a single core.
@@ -791,27 +792,32 @@ optimal \acrshort{ilp} algorithm in a fraction of the time.
 
 \section{Related Work} \label{sec:related_work}
 
-The most important paper to discuss is \parencite{nasri_response-time_2018} which provides a
-state-of-the-art schedulability analysis method for non-preemptive static-priority tasks sets under
-global scheduling. The analysis is sufficient for multi-core systems and a corresponding precise
-method for uni-core systems by the same authors is presented in \parencite{nasri_exact_2017}. The
-paper is explained in detail in section \ref{subsec:artafnpjsug}. Since the thesis builds on top of
-the concept of the \acrshort{aer} model it is necessary to be familiar with the paper
-\parencite{durrieu_predictable_2014} which was the first to present this model and presents an
-offline non-preemptive partitioned scheduling algorithm to schedule the memory accesses. The idea to divide
-up tasks into distinct execution phases is not a novel one as \acrshort{aer} builds on top of the
-\acrshort{prem} which divides up tasks into a read and execute phase for single-core system and was
-first presented in \parencite{pellizzoni_predictable_2011}. The \acrshort{aer} model is
-further explored in \parencite{maia_closer_2016} which presents five new global non-preemptive
-online scheduling algorithms where the most successful assigns priorities to tasks based on their
-period in the same way \acrshort{rms} works. It is also shown to be able to schedule tasks sets that
-would otherwise not be schedulable under global \acrshort{edf} due to congestion.
+The most important paper is \parencite{nasri_exact_2017} which provides a state-of-the-art
+schedulability analysis method for non-preemptive static-priority task sets for single-processors.
+The analysis is exact for single-core systems and a corresponding sufficient analysis method for
+multi-core systems by the same authors is presented in \parencite{nasry_response-time_2018}. The
+concept behind the single-core analysis is explained fully in section \ref{sec:np-test}. Since the
+multi-processor analysis method build on the same concepts as the analysis for single-processors it
+is also of interest and is summarized in section \ref{subsec:artafnpjsug}. Since the thesis also
+builds on top of the concept of the \acrshort{aer} model it is necessary to be familiar with the
+paper \parencite{durrieu_predictable_2014} which was the first to present this model and presents an
+offline non-preemptive partitioned scheduling algorithm to schedule the memory accesses. This paper
+and the \acrshort{aer} model is explained in detail in section \ref{sec:aer_execution_model}.
+
+The idea to divide up tasks into distinct execution phases is not a novel one as \acrshort{aer}
+builds on top of the \acrshort{prem} which divides up tasks into a read and execute phase for
+single-core system and was first presented in \parencite{pellizzoni_predictable_2011}. The
+\acrshort{aer} model is also further explored in \parencite{maia_closer_2016} which presents five
+new global non-preemptive online scheduling algorithms where the most successful assigns priorities
+to tasks based on their period in the same way \acrshort{rms} works. It is also shown to be able to
+schedule tasks sets that would otherwise not be schedulable under global \acrshort{edf} due to
+congestion.
 
 %TODO: Mention that this does no take into the account the deadline of the R-phase.
 %TODO: Maybe keep all related work covering scheduling analysis in a new subsection
 Some work on analysing have been done on analysing the schedulability of algorithms developed around
 \acrshort{prem} such as \parencite{alhammad_schedulability_2014} which builds on the idea of a
-problem window from \parencite{baker_multiprocessor_2003}. This idea presents an analysis method for
+problem window from \parencite{baker_multiprocessor_2003}. The paper presents an analysis method for
 \acrshort{edf} and \acrshort{dms} on multi-core processors and defines the problem window as the
 time interval between the release time and deadline of a certain task $ \tau_i $. The method works
 by contradiction where the task is assumed to miss its deadline within the window. An upper bound $
@@ -820,28 +826,28 @@ utilization that the task set $ \Gamma $ could possibly generate inside the timi
 bound $ LB(\psi_i) $ is then defined as the demand required on the problem window for $ \tau_i $ to
 miss its deadline. The condition $ UB(\psi_i) \le LB(\psi_i) $ then defines a sufficient
 schedulability condition for work-conserving schedulers if it is shown to hold for every task in the
-task set. The paper extends the \acrshort{prem} to a multi-core scheduler and called
+task set. The paper also extends the \acrshort{prem} to a multi-core scheduler and called
 \acrshort{gprem} which is a global static-priority scheduler. This scheduler is shown to, on
 average, schedule more task sets than a baseline global round robin scheduler that does not account
-contention for all cases that was tried. The different cases were different utilization, different
-period ranges, different tasks per core and different number of cores.
+for contention. The different cases tested for were different utilization, different period ranges,
+different tasks per core and different number of cores for the scheduling algorithms.
 
 The paper \parencite{maia_schedulability_2017} specifically tackles analysis for the \acrshort{aer}
-model for multi-core systems by using the theory of a problem windows but applying it in a
-bus-centric way. The idea is that by doing analysis of the scheduling of bus accesses instead of the
-cores it becomes a single-core problem as only one core can access the bus at a time.  Instead of
-checking for an upper bound of the interference that tasks create on cores the method describes a
-way to find the upper bound of the interference on the bus created by the other tasks. A bus hole is
-defined as "\textit{A bus hole is an interval of time, within the problem window, where all m cores
-are busy executing E-phases}" \parencite{maia_schedulability_2017}. The amount of time within all
-the bus holes inside the problem window must be enough for the task being examined to schedule its A
-and R phases to be able to meet its deadline. The paper describes a method that can compute an upper
-bound on the holes in the problem window in pseudo-polynomial time.
+model for multi-core systems by using the theory of problem windows but applying it in a bus-centric
+way. The idea is that by doing analysis of the scheduling of bus accesses instead of the cores it
+becomes a single-core problem as only one core can access the bus at a time.  Instead of checking
+for an upper bound of the interference that tasks create on cores the method describes a way to find
+the upper bound of the interference on the bus created by the other tasks. A bus hole is defined as
+"\textit{A bus hole is an interval of time, within the problem window, where all m cores are busy
+executing E-phases}" \parencite{maia_schedulability_2017}. The amount of time within all the bus
+holes inside the problem window must be enough for the task being examined to schedule its A and R
+phases to be able to meet its deadline. The paper describes a method that can compute an upper bound
+on the holes in the problem window in pseudo-polynomial time.
 
 The paper \parencite{becker_contention-free_2016} makes an effort to adapt the \acrshort{aer} model
-to real applications in the automotive domain by providing a general framework that is also applied
-to the physical platform Kalray MPPA-256. It consists of 16 compute clusters that contain 16
-processing elements and 16 banks of shared parallel memory each. The concept builds on top of the
+to real applications in the automotive domain by providing a general framework that is applied to
+the physical platform Kalray MPPA-256. It consists of 16 compute clusters that contain 16 processing
+elements and 16 banks of shared parallel memory each. The concept builds on top of the
 \acrshort{autosar} architecture for automotive \acrshort{ecu}'s where the smallest unit of execution
 is known as a runnable. Runnables communicate with each other through variables called labels. For
 each compute cluster one memory bank is reserved as the shared memory which stores all of the
@@ -860,76 +866,74 @@ access phases of the runnables to battle congestion. The scheduling algorithm is
 Scheduling}\label{subsec:artafnpjsug}
 
 %TODO: Mention it requires static-priority assignment
-The paper \parencite{nasri_response-time_2018} is the most relevant work for this thesis. It
-presents a state-of-the art analysis methods for non-preemptive multi-processor global scheduling.
-The method gives a sufficient condition for schedulability. The input is a set of jobs consisting of
-their ID, deadline, priority, earliest release time, latest release time, \acrshort{wcet} and
-\acrshort{bcet}.  The output then tells whether or not the input is schedulable. The basic idea of
-the analysis is to enumerate all of possible combinations of \acrshort{wcet}, \acrshort{bcet} and
-release jitter but as not to blow up computation time or memory try to be clever about it. This is
-basically done by removing all duplicates of schedules that lead to the same ordering of start times
-of the jobs.
+The paper \parencite{nasri_response-time_2018} presents a state-of-the art analysis method for
+non-preemptive multi-processor global scheduling. The method gives a sufficient condition for
+schedulability. The input is a set of jobs consisting of their ID, deadline, priority, earliest
+release time, latest release time, \acrshort{wcet} and \acrshort{bcet}. The output then tells
+whether or not the input is schedulable. The basic idea of the analysis is to enumerate all of
+possible combinations of \acrshort{wcet}, \acrshort{bcet} and release jitter but as not to be
+computation- or memory-heavy it tries to be clever about it. This is done by removing all duplicates
+of schedules that lead to the same ordering of start times for the jobs.
 
-The implementation of the analysis works by progressively building a tree graph where each edge
-represents a scheduling decision in the form of a specific job assigned to a specific core. The root
-node represents the start of scheduling when the first job is available, usually at time zero. 
-If two jobs are available simultaneously they will be represented as two different edges in the graph
-stemming from the same vertex, even if they are scheduled at the same time instance. Each node
+The implementation of the analysis works much like its single-core version by progressively building
+a tree graph where each edge represents a scheduling decision in the form of a specific job assigned
+to a specific core. The root node represents the start of scheduling when the first job is
+available, usually at time zero. If two jobs are able to be scheduled during the same interval they
+will be represented as two different edges in the graph stemming from the same node. Each node
 represents a state in time of the schedule and contains information about the interval between the
 earliest possible availability and latest possible availability of each core (the time at which a
-core is ready to accept a new job) in
-system. The root node represents time zero in the schedule at which no job yet has been assigned to
-any core. 
+core is ready to accept a new job) in the system. The root node represents time zero in the schedule
+at which no job yet has been assigned to any core. 
 
 The tree graph is built progressively by iterating the algorithm through three different phases.
-The expansion phase selects the shortest path from the root to a leaf node and makes a scheduling
-decisions (assignment of ready job onto vacant core) and creates its corresponding edge. A unique
-edge is created for each core that the job may be assigned to. Each assignment leads to a certain
-state of the schedule represented by an added leaf node. The fast-forward phase then progresses 
-time until the next scheduling decision is to be made (a core has become vacant). The merge phase is
-the part where the analysis is clever by trying to minimize the search space of the tree. Paths that
-have scheduled the same job sets in different order but have the same timing values will lead to
-identical sub-trees in the future. Because of this it is only necessary to continue evaluation from
-one of the nodes effectively making it so that the nodes can be \textit{merged}.
+The expansion phase selects the shortest path (as in the amount of edges)from the root to a leaf
+node and makes a scheduling decisions (assignment of ready job onto vacant core) at the leaf node
+and creates the corresponding edge. A unique edge is created for each core that the job may be
+assigned to. Each assignment leads to a certain state of the schedule represented by an added leaf
+node. The fast-forward phase then progresses time until the next scheduling decision is to be made
+(a core has become vacant). The final phase, the merge phase is the part where the analysis is
+clever by trying to minimize the search space of the tree graph. Paths that have scheduled the same
+job sets in different order but have the same timing values will lead to identical sub-trees in the
+future. Because of this it is only necessary to continue evaluation from one of the nodes
+effectively making it so that the nodes can be \textit{merged} by following certain rules.
 
 
 \chapter{Method} \label{ch:method}
 
 This chapter explains the work that has been done to reach the conclusions in the thesis. Section
 \ref{sec:work_task_model} presents an extended version of the \acrshort{aer} task model that has
-been produced. Section \ref{sec:iip} presents a new \acrshort{iip} that can be used in conjunction
-with the \acrshort{np}-test in order for the test to accept job-sets of the task model presented in
-section \ref{sec:work_task_model}. Section \ref{sec:scheduling_algorithms} presents the scheduling
-algorithms that will be used during benchmarking to prioritize the jobs. Section
-\ref{sec:benchmarking} discusses how benchmarking was done to get correct results for evaluating the
-task model presented in section \ref{sec:work_task_model} and the different scheduling algorithms
-presented in \ref{sec:scheduling_algorithms}.
+been developed. Section \ref{sec:iip} presents a new \acrshort{iip} that can be used in conjunction
+with the \acrshort{np}-test in order for the test to accept job-sets of the \acrshort{aer} task
+model presented in section \ref{sec:work_task_model}. Section \ref{sec:scheduling_algorithms}
+presents the scheduling algorithms that will be used during benchmarking to prioritize the jobs.
+Section \ref{sec:benchmarking} discusses how benchmarking was done to get correct results to
+evaluate the task model presented in section \ref{sec:work_task_model} and the different scheduling
+algorithms presented in \ref{sec:scheduling_algorithms}.
 
 \section{Task model} \label{sec:work_task_model}
 
 When the interval between the worst-case finish time of the \acrshort{a}-phase and the best-case
 release time of the \acrshort{r}-phase is less than the \acrshort{wcet} of the \acrshort{e}-phase a
-problem arises. The analysis can't make the guarantee that the interval between the finish time of
-the \acrshort{a}-phase and the start time of the \acrshort{r}-phase is sufficient for the
-\acrshort{e}-phase to finish its execution. The problem becomes even worse as the schedulability
-windows of the \acrshort{a}-phase and \acrshort{r}-phase overlaps as the analysis doesn't handle any
-precedence constraints among jobs. This means that it would be possible for an \acrshort{r}-phase
-to be scheduled before the \acrshort{a}-phase belonging to the same job.
+problem arises. The \acrshort{np}-test timing analysis can't make the guarantee that the interval
+between the finish time of the \acrshort{a}-phase and the start time of the \acrshort{r}-phase is
+sufficient for the \acrshort{e}-phase to finish its execution. The problem becomes even worse as the
+schedulability windows of the \acrshort{a}-phase and \acrshort{r}-phase overlaps as the analysis
+doesn't handle any precedence constraints among jobs. This means that it would be possible for an
+\acrshort{r}-phase to be scheduled before the \acrshort{a}-phase belonging to the same job.
 
-It is a property of the model that an \acrshort{a}-phase must always precede its matching
-\acrshort{r}-phase belonging to the same task. It also becomes more complicated than a simple
-precedence constraint as the analysis must leave sufficient time between the finish time of the
-A-phase and the start time of the R-phase for the E-phase to finish execution. This can be
+As explained, it is a property of the model that an \acrshort{a}-phase must always precede its
+matching \acrshort{r}-phase belonging to the same task. It also becomes more complicated than a
+simple precedence constraint as the analysis must leave sufficient time between the finish time of
+the A-phase and the start time of the R-phase for the E-phase to finish execution. This can be
 circumvented by introducing new concepts to the \acrshort{aer}-model. The schedulability window of a
 task can be divided into three non-overlapping intervals that can be thought of as sub-windows of
 the schedulability window. The first window is referred to as the acquisition-window and is the
 interval within which the \acrshort{a}-phase is allowed to execute within. The second interval
 begins right after the first and is the size of the \acrshort{wcet} of the \acrshort{e}-phase as it
 is the required time before the \acrshort{r}-phase is allowed to start execution. After the second
-interval is the \acrshort{r}-window within which the \acrshort{r}-phase is allowed to execute.So
+interval is the \acrshort{r}-window within which the \acrshort{r}-phase is allowed to execute. So
 each phase has a predetermined interval as a part of the whole schedulability-window where no
-intervals are allowed to overlap. This concepts is better illustrated in figure
-\ref{fig:aer_window_model}.
+intervals are allowed to overlap. This concepts is illustrated in figure \ref{fig:aer_window_model}.
 
 
 \begin{figure}
@@ -938,27 +942,31 @@ intervals are allowed to overlap. This concepts is better illustrated in figure
 
     \includegraphics[width=0.8\linewidth]{images/aer_window_model.pdf}
 
-    \caption{The AER window model}
+    \caption{The AER window model, note that the \acrshort{a}-phase and \acrshort{r}-phase can be
+    scheduled during any time within their windows.}
 
     \label{fig:aer_window_model}
 
 \end{figure}
 
 
-The task is divided into two separate jobs, one job, denoted $J^{A}$, represents the
-acquisition-phase and the other job, denoted $J^{R}$, representing the restitution-phase both being
-separated by the \acrshort{wcet} of the task. Each individual job can the be scheduled representing
-the memory access and the restitution-phase does not have to worry if the acquisition-phase and the
-execution-phase have yet to finish execution as a property of the model is that the
-restitution-phase will never be released before the execution-phase is guaranteed to have finished
-even in the worst-case. One interesting thing of the model is that the interval for the
-\acrshort{a}-phase and \acrshort{r}-phase doesn't necessarily have to be of the same size, but more
-time could for example be allocated for the \acrshort{a}-window with a cost of shrinking the
-\acrshort{r}-window. The relationship between the size of the two intervals is called the
-\textbf{window-ratio} and is equal to the size of the \acrshort{a}-windows size divided by the
-sum of the \acrshort{a}-window and \acrshort{r}-window sizes. This is explored further during
-benchmarking in section \ref{sec:benchmarking}.
-
+The task within each of its period is in this way divided into two separate jobs, the first job,
+denoted $J^{A}$, represents the \acrhsort{a}-phase and the second job, denoted $J^{R}$, representing
+the \acrshort{r}-phase. Each of the jobs arrival time and deadline are then set to correspond to its
+scheduling window as seen in figure \ref{fig:aer_window_model}. Each individual job then represents
+accesses to the shared memory and can be scheduled by a regular scheduler as if they were regular
+jobs being scheduled on a core, which is why the multi-core problem is in a way reduced to a
+single-core problem when developing memory-centric heuristics. In this way the \acrshort{r}-phase
+doesn't have to worry about if the \acrshort{a}-phase and the \acrshort{e}-phase have yet to finish
+execution as a property of the model is that the restitution-phase will never be released before the
+execution-phase is guaranteed to have finished even in the worst-case. One interesting thing of the
+model is that the interval for the \acrshort{a}-phase and \acrshort{r}-phase doesn't necessarily
+have to be of the same size, but more time could for example be allocated for the
+\acrshort{a}-window with a cost of shrinking the \acrshort{r}-window. The relationship between the
+size of the two intervals is referred to as the \textbf{window-ratio} and is equal to the size of
+the \acrshort{a}-windows size divided by the sum of the \acrshort{a}-windows and
+\acrshort{r}-windows sizes. This is explored further during benchmarking in section
+\ref{sec:benchmarking}.
 
 It quickly becomes obvious however that the model has some disadvantages. The most obvious one being
 that the core which the task is assigned to might idle for a long time during certain circumstances.
@@ -967,14 +975,15 @@ For instance, even though enough space is allocated between the \acrshort{a}-win
 \acrshort{e}-phase from starting execution as soon as the \acrshort{a}-phase is complete, even if
 this is well before its deadline. So when the \acrshort{a}-phase and \acrshort{e}-phase finish
 executing, especially in the best case, the restitution phase is yet to be released for what may be
-a very long time, thus leaving the allocated core idle for all of this time unable to take on any
-other work. Another problem is that the number of tasks with the same period can never be larger
-than the amount of physical cores as the task set would never be schedulable then. Imagine all but
-one task of the same periods and same window-ratio being assigned cores at the same time such that
-all cores are busy. The occupied cores would then be busy until the restitution-phases are finished
-executing, at which the acquisition-phases are all guaranteed to have had their deadlines passed,
-thus the unassigned task will miss its deadline. The effect of these disadvantages are further
-discussed in chapter \ref{ch:results}.
+a very long time, thus leaving the allocated core idle for all of this time while unable to finish
+its \acrshort{r}-phase even though it should be able to. Another problem is that the number of tasks
+with the same period can never be larger than the amount of physical cores as such a task set never
+can be schedulable. This is illustrated by imagining a task set where all tasks have the same
+periods and same window-ratio. All but on task is then being assigned cores at the same time such
+that all cores are busy. The occupied cores would then be busy until the restitution-phases are
+finished executing, at which time the acquisition-phases are all guaranteed to have had their
+deadlines passed, thus the unassigned task will miss its deadline. The effect of these disadvantages
+are further discussed in chapter \ref{ch:results}.
 
 
 \section{Idle-time Insertion Policy} \label{sec:iip}
@@ -984,23 +993,23 @@ discussed in chapter \ref{ch:results}.
 
 % TODO: Move to background "work-conserving vs. non-work-conserving"
 Imagining a non-preemptive scheduler and a long-running, low-priority task with a deadline far into
-the future that has just been released and is about to be scheduled onto a core. If a
-higher-priority task with a short deadline is released just after the first tasks has been scheduled
-it might miss its deadline as the core wont be available for a long time. In this instance it could
-prove beneficial for the schedulability of the task set to leave a core idle even when there is work
-to be completed to wait for a higher priority task to be released. This can be done using an
-\acrfull{iip}. An \acrshort{iip} makes a decision about whether or not the highest priority job is
-to be scheduled when the core becomes free or if the core should be idle until another higher
-priority job is released.
+the future that has just been released and is about to be scheduled onto a single-core system. If a
+higher-priority task with a short deadline is then released just after the first tasks has been
+scheduled the second task might miss its deadline as the core wont be available for a long time. In
+this instance it could prove beneficial for scheduling algorithm to leave a core idle even when
+there is work to be completed to wait for a higher priority task to be released. This idea of
+leaving core idles and postponing work is the philosophy behind using an \acrfull{iip}. An
+\acrshort{iip} makes a decision about whether or not the highest priority job is to be scheduled
+when the core becomes free or if the core should be idle until another higher priority job is
+released.
 
-
-For the \acrshort{iip} to make a decision it is provided with three pieces of information. First
-the job-set of jobs that have previously been scheduled and are finished, second it is provided the
-job that just has been released and is to be scheduled, thirdly it is provided the present time at
-which the released job is to be scheduled.  The policy then returns a true or false value
-representing if the provided job is schedulable at that time. The functionality of an \acrshort{iip}
-can thus be described by algorithm \ref{algo:iip_eligibility}, inspired by
-\parencite{nasri_exact_2017}.
+For a basic \acrshort{iip} to make a decision about whether or not to schedule a job it is provided
+with three pieces of information. First the job-set of jobs that have previously been scheduled and
+are finished, second it is provided the job that just has been released and is to be scheduled,
+thirdly it is provided the present time at which the released job is to be scheduled. The policy
+then returns a true or false value representing if the provided job is schedulable at that time. The
+usage of an \acrshort{iip} to check for eligibility can thus be described by algorithm
+\ref{algo:iip_eligibility}, inspired by \parencite{nasri_exact_2017}.
 
 \begin{algorithm}
     \caption{IIP eligibility}
@@ -1016,8 +1025,9 @@ can thus be described by algorithm \ref{algo:iip_eligibility}, inspired by
     \end{algorithmic}
 \end{algorithm}
 
-The np-test can be used in conjunction with different \acrshort{iip}'s. To make sure the task model
-described in section \ref{sec:work_task_model} works with the np-test a custom \acrshort{iip} is
+The \acrshort{np}-test can be used in conjunction with different \acrshort{iip}'s. To make sure the
+task model described in section \ref{sec:work_task_model} works with the np-test a custom
+\acrshort{iip} is
 created as scheduling tasks using a memory-centric approach can be described as a
 non-work-conserving scheduler as the memory might be left idle, even when there is work to be done.
 The \acrshort{iip} makes sure of two things when a job is ready to be scheduled. The first thing is
