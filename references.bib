@@ -1,148 +1,139 @@
 
-@inproceedings{nasri_response-time_2018,
-	address = {Dagstuhl, Germany},
-	series = {Leibniz {International} {Proceedings} in {Informatics} ({LIPIcs})},
-	title = {A {Response}-{Time} {Analysis} for {Non}-{Preemptive} {Job} {Sets} under {Global} {Scheduling}},
-	volume = {106},
-	isbn = {978-3-95977-075-0},
-	url = {http://drops.dagstuhl.de/opus/volltexte/2018/8994},
-	doi = {10.4230/LIPIcs.ECRTS.2018.9},
-	urldate = {2019-01-15},
-	booktitle = {30th {Euromicro} {Conference} on {Real}-{Time} {Systems} ({ECRTS} 2018)},
-	publisher = {Schloss Dagstuhl–Leibniz-Zentrum fuer Informatik},
-	author = {Nasri, Mitra and Nelissen, Geoffrey and Brandenburg, Björn B.},
-	editor = {Altmeyer, Sebastian},
-	year = {2018},
-	keywords = {best-case response time, global multiprocessor scheduling, non-preemptive tasks, schedulability analysis, worst-case response time},
-	pages = {9:1--9:23},
-	file = {Full Text PDF:/home/jacob/Zotero/storage/MJY4SM3R/Nasri et al. - 2018 - A Response-Time Analysis for Non-Preemptive Job Se.pdf:application/pdf;Snapshot:/home/jacob/Zotero/storage/8IY6NVEI/8994.html:text/html}
-}
-
-@inproceedings{becker_contention-free_2016,
-	title = {Contention-{Free} {Execution} of {Automotive} {Applications} on a {Clustered} {Many}-{Core} {Platform}},
-	doi = {10.1109/ECRTS.2016.14},
-	abstract = {Next generations of compute-intensive real-time applications in automotive systems will require more powerful computing platforms. One promising power-efficient solution for such applications is to use clustered many-core architectures. However, ensuring that real-time requirements are satisfied in the presence of contention in shared resources, such as memories, remains an open issue. This work presents a novel contention-free execution framework to execute automotive applications on such platforms. Privatization of memory banks together with defined access phases to shared memory resources is the backbone of the framework. An Integer Linear Programming (ILP) formulation is presented to find the optimal time-triggered schedule for the on-core execution as well as for the access to shared memory. Additionally a heuristic solution is presented that generates the schedule in a fraction of the time required by the ILP. Extensive evaluations show that the proposed heuristic performs only 0.5\% away from the optimal solution while it outperforms a baseline heuristic by 67\%. The applicability of the approach to industrially sized problems is demonstrated in a case study of a software for Engine Management Systems.},
-	booktitle = {2016 28th {Euromicro} {Conference} on {Real}-{Time} {Systems} ({ECRTS})},
-	author = {Becker, M. and Dasari, D. and Nicolic, B. and Akesson, B. and Nélis, V. and Nolte, T.},
-	month = jul,
-	year = {2016},
-	keywords = {Automotive, automotive applications, Automotive applications, automotive electronics, automotive systems, clustered many-core architectures, clustered many-core platform, compute-intensive real-time applications, computing platforms, contention-free execution framework, Execution Framework, ILP formulation, integer linear programming, integer programming, linear programming, Many-Core, memory banks privatization, Memory management, optimal time-triggered schedule, parallel architectures, power-efficient solution, Real-Time, real-time requirements, real-time systems, resource allocation, Schedules, Scheduling, shared memory resources, shared memory systems, Software, Time-Triggered},
-	pages = {14--24},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/2UMJR82E/7557865.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/KSRFFN6G/Becker et al. - 2016 - Contention-Free Execution of Automotive Applicatio.pdf:application/pdf}
-}
-
-@inproceedings{kramer_real_2015,
-	title = {Real world automotive benchmarks for free},
-	booktitle = {6th {International} {Workshop} on {Analysis} {Tools} and {Methodologies} for {Embedded} and {Real}-time {Systems} ({WATERS})},
-	author = {Kramer, Simon and Ziegenbein, Dirk and Hamann, Arne},
-	year = {2015}
-}
-
-@inproceedings{maia_schedulability_2017,
-	title = {Schedulability analysis for global fixed-priority scheduling of the 3-phase task model},
-	doi = {10.1109/RTCSA.2017.8046313},
-	abstract = {Scheduling real-time applications on general purpose multicore platforms is a challenging problem from a timing analysis perspective. Such platforms expose uncontrolled sources of interference whenever concurrent accesses to memory are performed. The non-deterministic bus and memory access behavior complicates the estimations of applications' worst-case execution times (WCET). The 3-phase task model seems a good candidate to circumvent the uncontrolled sources of interference by isolating concurrent memory accesses. A task is divided in three successive phases; first, the task loads its instruction and data in a local memory, then it executes non-preemptively using those pre-loaded instructions and data, and finally, the modified data are pushed back to main memory. Following this execution model, tasks never access the bus during their execution phase. Instead, all the bus accesses are performed during the first and third phases. In this paper, we focus on the global fixed-priority scheduling of the 3-phase task model. A new schedulability test is derived by modelling the interference happening on the bus rather than the interference on the cores as in the state-of-the-art techniques. The effectiveness of the test is evaluated by comparing it against the state-of-the-art.},
-	booktitle = {2017 {IEEE} 23rd {International} {Conference} on {Embedded} and {Real}-{Time} {Computing} {Systems} and {Applications} ({RTCSA})},
-	author = {Maia, C. and Nelissen, G. and Nogueira, L. and Pinho, L. M. and Pérez, D. G.},
-	month = aug,
-	year = {2017},
-	keywords = {schedulability analysis, 3-phase task model, Analytical models, concurrency (computers), general purpose multicore platforms, global fixed-priority scheduling, Interference, Load modeling, Multicore processing, Predictive models, Program processors, Real-time systems, scheduling, WCET, worst-case execution times},
-	pages = {1--10},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/YYV5S36L/8046313.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/ZNVQ8CA3/Maia et al. - 2017 - Schedulability analysis for global fixed-priority .pdf:application/pdf}
-}
-
-@inproceedings{maia_closer_2016,
-	title = {A closer look into the {AER} {Model}},
-	doi = {10.1109/ETFA.2016.7733567},
-	abstract = {Commercial-of-the-shelf based multi-core systems present timing anomalies that cannot be ignored by the real-time systems community due to their unpredictable behaviour. These timing anomalies, often caused by applications' uncontrolled accesses to shared resources such as the components in the memory hierarchy or in the I/O subsystem, introduce interference that may lead to deadline misses if the problem is neglected. The Acquisition Execution Restitution (AER) execution model was previously proposed to circumvent this problem and, therefore, mitigate inter-task interference. In this model, applications decouple communication (acquisition and restitution phases) from the actual execution in a way that at most one acquisition or restitution phase is in execution at any instant of time while the execution phase of different tasks can progress in parallel on multiple cores. Thus, keeping each task's derived worst-case execution time closer to the one measured in isolation. In this paper, we study the AER execution model and compare it against a global Earliest Deadline First (EDF) approach where interferences are considered. Our results show that a priority assignment heuristic which assigns the priorities based on the tasks' periods dominates all the other proposed heuristics and that due to interference it can also schedule task sets which are not schedulable by using the global EDF approach.},
-	booktitle = {2016 {IEEE} 21st {International} {Conference} on {Emerging} {Technologies} and {Factory} {Automation} ({ETFA})},
-	author = {Maia, C. and Nogueira, L. and Pinho, L. M. and Pérez, D. G.},
-	month = sep,
-	year = {2016},
-	keywords = {Schedules, Software, Interference, Multicore processing, WCET, acquisition execution restitution model, AER model, Computational modeling, multicore system, multiprocessing systems, parallel processing, priority assignment heuristic, processor scheduling, task scheduling, Time division multiple access, Timing, worst-case execution time},
-	pages = {1--8},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/AWQQSM44/7733567.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/Q5EA988V/Maia et al. - 2016 - A closer look into the AER Model.pdf:application/pdf}
-}
-
-@inproceedings{schranzhofer_timing_2010,
-	title = {Timing {Analysis} for {TDMA} {Arbitration} in {Resource} {Sharing} {Systems}},
-	doi = {10.1109/RTAS.2010.24},
-	abstract = {Modern computing systems have adopted multicore architectures and multiprocessor systems on chip (MPSoCs) for accommodating the increasing demand on computation power. However, performance boosting is constrained by shared resources, such as buses, main memory, DMA, etc.This paper analyzes the worst-case completion (response) time for real-time tasks when time division multiple access (TDMA) policies are applied for resource arbitration.Real-time tasks execute periodically on a processing element and are constituted by sequential superblocks. A superblock is characterized by its accesses to a shared resource and its computation time. We explore three models of accessing shared resources: (1)dedicated access model, in which accesses happen only at the beginning and the end of a superblock, (2) general access model, in which accesses could happen anytime during the execution of a superblock, and (3) hybrid access model, which combines the dedicated and general access models. We present a framework to analyze the worst-case completion time of real-time tasks (superblocks) under these three access models, for a given TDMA arbiter. We compare the timing analysis of the three proposed models for a real-world application.},
-	booktitle = {2010 16th {IEEE} {Real}-{Time} and {Embedded} {Technology} and {Applications} {Symposium}},
-	author = {Schranzhofer, A. and Chen, J. and Thiele, L.},
-	month = apr,
-	year = {2010},
-	keywords = {Multicore processing, Time division multiple access, Timing, Boosting, buses, Computer architecture, DMA, general access model, hybrid access model, main memory, multicore architectures, Multiprocessing systems, multiprocessor systems on chip, Performance analysis, Real-Time Systems, Resource management, resource sharing systems, SOC, System-on-a-chip, system-on-chip, TDMA arbitration, time division multiple access, Time Division Multiple Access (TDMA), time division multiple access policies, Time factors, timing analysis, worst-case completion time, Worst-Case Timing Analysis},
-	pages = {215--224},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/NI3P88NG/5465981.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/3R4GNPRS/Schranzhofer et al. - 2010 - Timing Analysis for TDMA Arbitration in Resource S.pdf:application/pdf}
-}
-
-@article{pellizzoni_predictable_2011,
-	title = {A {Predictable} {Execution} {Model} for {COTS}-{Based} {Embedded} {Systems}},
-	doi = {10.1109/RTAS.2011.33},
-	abstract = {Building safety-critical real-time systems out of inexpensive, non-real-time, COTS components is challenging. Although COTS components generally offer high performance, they can occasionally incur significant timing delays. To prevent this, we propose controlling the operating point of each shared resource (like the cache, memory, and interconnection buses) to maintain it below its saturation limit. This is necessary because the low-level arbiters of these shared resources are not typically designed to provide real-time guarantees. In this work, we introduce a novel system execution model, the Predictable Execution Model (PREM), which, in contrast to the standard COTS execution model, coschedules at a high level all active components in the system, such as CPU cores and I/O peripherals. In order to permit predictable, system-wide execution, we argue that real-time embedded applications should be compiled according to a new set of rules dictated by PREM. To experimentally validate our theory, we developed a COTS-based PREM testbed and modified the LLVM Compiler Infrastructure to produce PREM-compatible executables.},
-	journal = {2011 17th IEEE Real-Time and Embedded Technology and Applications Symposium},
-	author = {Pellizzoni, Rodolfo and Betti, Emiliano and Bak, Stanley and Yao, Gang and Criswell, John and Caccamo, Marco and Kegley, Russell},
-	year = {2011},
-	keywords = {Arbiter (electronics), Central processing unit, Compiler, Embedded system, Executable, Experiment, High- and low-level, High-level programming language, Input/output, Interconnection, LLVM, Operating point, Peripheral, Real-time clock, Real-time computing, Testbed, Transponder timing},
-	pages = {269--279}
-}
-
-@inproceedings{durrieu_predictable_2014,
-	address = {TOULOUSE, France},
-	title = {Predictable {Flight} {Management} {System} {Implementation} on a {Multicore} {Processor}},
-	url = {https://hal.archives-ouvertes.fr/hal-01121700},
-	abstract = {This paper presents an approach for hosting a representative avionic function on a distributed-memory mul-ticore COTS architecture. This approach was developed in collaboration by Thales and ONERA, in order to improve the performance of the function while enforcing its predictability. Once the target avionic function and the multicore architecture have been introduced, the execution model and the needed basic services are described and evaluated.},
-	urldate = {2019-01-18},
-	booktitle = {Embedded {Real} {Time} {Software} ({ERTS}'14)},
-	author = {Durrieu, Guy and Faugère, Madeleine and Girbal, Sylvain and Gracia Pérez, Daniel and Pagetti, Claire and Puffitsch, W.},
-	month = feb,
-	year = {2014},
-	keywords = {FMS, MULTI-COEURS, PREDICTIBILITE},
-	file = {HAL PDF Full Text:/home/jacob/Zotero/storage/P9I98UMI/Durrieu et al. - 2014 - Predictable Flight Management System Implementatio.pdf:application/pdf}
-}
-
-@article{liu_scheduling_1973,
-	title = {Scheduling {Algorithms} for {Multiprogramming} in a {Hard}-{Real}-{Time} {Environment}},
-	volume = {20},
-	issn = {0004-5411},
-	url = {http://doi.acm.org/10.1145/321738.321743},
-	doi = {10.1145/321738.321743},
-	abstract = {The problem of multiprogram scheduling on a single processor is studied from the viewpoint of the characteristics peculiar to the program functions that need guaranteed service. It is shown that an optimum fixed priority scheduler possesses an upper bound to processor utilization which may be as low as 70 percent for large task sets. It is also shown that full processor utilization can be achieved by dynamically assigning priorities on the basis of their current deadlines. A combination of these two scheduling techniques is also discussed.},
+@article{bini_measuring_2005,
+	title = {Measuring the {Performance} of {Schedulability} {Tests}},
+	volume = {30},
+	issn = {1573-1383},
+	url = {https://doi.org/10.1007/s11241-005-0507-9},
+	doi = {10.1007/s11241-005-0507-9},
+	abstract = {The high computational complexity required for performing an exact schedulability analysis of fixed priority systems has led the research community to investigate new feasibility tests which are less complex than exact tests, but still provide a reasonable performance in terms of acceptance ratio. The performance of a test is typically evaluated by generating a huge number of synthetic task sets and then computing the fraction of those that pass the test with respect to the total number of feasible ones. The resulting ratio, however, depends on the metrics used for evaluating the performance and on the method for generating random task parameters. In particular, an important factor that affects the overall result of the simulation is the probability density function of the random variables used to generate the task set parameters. In this paper we discuss and compare three different metrics that can be used for evaluating the performance of schedulability tests. Then, we investigate how the random generation procedure can bias the simulation results of some specific scheduling algorithm. Finally, we present an efficient method for generating task sets with uniform distribution in a given space, and show how some intuitive solutions typically used for task set generation can bias the simulation results.},
+	language = {en},
 	number = {1},
-	urldate = {2019-01-21},
-	journal = {J. ACM},
-	author = {Liu, C. L. and Layland, James W.},
-	month = jan,
-	year = {1973},
-	pages = {46--61},
-	file = {ACM Full Text PDF:/home/jacob/Zotero/storage/4NS366CB/Liu and Layland - 1973 - Scheduling Algorithms for Multiprogramming in a Ha.pdf:application/pdf}
-}
-
-@inproceedings{sebestyen_simulation-based_2012,
-	title = {Simulation-based schedulability tests for multiprocessor real-time systems},
-	doi = {10.1109/AQTR.2012.6237706},
-	abstract = {The assimilation of multiprocessor programming into the real-time application's domain is limited because there are not enough theoretical and pragmatic tools for proving the feasibility of such systems. Theoretical results are few and tend to be too complex for a practical implementation. In this paper, we combine theoretical analysis results with simulation to obtain a tool, which can assess the multiprocessor real-time schedulability of periodic task sets. We performed simulations on different scenarios in order to determine the features that influence schedulability of a multiprocessor real-time system.},
-	booktitle = {Proceedings of 2012 {IEEE} {International} {Conference} on {Automation}, {Quality} and {Testing}, {Robotics}},
-	author = {Sebestyen, G. and Hangan, A. and Suciu, A.},
+	urldate = {2019-02-07},
+	journal = {Real-Time Systems},
+	author = {Bini, Enrico and Buttazzo, Giorgio C.},
 	month = may,
-	year = {2012},
-	keywords = {schedulability analysis, real-time systems, Schedules, Scheduling, Analytical models, multiprocessing systems, processor scheduling, Equations, global EDF, Mathematical model, multiprocessor, multiprocessor programming, multiprocessor real-time systems, Processor scheduling, Real time systems, Simulation, simulation-based schedulability tests, task set generation, theoretical analysis},
-	pages = {216--221},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/YQ5GIIVA/6237706.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/KNXEX8FF/Sebestyen et al. - 2012 - Simulation-based schedulability tests for multipro.pdf:application/pdf}
+	year = {2005},
+	keywords = {EDF: Earliest Deadline First, FP: Fixed Priorities, HB: Hyperbolic Bound, RM: Rate Monotonic},
+	pages = {129--154},
+	file = {Springer Full Text PDF:/home/jacob/Zotero/storage/899TQPW8/Bini and Buttazzo - 2005 - Measuring the Performance of Schedulability Tests.pdf:application/pdf}
 }
 
-@inproceedings{bini_multi_2009,
-	title = {The {Multi} {Supply} {Function} {Abstraction} for {Multiprocessors}},
-	doi = {10.1109/RTCSA.2009.39},
-	abstract = {Multi-core platforms are becoming the dominant computing architecture for next generation embedded systems. Nevertheless, designing, programming, and analyzing such systems is not easy and a solid methodology is still missing. In this paper, we propose two powerful abstractions to model the computing power of a parallel machine, which provide a general interface for developing and analyzing real-time applications in isolation, independently of the physical platform. The proposed abstractions can be applied on top of different types of service mechanisms, such as periodic servers, static partitions, and P-fair time partitions. In addition, we developed the schedulability analysis of a set of real-time tasks on top of a parallel machine that is compliant with the proposed abstractions.},
-	booktitle = {2009 15th {IEEE} {International} {Conference} on {Embedded} and {Real}-{Time} {Computing} {Systems} and {Applications}},
-	author = {Bini, E. and Buttazzo, G. and Bertogna, M.},
-	month = aug,
-	year = {2009},
-	keywords = {schedulability analysis, multiprocessing systems, Timing, Computer architecture, Resource management, global EDF, Processor scheduling, Real time systems, Bandwidth, Compositional analysis, computer architecture, computing architecture, Embedded computing, embedded systems, multi supply function, multi supply function abstraction, multicore platforms, multiprocessors, P-fair time partitions, parallel machine, parallel machines, Parallel machines, periodic servers, Power system modeling, Protection, real-time applications, service mechanisms, static partitions},
-	pages = {294--302},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/FHRBNI92/5279679.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/N5CC6RJQ/Bini et al. - 2009 - The Multi Supply Function Abstraction for Multipro.pdf:application/pdf}
+@inproceedings{baker_multiprocessor_2003,
+	title = {Multiprocessor {EDF} and deadline monotonic schedulability analysis},
+	doi = {10.1109/REAL.2003.1253260},
+	abstract = {Schedulability tests are presented for preemptive earlier-deadline-first and deadline-monotonic scheduling of periodic or sporadic real-time tasks on a single-queue m-server system, in which the deadline of a task may be less than or equal to the task period. These results subsume and generalize several known utilization-based multiprocessor schedulability tests, and are derived via an independent proof.},
+	booktitle = {{RTSS} 2003. 24th {IEEE} {Real}-{Time} {Systems} {Symposium}, 2003},
+	author = {Baker, T. P.},
+	month = dec,
+	year = {2003},
+	keywords = {Computer science, deadline-monotonic scheduling, Delta modulation, multiprocessing systems, Multiprocessing systems, multiprocessors, periodic real-time tasks, preemptive earlier-deadline-first scheduling, processor scheduling, Processor scheduling, queueing theory, Real time systems, real-time systems, resource allocation, schedulability tests, Scheduling algorithm, single-queue m-server system, sporadic real-time tasks, Sufficient conditions, System testing, utilization-based multiprocessor, Writing},
+	pages = {120--129},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/TNPTG8LC/1253260.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/RQYDPG6R/Baker - 2003 - Multiprocessor EDF and deadline monotonic schedula.pdf:application/pdf}
+}
+
+@inproceedings{alhammad_schedulability_2014,
+	title = {Schedulability analysis of global memory-predictable scheduling},
+	doi = {10.1145/2656045.2656070},
+	abstract = {The use of multicore CPUs in real-time systems poses significant challenges in estimating their temporal behavior. A factor that has a large impact on this issue is the contention for access to main memory among multiple cores. To overcome this problem, an execution model called PREM has been previously introduced to co-schedule CPU execution and accesses to main memory without relying on hardware arbiters. In this paper, we provide a global schedulbil-ity analysis for this predictable execution model, and we prove its correctness. We also evaluate the effectiveness of the proposed solution with extensive simulations. The results show a significant advantage of the proposed solution when compared to contention execution in which tasks access main memory unpredictably.},
+	booktitle = {2014 {International} {Conference} on {Embedded} {Software} ({EMSOFT})},
+	author = {Alhammad, A. and Pellizzoni, R.},
+	month = oct,
+	year = {2014},
+	keywords = {multiprocessing systems, processor scheduling, Processor scheduling, real-time systems, contention execution, coschedule CPU execution, global memory-predictable scheduling, global schedulability analysis, Hardware, Interference, multicore CPUs, Multicore processing, predictable execution model, PREM, Real-time systems, schedulability analysis, Schedules, Scheduling, temporal behavior},
+	pages = {1--10},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/CVR35WHR/6986128.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/RGQD6727/Alhammad and Pellizzoni - 2014 - Schedulability analysis of global memory-predictab.pdf:application/pdf}
+}
+
+@inproceedings{shah_timing_2014,
+	title = {Timing anomalies in multi-core architectures due to the interference on the shared resources},
+	doi = {10.1109/ASPDAC.2014.6742973},
+	abstract = {Timing anomalies in single-core processors have been theoretically explained and well understood phenomenon. This paper presents new timing anomalies which occur in multi-core architectures due to the interference on the shared resources. We derive formulation to capture these anomalies and provide practical evidences using real applications from the M̈alardalen WCET benchmark suit executing on NIOS II multi-core architecture on an Altera FPGA.},
+	booktitle = {2014 19th {Asia} and {South} {Pacific} {Design} {Automation} {Conference} ({ASP}-{DAC})},
+	author = {Shah, H. and Huang, K. and Knoll, A.},
+	month = jan,
+	year = {2014},
+	keywords = {multiprocessing systems, Interference, Altera FPGA, Clocks, Computational modeling, Equations, field programmable gate arrays, interference, interference analysis, M̈alardalen WCET benchmark suit, microprocessor chips, NIOS II multicore architecture, Radiation detectors, Round robin, shared resources, timed automata models, Timing, timing anomalies},
+	pages = {708--713},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/ZBB7DAN9/6742973.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/NQGNNAFB/Shah et al. - 2014 - Timing anomalies in multi-core architectures due t.pdf:application/pdf}
+}
+
+@inproceedings{nasri_exact_2017,
+	title = {An {Exact} and {Sustainable} {Analysis} of {Non}-preemptive {Scheduling}},
+	doi = {10.1109/RTSS.2017.00009},
+	abstract = {This paper provides an exact and sustainable schedulability test for a set of non-preemptive jobs scheduled with a fixed-job-priority (FJP) policy upon a uniprocessor. Both classic work-conserving and recent non-work-conserving schedulers are supported. Jobs may exhibit both release jitter and execution time variation. Both best- and worst-case response time bounds are derived. No prior response-time analysis (RTA) for this general setting is both exact and sustainable, nor does any prior RTA support non-work-conserving schedulers. The proposed analysis works by building a schedule graph that precisely abstracts all possible execution scenarios. Key to deferring the state-space explosion problem is a novel path-merging technique that collapses similar scenarios without giving up analysis precision. In an empirical evaluation with randomly generated workloads based on an automotive benchmark, the method is shown to scale to 30+ periodic tasks with thousands of jobs (per hyperperiod).},
+	booktitle = {2017 {IEEE} {Real}-{Time} {Systems} {Symposium} ({RTSS})},
+	author = {Nasri, M. and Brandenburg, B. B.},
+	month = dec,
+	year = {2017},
+	keywords = {processor scheduling, real-time systems, Real-time systems, Schedules, Algorithm design and analysis, exact analysis, exact schedulability test, execution time variation, fixed-job-priority, fixed-job-priority policy, Jitter, non-preemptive-scheduling, non-work-conserving-scheduling, nonpreemptive jobs, nonpreemptive scheduling, real-time-systems, Runtime, schedulability-analysis, schedule graph, Scheduling algorithms, sustainability, sustainable analysis, sustainable schedulability test, Task analysis, worst-case response time bounds},
+	pages = {12--23},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/96FAYXCC/8277276.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/SKVSDRHH/Nasri and Brandenburg - 2017 - An Exact and Sustainable Analysis of Non-preemptiv.pdf:application/pdf}
+}
+
+@article{coffman_application_1978,
+	title = {An {Application} of {Bin}-{Packing} to {Multiprocessor} {Scheduling}},
+	volume = {7},
+	issn = {0097-5397},
+	url = {https://epubs.siam.org/doi/abs/10.1137/0207001},
+	doi = {10.1137/0207001},
+	abstract = {We consider one of the basic, well-studied problems of scheduling theory, that of nonpreemptively scheduling n independent tasks on m identical, parallel processors with the objective of minimizing the “makespan,” i.e., the total timespan required to process all the given tasks. Because this problem is \$NP\$-complete and apparently intractable in general, much effort has been directed toward devising fast algorithms which find near-optimal schedules. The well-known LPT (Largest Processing Time first) algorithm always finds a schedule having makespan within \$4/3 = 1.333 {\textbackslash}cdots \$ of the minimum possible makespan, and this is the best such bound satisfied by any previously published fast algorithm. We describe a comparably fast algorithm, based on techniques from “bin-packing,” which we prove satisfies a bound of 1.220. On the basis of exact upper bounds determined for each \$m {\textbackslash}leqq 7\$, we conjecture that the best possible general bound for our algorithm is actually \$20/17 = 1.176 {\textbackslash}cdots \$.},
+	number = {1},
+	urldate = {2019-01-30},
+	journal = {SIAM Journal on Computing},
+	author = {Coffman, E., Jr. and Garey, M. and Johnson, D.},
+	month = feb,
+	year = {1978},
+	pages = {1--17},
+	file = {Full Text PDF:/home/jacob/Zotero/storage/UGW48GD4/Coffman et al. - 1978 - An Application of Bin-Packing to Multiprocessor Sc.pdf:application/pdf;Snapshot:/home/jacob/Zotero/storage/74ABEIIF/0207001.html:text/html}
+}
+
+@article{johnson_fast_1974,
+	title = {Fast algorithms for bin packing},
+	volume = {8},
+	issn = {0022-0000},
+	url = {http://www.sciencedirect.com/science/article/pii/S0022000074800267},
+	doi = {10.1016/S0022-0000(74)80026-7},
+	abstract = {Low-order polynomial time algorithms for near-optimal solutions to the problem of bin packing are studied. The previously analyzed FIRST FIT and BEST FIT packing rules are shown to be members of a more generalized class of packing rules all of which have the same worst case behavior. If the input list is in decreasing order, the worst case behavior of the packing rules in the class is considerably improved and, if not the same for all, at least restricted to a narrow range of possibilities. Finally, after showing that any implementation of a packing rule in the class requires at least 0(n log n) comparisons, we present linear-time approximations to these packing rules whose worst case behavior is as good as that of FIRST FIT under a large variety of restrictions on the input.},
+	number = {3},
+	urldate = {2019-01-30},
+	journal = {Journal of Computer and System Sciences},
+	author = {Johnson, David S.},
+	month = jun,
+	year = {1974},
+	pages = {272--314},
+	file = {ScienceDirect Full Text PDF:/home/jacob/Zotero/storage/42768N8A/Johnson - 1974 - Fast algorithms for bin packing.pdf:application/pdf;ScienceDirect Snapshot:/home/jacob/Zotero/storage/47D5FAL7/S0022000074800267.html:text/html}
+}
+
+@inproceedings{bini_hyperbolic_2001,
+	title = {A hyperbolic bound for the rate monotonic algorithm},
+	doi = {10.1109/EMRTS.2001.934000},
+	abstract = {In this paper we propose a novel schedulability analysis for verifying the feasibility of large periodic task sets under the rate monotonic algorithm, when the exact test cannot be applied on line due to prohibitively long execution times. The proposed test has the same complexity as the original Liu and Layland bound but it is less pessimistic, so allowing to accept task sets that would be rejected using the original approach. The performance of the proposed approach is evaluated with respect to the classical Liu and Layland method, and theoretical bounds are derived as a function of n (the number of tasks) and for the limit case of n tending to infinity. The analysis is also extended to include aperiodic servers and blocking times due to concurrency control protocols. Extensive simulations on synthetic tasks sets are presented to compare the effectiveness of the proposed test with respect to the Liu and Layland method and the exact response time analysis.},
+	booktitle = {Proceedings 13th {Euromicro} {Conference} on {Real}-{Time} {Systems}},
+	author = {Bini, E. and Buttazzo, G. and Buttazzo, G.},
+	month = jun,
+	year = {2001},
+	keywords = {processor scheduling, Scheduling algorithm, schedulability analysis, Algorithm design and analysis, Runtime, Analytical models, complexity, computational complexity, concurrency control, Concurrency control, concurrency control protocols, Delay, exact response time analysis, formal verification, H infinity control, hyperbolic bound, large periodic task sets, Mathematics, protocols, Protocols, rate monotonic algorithm, Testing},
+	pages = {59--66},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/HQVKGWI6/934000.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/3GSD2QQS/Bini et al. - 2001 - A hyperbolic bound for the rate monotonic algorith.pdf:application/pdf}
+}
+
+@article{bertogna_tests_2011,
+	series = {Special {Issue} on {Multiprocessor} {Real}-time {Scheduling}},
+	title = {Tests for global {EDF} schedulability analysis},
+	volume = {57},
+	issn = {1383-7621},
+	url = {http://www.sciencedirect.com/science/article/pii/S1383762110001128},
+	doi = {10.1016/j.sysarc.2010.09.004},
+	abstract = {Several schedulability tests have been proposed for global EDF scheduling on identical multiprocessors. All these tests are sufficient, rather than exact. These different tests were, for the most part, independently developed. The relationships among such tests have not been adequately investigated, so that it is difficult to understand which test is most appropriate in a particular given scenario. This paper represents an attempt to remedy this, by means of three major contributions. First, we summarize the main existing results for the schedulability analysis of multiprocessor systems scheduled with global edf, showing, when possible, existing dominance relations. We compare these algorithms taking into consideration different aspects, namely, run-time complexity, average performances over randomly generated workloads, sustainability properties and speedup factors. Second, based on this comparative evaluation we propose a recommended approach to schedulability analysis, that suggests a particular order in which to apply preexisting tests, thereby accomplishing both good provable performance and good behavior in practice. And finally, we propose a further improvement to one of these preexisting tests to improve its run-time performance by an order of magnitude, while completely retaining its ability to correctly identify schedulable systems.},
+	number = {5},
+	urldate = {2019-01-28},
+	journal = {Journal of Systems Architecture},
+	author = {Bertogna, Marko and Baruah, Sanjoy},
+	month = may,
+	year = {2011},
+	keywords = {Earliest deadline first, Global scheduling, Multiprocessor scheduling, Schedulability analysis},
+	pages = {487--497},
+	file = {ScienceDirect Full Text PDF:/home/jacob/Zotero/storage/KFNMCGE7/Bertogna and Baruah - 2011 - Tests for global EDF schedulability analysis.pdf:application/pdf;ScienceDirect Snapshot:/home/jacob/Zotero/storage/2SYDKNTS/S1383762110001128.html:text/html}
 }
 
 @article{manolache_schedulability_2004,
@@ -163,178 +154,178 @@
 	file = {ACM Full Text PDF:/home/jacob/Zotero/storage/LCKJEK8Q/Manolache et al. - 2004 - Schedulability Analysis of Applications with Stoch.pdf:application/pdf}
 }
 
-@article{bertogna_tests_2011,
-	series = {Special {Issue} on {Multiprocessor} {Real}-time {Scheduling}},
-	title = {Tests for global {EDF} schedulability analysis},
-	volume = {57},
-	issn = {1383-7621},
-	url = {http://www.sciencedirect.com/science/article/pii/S1383762110001128},
-	doi = {10.1016/j.sysarc.2010.09.004},
-	abstract = {Several schedulability tests have been proposed for global EDF scheduling on identical multiprocessors. All these tests are sufficient, rather than exact. These different tests were, for the most part, independently developed. The relationships among such tests have not been adequately investigated, so that it is difficult to understand which test is most appropriate in a particular given scenario. This paper represents an attempt to remedy this, by means of three major contributions. First, we summarize the main existing results for the schedulability analysis of multiprocessor systems scheduled with global edf, showing, when possible, existing dominance relations. We compare these algorithms taking into consideration different aspects, namely, run-time complexity, average performances over randomly generated workloads, sustainability properties and speedup factors. Second, based on this comparative evaluation we propose a recommended approach to schedulability analysis, that suggests a particular order in which to apply preexisting tests, thereby accomplishing both good provable performance and good behavior in practice. And finally, we propose a further improvement to one of these preexisting tests to improve its run-time performance by an order of magnitude, while completely retaining its ability to correctly identify schedulable systems.},
-	number = {5},
-	urldate = {2019-01-28},
-	journal = {Journal of Systems Architecture},
-	author = {Bertogna, Marko and Baruah, Sanjoy},
+@inproceedings{bini_multi_2009,
+	title = {The {Multi} {Supply} {Function} {Abstraction} for {Multiprocessors}},
+	doi = {10.1109/RTCSA.2009.39},
+	abstract = {Multi-core platforms are becoming the dominant computing architecture for next generation embedded systems. Nevertheless, designing, programming, and analyzing such systems is not easy and a solid methodology is still missing. In this paper, we propose two powerful abstractions to model the computing power of a parallel machine, which provide a general interface for developing and analyzing real-time applications in isolation, independently of the physical platform. The proposed abstractions can be applied on top of different types of service mechanisms, such as periodic servers, static partitions, and P-fair time partitions. In addition, we developed the schedulability analysis of a set of real-time tasks on top of a parallel machine that is compliant with the proposed abstractions.},
+	booktitle = {2009 15th {IEEE} {International} {Conference} on {Embedded} and {Real}-{Time} {Computing} {Systems} and {Applications}},
+	author = {Bini, E. and Buttazzo, G. and Bertogna, M.},
+	month = aug,
+	year = {2009},
+	keywords = {multiprocessing systems, multiprocessors, Processor scheduling, Real time systems, schedulability analysis, Timing, Bandwidth, Compositional analysis, computer architecture, Computer architecture, computing architecture, Embedded computing, embedded systems, global EDF, multi supply function, multi supply function abstraction, multicore platforms, P-fair time partitions, parallel machine, parallel machines, Parallel machines, periodic servers, Power system modeling, Protection, real-time applications, Resource management, service mechanisms, static partitions},
+	pages = {294--302},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/FHRBNI92/5279679.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/N5CC6RJQ/Bini et al. - 2009 - The Multi Supply Function Abstraction for Multipro.pdf:application/pdf}
+}
+
+@inproceedings{sebestyen_simulation-based_2012,
+	title = {Simulation-based schedulability tests for multiprocessor real-time systems},
+	doi = {10.1109/AQTR.2012.6237706},
+	abstract = {The assimilation of multiprocessor programming into the real-time application's domain is limited because there are not enough theoretical and pragmatic tools for proving the feasibility of such systems. Theoretical results are few and tend to be too complex for a practical implementation. In this paper, we combine theoretical analysis results with simulation to obtain a tool, which can assess the multiprocessor real-time schedulability of periodic task sets. We performed simulations on different scenarios in order to determine the features that influence schedulability of a multiprocessor real-time system.},
+	booktitle = {Proceedings of 2012 {IEEE} {International} {Conference} on {Automation}, {Quality} and {Testing}, {Robotics}},
+	author = {Sebestyen, G. and Hangan, A. and Suciu, A.},
 	month = may,
-	year = {2011},
-	keywords = {Schedulability analysis, Global scheduling, Multiprocessor scheduling, Earliest deadline first},
-	pages = {487--497},
-	file = {ScienceDirect Full Text PDF:/home/jacob/Zotero/storage/KFNMCGE7/Bertogna and Baruah - 2011 - Tests for global EDF schedulability analysis.pdf:application/pdf;ScienceDirect Snapshot:/home/jacob/Zotero/storage/2SYDKNTS/S1383762110001128.html:text/html}
+	year = {2012},
+	keywords = {multiprocessing systems, processor scheduling, Processor scheduling, Real time systems, real-time systems, schedulability analysis, Schedules, Scheduling, Equations, Analytical models, global EDF, Mathematical model, multiprocessor, multiprocessor programming, multiprocessor real-time systems, Simulation, simulation-based schedulability tests, task set generation, theoretical analysis},
+	pages = {216--221},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/YQ5GIIVA/6237706.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/KNXEX8FF/Sebestyen et al. - 2012 - Simulation-based schedulability tests for multipro.pdf:application/pdf}
 }
 
-@inproceedings{bini_hyperbolic_2001,
-	title = {A hyperbolic bound for the rate monotonic algorithm},
-	doi = {10.1109/EMRTS.2001.934000},
-	abstract = {In this paper we propose a novel schedulability analysis for verifying the feasibility of large periodic task sets under the rate monotonic algorithm, when the exact test cannot be applied on line due to prohibitively long execution times. The proposed test has the same complexity as the original Liu and Layland bound but it is less pessimistic, so allowing to accept task sets that would be rejected using the original approach. The performance of the proposed approach is evaluated with respect to the classical Liu and Layland method, and theoretical bounds are derived as a function of n (the number of tasks) and for the limit case of n tending to infinity. The analysis is also extended to include aperiodic servers and blocking times due to concurrency control protocols. Extensive simulations on synthetic tasks sets are presented to compare the effectiveness of the proposed test with respect to the Liu and Layland method and the exact response time analysis.},
-	booktitle = {Proceedings 13th {Euromicro} {Conference} on {Real}-{Time} {Systems}},
-	author = {Bini, E. and Buttazzo, G. and Buttazzo, G.},
-	month = jun,
-	year = {2001},
-	keywords = {schedulability analysis, Analytical models, processor scheduling, Algorithm design and analysis, complexity, computational complexity, concurrency control, Concurrency control, concurrency control protocols, Delay, exact response time analysis, formal verification, H infinity control, hyperbolic bound, large periodic task sets, Mathematics, protocols, Protocols, rate monotonic algorithm, Runtime, Scheduling algorithm, Testing},
-	pages = {59--66},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/HQVKGWI6/934000.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/3GSD2QQS/Bini et al. - 2001 - A hyperbolic bound for the rate monotonic algorith.pdf:application/pdf}
-}
-
-@article{johnson_fast_1974,
-	title = {Fast algorithms for bin packing},
-	volume = {8},
-	issn = {0022-0000},
-	url = {http://www.sciencedirect.com/science/article/pii/S0022000074800267},
-	doi = {10.1016/S0022-0000(74)80026-7},
-	abstract = {Low-order polynomial time algorithms for near-optimal solutions to the problem of bin packing are studied. The previously analyzed FIRST FIT and BEST FIT packing rules are shown to be members of a more generalized class of packing rules all of which have the same worst case behavior. If the input list is in decreasing order, the worst case behavior of the packing rules in the class is considerably improved and, if not the same for all, at least restricted to a narrow range of possibilities. Finally, after showing that any implementation of a packing rule in the class requires at least 0(n log n) comparisons, we present linear-time approximations to these packing rules whose worst case behavior is as good as that of FIRST FIT under a large variety of restrictions on the input.},
-	number = {3},
-	urldate = {2019-01-30},
-	journal = {Journal of Computer and System Sciences},
-	author = {Johnson, David S.},
-	month = jun,
-	year = {1974},
-	pages = {272--314},
-	file = {ScienceDirect Full Text PDF:/home/jacob/Zotero/storage/42768N8A/Johnson - 1974 - Fast algorithms for bin packing.pdf:application/pdf;ScienceDirect Snapshot:/home/jacob/Zotero/storage/47D5FAL7/S0022000074800267.html:text/html}
-}
-
-@article{coffman_application_1978,
-	title = {An {Application} of {Bin}-{Packing} to {Multiprocessor} {Scheduling}},
-	volume = {7},
-	issn = {0097-5397},
-	url = {https://epubs.siam.org/doi/abs/10.1137/0207001},
-	doi = {10.1137/0207001},
-	abstract = {We consider one of the basic, well-studied problems of scheduling theory, that of nonpreemptively scheduling n independent tasks on m identical, parallel processors with the objective of minimizing the “makespan,” i.e., the total timespan required to process all the given tasks. Because this problem is \$NP\$-complete and apparently intractable in general, much effort has been directed toward devising fast algorithms which find near-optimal schedules. The well-known LPT (Largest Processing Time first) algorithm always finds a schedule having makespan within \$4/3 = 1.333 {\textbackslash}cdots \$ of the minimum possible makespan, and this is the best such bound satisfied by any previously published fast algorithm. We describe a comparably fast algorithm, based on techniques from “bin-packing,” which we prove satisfies a bound of 1.220. On the basis of exact upper bounds determined for each \$m {\textbackslash}leqq 7\$, we conjecture that the best possible general bound for our algorithm is actually \$20/17 = 1.176 {\textbackslash}cdots \$.},
+@article{liu_scheduling_1973,
+	title = {Scheduling {Algorithms} for {Multiprogramming} in a {Hard}-{Real}-{Time} {Environment}},
+	volume = {20},
+	issn = {0004-5411},
+	url = {http://doi.acm.org/10.1145/321738.321743},
+	doi = {10.1145/321738.321743},
+	abstract = {The problem of multiprogram scheduling on a single processor is studied from the viewpoint of the characteristics peculiar to the program functions that need guaranteed service. It is shown that an optimum fixed priority scheduler possesses an upper bound to processor utilization which may be as low as 70 percent for large task sets. It is also shown that full processor utilization can be achieved by dynamically assigning priorities on the basis of their current deadlines. A combination of these two scheduling techniques is also discussed.},
 	number = {1},
-	urldate = {2019-01-30},
-	journal = {SIAM Journal on Computing},
-	author = {Coffman, E., Jr. and Garey, M. and Johnson, D.},
+	urldate = {2019-01-21},
+	journal = {J. ACM},
+	author = {Liu, C. L. and Layland, James W.},
+	month = jan,
+	year = {1973},
+	pages = {46--61},
+	file = {ACM Full Text PDF:/home/jacob/Zotero/storage/4NS366CB/Liu and Layland - 1973 - Scheduling Algorithms for Multiprogramming in a Ha.pdf:application/pdf}
+}
+
+@inproceedings{durrieu_predictable_2014,
+	address = {TOULOUSE, France},
+	title = {Predictable {Flight} {Management} {System} {Implementation} on a {Multicore} {Processor}},
+	url = {https://hal.archives-ouvertes.fr/hal-01121700},
+	abstract = {This paper presents an approach for hosting a representative avionic function on a distributed-memory mul-ticore COTS architecture. This approach was developed in collaboration by Thales and ONERA, in order to improve the performance of the function while enforcing its predictability. Once the target avionic function and the multicore architecture have been introduced, the execution model and the needed basic services are described and evaluated.},
+	urldate = {2019-01-18},
+	booktitle = {Embedded {Real} {Time} {Software} ({ERTS}'14)},
+	author = {Durrieu, Guy and Faugère, Madeleine and Girbal, Sylvain and Gracia Pérez, Daniel and Pagetti, Claire and Puffitsch, W.},
 	month = feb,
-	year = {1978},
-	pages = {1--17},
-	file = {Full Text PDF:/home/jacob/Zotero/storage/UGW48GD4/Coffman et al. - 1978 - An Application of Bin-Packing to Multiprocessor Sc.pdf:application/pdf;Snapshot:/home/jacob/Zotero/storage/74ABEIIF/0207001.html:text/html}
+	year = {2014},
+	keywords = {FMS, MULTI-COEURS, PREDICTIBILITE},
+	file = {HAL PDF Full Text:/home/jacob/Zotero/storage/P9I98UMI/Durrieu et al. - 2014 - Predictable Flight Management System Implementatio.pdf:application/pdf}
 }
 
-@inproceedings{nasri_exact_2017,
-	title = {An {Exact} and {Sustainable} {Analysis} of {Non}-preemptive {Scheduling}},
-	doi = {10.1109/RTSS.2017.00009},
-	abstract = {This paper provides an exact and sustainable schedulability test for a set of non-preemptive jobs scheduled with a fixed-job-priority (FJP) policy upon a uniprocessor. Both classic work-conserving and recent non-work-conserving schedulers are supported. Jobs may exhibit both release jitter and execution time variation. Both best- and worst-case response time bounds are derived. No prior response-time analysis (RTA) for this general setting is both exact and sustainable, nor does any prior RTA support non-work-conserving schedulers. The proposed analysis works by building a schedule graph that precisely abstracts all possible execution scenarios. Key to deferring the state-space explosion problem is a novel path-merging technique that collapses similar scenarios without giving up analysis precision. In an empirical evaluation with randomly generated workloads based on an automotive benchmark, the method is shown to scale to 30+ periodic tasks with thousands of jobs (per hyperperiod).},
-	booktitle = {2017 {IEEE} {Real}-{Time} {Systems} {Symposium} ({RTSS})},
-	author = {Nasri, M. and Brandenburg, B. B.},
-	month = dec,
+@article{pellizzoni_predictable_2011,
+	title = {A {Predictable} {Execution} {Model} for {COTS}-{Based} {Embedded} {Systems}},
+	doi = {10.1109/RTAS.2011.33},
+	abstract = {Building safety-critical real-time systems out of inexpensive, non-real-time, COTS components is challenging. Although COTS components generally offer high performance, they can occasionally incur significant timing delays. To prevent this, we propose controlling the operating point of each shared resource (like the cache, memory, and interconnection buses) to maintain it below its saturation limit. This is necessary because the low-level arbiters of these shared resources are not typically designed to provide real-time guarantees. In this work, we introduce a novel system execution model, the Predictable Execution Model (PREM), which, in contrast to the standard COTS execution model, coschedules at a high level all active components in the system, such as CPU cores and I/O peripherals. In order to permit predictable, system-wide execution, we argue that real-time embedded applications should be compiled according to a new set of rules dictated by PREM. To experimentally validate our theory, we developed a COTS-based PREM testbed and modified the LLVM Compiler Infrastructure to produce PREM-compatible executables.},
+	journal = {2011 17th IEEE Real-Time and Embedded Technology and Applications Symposium},
+	author = {Pellizzoni, Rodolfo and Betti, Emiliano and Bak, Stanley and Yao, Gang and Criswell, John and Caccamo, Marco and Kegley, Russell},
+	year = {2011},
+	keywords = {Arbiter (electronics), Central processing unit, Compiler, Embedded system, Executable, Experiment, High- and low-level, High-level programming language, Input/output, Interconnection, LLVM, Operating point, Peripheral, Real-time clock, Real-time computing, Testbed, Transponder timing},
+	pages = {269--279}
+}
+
+@inproceedings{schranzhofer_timing_2010,
+	title = {Timing {Analysis} for {TDMA} {Arbitration} in {Resource} {Sharing} {Systems}},
+	doi = {10.1109/RTAS.2010.24},
+	abstract = {Modern computing systems have adopted multicore architectures and multiprocessor systems on chip (MPSoCs) for accommodating the increasing demand on computation power. However, performance boosting is constrained by shared resources, such as buses, main memory, DMA, etc.This paper analyzes the worst-case completion (response) time for real-time tasks when time division multiple access (TDMA) policies are applied for resource arbitration.Real-time tasks execute periodically on a processing element and are constituted by sequential superblocks. A superblock is characterized by its accesses to a shared resource and its computation time. We explore three models of accessing shared resources: (1)dedicated access model, in which accesses happen only at the beginning and the end of a superblock, (2) general access model, in which accesses could happen anytime during the execution of a superblock, and (3) hybrid access model, which combines the dedicated and general access models. We present a framework to analyze the worst-case completion time of real-time tasks (superblocks) under these three access models, for a given TDMA arbiter. We compare the timing analysis of the three proposed models for a real-world application.},
+	booktitle = {2010 16th {IEEE} {Real}-{Time} and {Embedded} {Technology} and {Applications} {Symposium}},
+	author = {Schranzhofer, A. and Chen, J. and Thiele, L.},
+	month = apr,
+	year = {2010},
+	keywords = {Multiprocessing systems, Multicore processing, Timing, Computer architecture, Resource management, Boosting, buses, DMA, general access model, hybrid access model, main memory, multicore architectures, multiprocessor systems on chip, Performance analysis, Real-Time Systems, resource sharing systems, SOC, System-on-a-chip, system-on-chip, TDMA arbitration, time division multiple access, Time division multiple access, Time Division Multiple Access (TDMA), time division multiple access policies, Time factors, timing analysis, worst-case completion time, Worst-Case Timing Analysis},
+	pages = {215--224},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/NI3P88NG/5465981.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/3R4GNPRS/Schranzhofer et al. - 2010 - Timing Analysis for TDMA Arbitration in Resource S.pdf:application/pdf}
+}
+
+@inproceedings{maia_closer_2016,
+	title = {A closer look into the {AER} {Model}},
+	doi = {10.1109/ETFA.2016.7733567},
+	abstract = {Commercial-of-the-shelf based multi-core systems present timing anomalies that cannot be ignored by the real-time systems community due to their unpredictable behaviour. These timing anomalies, often caused by applications' uncontrolled accesses to shared resources such as the components in the memory hierarchy or in the I/O subsystem, introduce interference that may lead to deadline misses if the problem is neglected. The Acquisition Execution Restitution (AER) execution model was previously proposed to circumvent this problem and, therefore, mitigate inter-task interference. In this model, applications decouple communication (acquisition and restitution phases) from the actual execution in a way that at most one acquisition or restitution phase is in execution at any instant of time while the execution phase of different tasks can progress in parallel on multiple cores. Thus, keeping each task's derived worst-case execution time closer to the one measured in isolation. In this paper, we study the AER execution model and compare it against a global Earliest Deadline First (EDF) approach where interferences are considered. Our results show that a priority assignment heuristic which assigns the priorities based on the tasks' periods dominates all the other proposed heuristics and that due to interference it can also schedule task sets which are not schedulable by using the global EDF approach.},
+	booktitle = {2016 {IEEE} 21st {International} {Conference} on {Emerging} {Technologies} and {Factory} {Automation} ({ETFA})},
+	author = {Maia, C. and Nogueira, L. and Pinho, L. M. and Pérez, D. G.},
+	month = sep,
+	year = {2016},
+	keywords = {multiprocessing systems, processor scheduling, Interference, Multicore processing, Schedules, Computational modeling, Timing, Time division multiple access, acquisition execution restitution model, AER model, multicore system, parallel processing, priority assignment heuristic, Software, task scheduling, WCET, worst-case execution time},
+	pages = {1--8},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/AWQQSM44/7733567.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/Q5EA988V/Maia et al. - 2016 - A closer look into the AER Model.pdf:application/pdf}
+}
+
+@inproceedings{maia_schedulability_2017,
+	title = {Schedulability analysis for global fixed-priority scheduling of the 3-phase task model},
+	doi = {10.1109/RTCSA.2017.8046313},
+	abstract = {Scheduling real-time applications on general purpose multicore platforms is a challenging problem from a timing analysis perspective. Such platforms expose uncontrolled sources of interference whenever concurrent accesses to memory are performed. The non-deterministic bus and memory access behavior complicates the estimations of applications' worst-case execution times (WCET). The 3-phase task model seems a good candidate to circumvent the uncontrolled sources of interference by isolating concurrent memory accesses. A task is divided in three successive phases; first, the task loads its instruction and data in a local memory, then it executes non-preemptively using those pre-loaded instructions and data, and finally, the modified data are pushed back to main memory. Following this execution model, tasks never access the bus during their execution phase. Instead, all the bus accesses are performed during the first and third phases. In this paper, we focus on the global fixed-priority scheduling of the 3-phase task model. A new schedulability test is derived by modelling the interference happening on the bus rather than the interference on the cores as in the state-of-the-art techniques. The effectiveness of the test is evaluated by comparing it against the state-of-the-art.},
+	booktitle = {2017 {IEEE} 23rd {International} {Conference} on {Embedded} and {Real}-{Time} {Computing} {Systems} and {Applications} ({RTCSA})},
+	author = {Maia, C. and Nelissen, G. and Nogueira, L. and Pinho, L. M. and Pérez, D. G.},
+	month = aug,
 	year = {2017},
-	keywords = {real-time systems, Schedules, Real-time systems, processor scheduling, Algorithm design and analysis, Runtime, exact analysis, exact schedulability test, execution time variation, fixed-job-priority, fixed-job-priority policy, Jitter, non-preemptive-scheduling, non-work-conserving-scheduling, nonpreemptive jobs, nonpreemptive scheduling, real-time-systems, schedulability-analysis, schedule graph, Scheduling algorithms, sustainability, sustainable analysis, sustainable schedulability test, Task analysis, worst-case response time bounds},
-	pages = {12--23},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/96FAYXCC/8277276.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/SKVSDRHH/Nasri and Brandenburg - 2017 - An Exact and Sustainable Analysis of Non-preemptiv.pdf:application/pdf}
-}
-
-@inproceedings{shah_timing_2014,
-	title = {Timing anomalies in multi-core architectures due to the interference on the shared resources},
-	doi = {10.1109/ASPDAC.2014.6742973},
-	abstract = {Timing anomalies in single-core processors have been theoretically explained and well understood phenomenon. This paper presents new timing anomalies which occur in multi-core architectures due to the interference on the shared resources. We derive formulation to capture these anomalies and provide practical evidences using real applications from the M̈alardalen WCET benchmark suit executing on NIOS II multi-core architecture on an Altera FPGA.},
-	booktitle = {2014 19th {Asia} and {South} {Pacific} {Design} {Automation} {Conference} ({ASP}-{DAC})},
-	author = {Shah, H. and Huang, K. and Knoll, A.},
-	month = jan,
-	year = {2014},
-	keywords = {Interference, Computational modeling, multiprocessing systems, Timing, Equations, Altera FPGA, Clocks, field programmable gate arrays, interference, interference analysis, M̈alardalen WCET benchmark suit, microprocessor chips, NIOS II multicore architecture, Radiation detectors, Round robin, shared resources, timed automata models, timing anomalies},
-	pages = {708--713},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/ZBB7DAN9/6742973.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/NQGNNAFB/Shah et al. - 2014 - Timing anomalies in multi-core architectures due t.pdf:application/pdf}
-}
-
-@inproceedings{alhammad_schedulability_2014,
-	title = {Schedulability analysis of global memory-predictable scheduling},
-	doi = {10.1145/2656045.2656070},
-	abstract = {The use of multicore CPUs in real-time systems poses significant challenges in estimating their temporal behavior. A factor that has a large impact on this issue is the contention for access to main memory among multiple cores. To overcome this problem, an execution model called PREM has been previously introduced to co-schedule CPU execution and accesses to main memory without relying on hardware arbiters. In this paper, we provide a global schedulbil-ity analysis for this predictable execution model, and we prove its correctness. We also evaluate the effectiveness of the proposed solution with extensive simulations. The results show a significant advantage of the proposed solution when compared to contention execution in which tasks access main memory unpredictably.},
-	booktitle = {2014 {International} {Conference} on {Embedded} {Software} ({EMSOFT})},
-	author = {Alhammad, A. and Pellizzoni, R.},
-	month = oct,
-	year = {2014},
-	keywords = {schedulability analysis, real-time systems, Schedules, Scheduling, Interference, Multicore processing, Real-time systems, multiprocessing systems, processor scheduling, Processor scheduling, contention execution, coschedule CPU execution, global memory-predictable scheduling, global schedulability analysis, Hardware, multicore CPUs, predictable execution model, PREM, temporal behavior},
+	keywords = {Interference, Multicore processing, Real-time systems, schedulability analysis, Analytical models, WCET, 3-phase task model, concurrency (computers), general purpose multicore platforms, global fixed-priority scheduling, Load modeling, Predictive models, Program processors, scheduling, worst-case execution times},
 	pages = {1--10},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/CVR35WHR/6986128.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/RGQD6727/Alhammad and Pellizzoni - 2014 - Schedulability analysis of global memory-predictab.pdf:application/pdf}
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/YYV5S36L/8046313.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/ZNVQ8CA3/Maia et al. - 2017 - Schedulability analysis for global fixed-priority .pdf:application/pdf}
 }
 
-@inproceedings{baker_multiprocessor_2003,
-	title = {Multiprocessor {EDF} and deadline monotonic schedulability analysis},
-	doi = {10.1109/REAL.2003.1253260},
-	abstract = {Schedulability tests are presented for preemptive earlier-deadline-first and deadline-monotonic scheduling of periodic or sporadic real-time tasks on a single-queue m-server system, in which the deadline of a task may be less than or equal to the task period. These results subsume and generalize several known utilization-based multiprocessor schedulability tests, and are derived via an independent proof.},
-	booktitle = {{RTSS} 2003. 24th {IEEE} {Real}-{Time} {Systems} {Symposium}, 2003},
-	author = {Baker, T. P.},
-	month = dec,
-	year = {2003},
-	keywords = {real-time systems, resource allocation, multiprocessing systems, processor scheduling, Multiprocessing systems, Processor scheduling, Real time systems, multiprocessors, Scheduling algorithm, Computer science, deadline-monotonic scheduling, Delta modulation, periodic real-time tasks, preemptive earlier-deadline-first scheduling, queueing theory, schedulability tests, single-queue m-server system, sporadic real-time tasks, Sufficient conditions, System testing, utilization-based multiprocessor, Writing},
-	pages = {120--129},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/TNPTG8LC/1253260.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/RQYDPG6R/Baker - 2003 - Multiprocessor EDF and deadline monotonic schedula.pdf:application/pdf}
+@inproceedings{kramer_real_2015,
+	title = {Real world automotive benchmarks for free},
+	booktitle = {6th {International} {Workshop} on {Analysis} {Tools} and {Methodologies} for {Embedded} and {Real}-time {Systems} ({WATERS})},
+	author = {Kramer, Simon and Ziegenbein, Dirk and Hamann, Arne},
+	year = {2015}
 }
 
-@article{bini_measuring_2005,
-	title = {Measuring the {Performance} of {Schedulability} {Tests}},
-	volume = {30},
-	issn = {1573-1383},
-	url = {https://doi.org/10.1007/s11241-005-0507-9},
-	doi = {10.1007/s11241-005-0507-9},
-	abstract = {The high computational complexity required for performing an exact schedulability analysis of fixed priority systems has led the research community to investigate new feasibility tests which are less complex than exact tests, but still provide a reasonable performance in terms of acceptance ratio. The performance of a test is typically evaluated by generating a huge number of synthetic task sets and then computing the fraction of those that pass the test with respect to the total number of feasible ones. The resulting ratio, however, depends on the metrics used for evaluating the performance and on the method for generating random task parameters. In particular, an important factor that affects the overall result of the simulation is the probability density function of the random variables used to generate the task set parameters. In this paper we discuss and compare three different metrics that can be used for evaluating the performance of schedulability tests. Then, we investigate how the random generation procedure can bias the simulation results of some specific scheduling algorithm. Finally, we present an efficient method for generating task sets with uniform distribution in a given space, and show how some intuitive solutions typically used for task set generation can bias the simulation results.},
+@inproceedings{becker_contention-free_2016,
+	title = {Contention-{Free} {Execution} of {Automotive} {Applications} on a {Clustered} {Many}-{Core} {Platform}},
+	doi = {10.1109/ECRTS.2016.14},
+	abstract = {Next generations of compute-intensive real-time applications in automotive systems will require more powerful computing platforms. One promising power-efficient solution for such applications is to use clustered many-core architectures. However, ensuring that real-time requirements are satisfied in the presence of contention in shared resources, such as memories, remains an open issue. This work presents a novel contention-free execution framework to execute automotive applications on such platforms. Privatization of memory banks together with defined access phases to shared memory resources is the backbone of the framework. An Integer Linear Programming (ILP) formulation is presented to find the optimal time-triggered schedule for the on-core execution as well as for the access to shared memory. Additionally a heuristic solution is presented that generates the schedule in a fraction of the time required by the ILP. Extensive evaluations show that the proposed heuristic performs only 0.5\% away from the optimal solution while it outperforms a baseline heuristic by 67\%. The applicability of the approach to industrially sized problems is demonstrated in a case study of a software for Engine Management Systems.},
+	booktitle = {2016 28th {Euromicro} {Conference} on {Real}-{Time} {Systems} ({ECRTS})},
+	author = {Becker, M. and Dasari, D. and Nicolic, B. and Akesson, B. and Nélis, V. and Nolte, T.},
+	month = jul,
+	year = {2016},
+	keywords = {real-time systems, resource allocation, Schedules, Scheduling, Software, Automotive, automotive applications, Automotive applications, automotive electronics, automotive systems, clustered many-core architectures, clustered many-core platform, compute-intensive real-time applications, computing platforms, contention-free execution framework, Execution Framework, ILP formulation, integer linear programming, integer programming, linear programming, Many-Core, memory banks privatization, Memory management, optimal time-triggered schedule, parallel architectures, power-efficient solution, Real-Time, real-time requirements, shared memory resources, shared memory systems, Time-Triggered},
+	pages = {14--24},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/2UMJR82E/7557865.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/KSRFFN6G/Becker et al. - 2016 - Contention-Free Execution of Automotive Applicatio.pdf:application/pdf}
+}
+
+@inproceedings{nasri_response-time_2018,
+	address = {Dagstuhl, Germany},
+	series = {Leibniz {International} {Proceedings} in {Informatics} ({LIPIcs})},
+	title = {A {Response}-{Time} {Analysis} for {Non}-{Preemptive} {Job} {Sets} under {Global} {Scheduling}},
+	volume = {106},
+	isbn = {978-3-95977-075-0},
+	url = {http://drops.dagstuhl.de/opus/volltexte/2018/8994},
+	doi = {10.4230/LIPIcs.ECRTS.2018.9},
+	urldate = {2019-01-15},
+	booktitle = {30th {Euromicro} {Conference} on {Real}-{Time} {Systems} ({ECRTS} 2018)},
+	publisher = {Schloss Dagstuhl–Leibniz-Zentrum fuer Informatik},
+	author = {Nasri, Mitra and Nelissen, Geoffrey and Brandenburg, Björn B.},
+	editor = {Altmeyer, Sebastian},
+	year = {2018},
+	keywords = {schedulability analysis, best-case response time, global multiprocessor scheduling, non-preemptive tasks, worst-case response time},
+	pages = {9:1--9:23},
+	file = {Full Text PDF:/home/jacob/Zotero/storage/MJY4SM3R/Nasri et al. - 2018 - A Response-Time Analysis for Non-Preemptive Job Se.pdf:application/pdf;Snapshot:/home/jacob/Zotero/storage/8IY6NVEI/8994.html:text/html}
+}
+
+@misc{us_epa_inventory_2017,
+	type = {Reports and {Assessments}},
+	title = {Inventory of {U}.{S}. {Greenhouse} {Gas} {Emissions} and {Sinks}},
+	url = {https://www.epa.gov/ghgemissions/inventory-us-greenhouse-gas-emissions-and-sinks},
+	abstract = {The national greenhouse gas inventory is developed each year to track trends in U.S. emissions and removals. Find emissions by source, economic sector and greenhouse gas.},
 	language = {en},
-	number = {1},
-	urldate = {2019-02-07},
-	journal = {Real-Time Systems},
-	author = {Bini, Enrico and Buttazzo, Giorgio C.},
-	month = may,
-	year = {2005},
-	keywords = {EDF: Earliest Deadline First, FP: Fixed Priorities, HB: Hyperbolic Bound, RM: Rate Monotonic},
-	pages = {129--154},
-	file = {Springer Full Text PDF:/home/jacob/Zotero/storage/899TQPW8/Bini and Buttazzo - 2005 - Measuring the Performance of Schedulability Tests.pdf:application/pdf}
+	urldate = {2019-05-22},
+	journal = {US EPA},
+	author = {US EPA, OA},
+	month = feb,
+	year = {2017},
+	file = {Snapshot:/home/jacob/Zotero/storage/9UI8S6P6/inventory-us-greenhouse-gas-emissions-and-sinks.html:text/html}
 }
 
-@inproceedings{becker_scheduling_2018,
-	title = {Scheduling multi-rate real-time applications on clustered many-core architectures with memory constraints},
-	doi = {10.1109/ASPDAC.2018.8297382},
-	abstract = {Access to shared memory is one of the main challenges for many-core processors. One group of scheduling strategies for such platforms focuses on the division of tasks' access to shared memory and code execution. This allows to orchestrate the access to shared local and off-chip memory in a way such that access contention between different compute cores is avoided by design. In this work, an execution framework is introduced that leverages local memory by statically allocating a subset of tasks to cores. This reduces the access times to shared memory, as off-chip memory access is avoided, and in turn improves the schedulability of such systems. A Constraint Programming (CP) formulation is presented to select the statically allocated tasks and to generate the complete system schedule. Evaluations show that the proposed approach yields an up to 19\% higher schedulability ratio than related work, and a case study demonstrates its applicability to industrial problems.},
-	booktitle = {2018 23rd {Asia} and {South} {Pacific} {Design} {Automation} {Conference} ({ASP}-{DAC})},
-	author = {Becker, M. and Mubeen, S. and Dasari, D. and Behnam, M. and Nolte, T.},
-	month = jan,
-	year = {2018},
-	keywords = {clustered many-core architectures, Memory management, Schedules, scheduling, multiprocessing systems, processor scheduling, Timing, Task analysis, access contention, access times, constraint programming, CP formulation, Industries, many-core processors, memory constraints, off-chip memory access, Prefetching, schedulability ratio, scheduling multirate real-time applications, scheduling strategies, shared memory processors, statically allocated tasks},
-	pages = {560--567},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/BFC6NTG7/8297382.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/CYG7IWCQ/Becker et al. - 2018 - Scheduling multi-rate real-time applications on cl.pdf:application/pdf}
-}
-
-@misc{brandenburg_implementation_2018,
-	title = {An implementation of the {Nasri} \& {Brandenburg} (2017) schedulability test for non-preemptive job sets: brandenburg/np-schedulability-analysis},
-	shorttitle = {An implementation of the {Nasri} \& {Brandenburg} (2017) schedulability test for non-preemptive job sets},
-	url = {https://github.com/brandenburg/np-schedulability-analysis},
-	urldate = {2019-05-14},
-	author = {Brandenburg, Björn},
-	month = dec,
-	year = {2018},
-	note = {original-date: 2017-10-26T12:38:43Z}
-}
-
-@inproceedings{baruah_sustainable_2006,
-	title = {Sustainable {Scheduling} {Analysis}},
-	doi = {10.1109/RTSS.2006.47},
-	abstract = {A schedulability test is defined to be sustainable if any task system deemed schedulable by the test remains so if it behaves "better" than mandated by its system specifications. We provide a formal definition of sustainability, and subject the concept to systematic analysis in the context of the uniprocessor scheduling of periodic and sporadic task systems. We argue that it is in general good engineering practice to use sustainable tests if possible, and classify common uniprocessor schedulability tests according to whether they are sustainable or not},
-	booktitle = {2006 27th {IEEE} {International} {Real}-{Time} {Systems} {Symposium} ({RTSS}'06)},
-	author = {Baruah, S. and Burns, A.},
-	month = dec,
-	year = {2006},
-	keywords = {scheduling, Timing, Processor scheduling, Real time systems, Runtime, Jitter, Computer science, System testing, periodic task scheduling, Robustness, schedulability test, sporadic task scheduling, Stability, sustainable scheduling analysis, uniprocessor scheduling, Yarn},
-	pages = {159--168},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/QCTPJY34/4032345.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/J4HKET22/Baruah and Burns - 2006 - Sustainable Scheduling Analysis.pdf:application/pdf}
+@inproceedings{nasri_non-work-conserving_2016,
+	title = {Non-work-conserving {Non}-preemptive {Scheduling}: {Motivations}, {Challenges}, and {Potential} {Solutions}},
+	shorttitle = {Non-work-conserving {Non}-preemptive {Scheduling}},
+	doi = {10.1109/ECRTS.2016.11},
+	abstract = {In many real-time systems, preemption is either impossible or prohibitively expensive. The problem of scheduling non-preemptive periodic tasks with known release offsets is known to be NP-Hard. In this paper, we investigate the existing non-preemptive scheduling algorithms in both categories of work-conserving and non-work-conserving algorithms, where in the former, the processing resource is not allowed to be idle as long as there is an unfinished job in the system. While describing the advantages and weaknesses of the existing scheduling solutions we show that using online non-work-conserving algorithms it is possible to schedule more task sets. In our work, we discuss the challenges to design the idle-time insertion policy (IIP) which can be combined with the existing scheduling policies such as the earliest deadline first (EDF), rate monotonic (RM), etc. Further we present a tighter necessary condition for schedulability of non-preemptive tasks. We also provide an IIP for EDF based on looking into a number of jobs in future. Through the experiments we show that the our IIP for EDF significantly increases the schedulability of non-preemptive tasks, particularly in periodic task sets. While our schedulability ratio is more than 80\%, the state of the art work-conserving algorithms are about 15\%.},
+	booktitle = {2016 28th {Euromicro} {Conference} on {Real}-{Time} {Systems} ({ECRTS})},
+	author = {Nasri, M. and Fohler, G.},
+	month = jul,
+	year = {2016},
+	keywords = {optimisation, real-time systems, Real-time systems, Schedules, Scheduling, Scheduling algorithms, computational complexity, scheduling, Concrete, hard real-time systems, Harmonic analysis, idle-time insertion policy, IIP, non-preemptive scheduling, non-work-conserving scheduling, nonpreemptive periodic task scheduling, NP-hard problem, operating system, operating systems (computers), Optimal scheduling, real-time system},
+	pages = {165--175},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/4L5RAMDM/7557878.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/4IIPTPYD/Nasri and Fohler - 2016 - Non-work-conserving Non-preemptive Scheduling Mot.pdf:application/pdf}
 }
 
 @article{nasri_precautious-rm:_2014,
@@ -357,32 +348,52 @@
 	file = {Springer Full Text PDF:/home/jacob/Zotero/storage/I7YKIFHQ/Nasri and Kargahi - 2014 - Precautious-RM a predictable non-preemptive sched.pdf:application/pdf}
 }
 
-@inproceedings{nasri_non-work-conserving_2016,
-	title = {Non-work-conserving {Non}-preemptive {Scheduling}: {Motivations}, {Challenges}, and {Potential} {Solutions}},
-	shorttitle = {Non-work-conserving {Non}-preemptive {Scheduling}},
-	doi = {10.1109/ECRTS.2016.11},
-	abstract = {In many real-time systems, preemption is either impossible or prohibitively expensive. The problem of scheduling non-preemptive periodic tasks with known release offsets is known to be NP-Hard. In this paper, we investigate the existing non-preemptive scheduling algorithms in both categories of work-conserving and non-work-conserving algorithms, where in the former, the processing resource is not allowed to be idle as long as there is an unfinished job in the system. While describing the advantages and weaknesses of the existing scheduling solutions we show that using online non-work-conserving algorithms it is possible to schedule more task sets. In our work, we discuss the challenges to design the idle-time insertion policy (IIP) which can be combined with the existing scheduling policies such as the earliest deadline first (EDF), rate monotonic (RM), etc. Further we present a tighter necessary condition for schedulability of non-preemptive tasks. We also provide an IIP for EDF based on looking into a number of jobs in future. Through the experiments we show that the our IIP for EDF significantly increases the schedulability of non-preemptive tasks, particularly in periodic task sets. While our schedulability ratio is more than 80\%, the state of the art work-conserving algorithms are about 15\%.},
-	booktitle = {2016 28th {Euromicro} {Conference} on {Real}-{Time} {Systems} ({ECRTS})},
-	author = {Nasri, M. and Fohler, G.},
-	month = jul,
-	year = {2016},
-	keywords = {optimisation, real-time systems, Schedules, Scheduling, Real-time systems, scheduling, computational complexity, Scheduling algorithms, Concrete, hard real-time systems, Harmonic analysis, idle-time insertion policy, IIP, non-preemptive scheduling, non-work-conserving scheduling, nonpreemptive periodic task scheduling, NP-hard problem, operating system, operating systems (computers), Optimal scheduling, real-time system},
-	pages = {165--175},
-	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/4L5RAMDM/7557878.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/4IIPTPYD/Nasri and Fohler - 2016 - Non-work-conserving Non-preemptive Scheduling Mot.pdf:application/pdf}
+@inproceedings{baruah_sustainable_2006,
+	title = {Sustainable {Scheduling} {Analysis}},
+	doi = {10.1109/RTSS.2006.47},
+	abstract = {A schedulability test is defined to be sustainable if any task system deemed schedulable by the test remains so if it behaves "better" than mandated by its system specifications. We provide a formal definition of sustainability, and subject the concept to systematic analysis in the context of the uniprocessor scheduling of periodic and sporadic task systems. We argue that it is in general good engineering practice to use sustainable tests if possible, and classify common uniprocessor schedulability tests according to whether they are sustainable or not},
+	booktitle = {2006 27th {IEEE} {International} {Real}-{Time} {Systems} {Symposium} ({RTSS}'06)},
+	author = {Baruah, S. and Burns, A.},
+	month = dec,
+	year = {2006},
+	keywords = {Computer science, Processor scheduling, Real time systems, System testing, Timing, Jitter, Runtime, scheduling, periodic task scheduling, Robustness, schedulability test, sporadic task scheduling, Stability, sustainable scheduling analysis, uniprocessor scheduling, Yarn},
+	pages = {159--168},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/QCTPJY34/4032345.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/J4HKET22/Baruah and Burns - 2006 - Sustainable Scheduling Analysis.pdf:application/pdf}
 }
 
-@misc{us_epa_inventory_2017,
-	type = {Reports and {Assessments}},
-	title = {Inventory of {U}.{S}. {Greenhouse} {Gas} {Emissions} and {Sinks}},
-	url = {https://www.epa.gov/ghgemissions/inventory-us-greenhouse-gas-emissions-and-sinks},
-	abstract = {The national greenhouse gas inventory is developed each year to track trends in U.S. emissions and removals. Find emissions by source, economic sector and greenhouse gas.},
+@misc{brandenburg_implementation_2018,
+	title = {An implementation of the {Nasri} \& {Brandenburg} (2017) schedulability test for non-preemptive job sets: brandenburg/np-schedulability-analysis},
+	shorttitle = {An implementation of the {Nasri} \& {Brandenburg} (2017) schedulability test for non-preemptive job sets},
+	url = {https://github.com/brandenburg/np-schedulability-analysis},
+	urldate = {2019-05-14},
+	author = {Brandenburg, Björn},
+	month = dec,
+	year = {2018},
+	note = {original-date: 2017-10-26T12:38:43Z}
+}
+
+@inproceedings{becker_scheduling_2018,
+	title = {Scheduling multi-rate real-time applications on clustered many-core architectures with memory constraints},
+	doi = {10.1109/ASPDAC.2018.8297382},
+	abstract = {Access to shared memory is one of the main challenges for many-core processors. One group of scheduling strategies for such platforms focuses on the division of tasks' access to shared memory and code execution. This allows to orchestrate the access to shared local and off-chip memory in a way such that access contention between different compute cores is avoided by design. In this work, an execution framework is introduced that leverages local memory by statically allocating a subset of tasks to cores. This reduces the access times to shared memory, as off-chip memory access is avoided, and in turn improves the schedulability of such systems. A Constraint Programming (CP) formulation is presented to select the statically allocated tasks and to generate the complete system schedule. Evaluations show that the proposed approach yields an up to 19\% higher schedulability ratio than related work, and a case study demonstrates its applicability to industrial problems.},
+	booktitle = {2018 23rd {Asia} and {South} {Pacific} {Design} {Automation} {Conference} ({ASP}-{DAC})},
+	author = {Becker, M. and Mubeen, S. and Dasari, D. and Behnam, M. and Nolte, T.},
+	month = jan,
+	year = {2018},
+	keywords = {multiprocessing systems, processor scheduling, Schedules, Timing, Task analysis, scheduling, clustered many-core architectures, Memory management, access contention, access times, constraint programming, CP formulation, Industries, many-core processors, memory constraints, off-chip memory access, Prefetching, schedulability ratio, scheduling multirate real-time applications, scheduling strategies, shared memory processors, statically allocated tasks},
+	pages = {560--567},
+	file = {IEEE Xplore Abstract Record:/home/jacob/Zotero/storage/BFC6NTG7/8297382.html:text/html;IEEE Xplore Full Text PDF:/home/jacob/Zotero/storage/CYG7IWCQ/Becker et al. - 2018 - Scheduling multi-rate real-time applications on cl.pdf:application/pdf}
+}
+
+@misc{doughty-white_million_nodate,
+	title = {Million {Lines} of {Code}},
+	url = {https://informationisbeautiful.net/visualizations/million-lines-of-code/},
+	abstract = {Is a million lines of code a lot? How many lines of code are there in Windows? Facebook? iPhone apps? Let our data-visualization program your brain.},
 	language = {en},
-	urldate = {2019-05-22},
-	journal = {US EPA},
-	author = {US EPA, OA},
-	month = feb,
-	year = {2017},
-	file = {Snapshot:/home/jacob/Zotero/storage/9UI8S6P6/inventory-us-greenhouse-gas-emissions-and-sinks.html:text/html}
+	urldate = {2019-08-19},
+	journal = {Information is Beautiful},
+	author = {Doughty-White, Pearl and Quick, Miriam},
+	file = {Snapshot:/home/jacob/Zotero/storage/LVG44SAY/million-lines-of-code.html:text/html}
 }
 
 @inproceedings{hakansson_portal_2013,
@@ -398,13 +409,19 @@
 	file = {Full Text PDF:/home/jacob/Zotero/storage/IRGEFESN/Håkansson - 2013 - Portal of Research Methods and Methodologies for R.pdf:application/pdf;Snapshot:/home/jacob/Zotero/storage/CIL4FWEA/record.html:text/html}
 }
 
-@misc{doughty-white_million_nodate,
-	title = {Million {Lines} of {Code}},
-	url = {https://informationisbeautiful.net/visualizations/million-lines-of-code/},
-	abstract = {Is a million lines of code a lot? How many lines of code are there in Windows? Facebook? iPhone apps? Let our data-visualization program your brain.},
-	language = {en},
-	urldate = {2019-08-19},
-	journal = {Information is Beautiful},
-	author = {Doughty-White, Pearl and Quick, Miriam},
-	file = {Snapshot:/home/jacob/Zotero/storage/LVG44SAY/million-lines-of-code.html:text/html}
+@article{davis_survey_2011,
+	title = {A {Survey} of {Hard} {Real}-time {Scheduling} for {Multiprocessor} {Systems}},
+	volume = {43},
+	issn = {0360-0300},
+	url = {http://doi.acm.org/10.1145/1978802.1978814},
+	doi = {10.1145/1978802.1978814},
+	abstract = {This survey covers hard real-time scheduling algorithms and schedulability analysis techniques for homogeneous multiprocessor systems. It reviews the key results in this field from its origins in the late 1960s to the latest research published in late 2009. The survey outlines fundamental results about multiprocessor real-time scheduling that hold independent of the scheduling algorithms employed. It provides a taxonomy of the different scheduling methods, and considers the various performance metrics that can be used for comparison purposes. A detailed review is provided covering partitioned, global, and hybrid scheduling algorithms, approaches to resource sharing, and the latest results from empirical investigations. The survey identifies open issues, key research challenges, and likely productive research directions.},
+	number = {4},
+	urldate = {2019-08-30},
+	journal = {ACM Comput. Surv.},
+	author = {Davis, Robert I. and Burns, Alan},
+	month = oct,
+	year = {2011},
+	keywords = {global scheduling, Hard real-time scheduling, multicore, multiprocessor, partitioned scheduling},
+	pages = {35:1--35:44}
 }
