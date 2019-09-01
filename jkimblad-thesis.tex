@@ -474,7 +474,8 @@ to resume execution of $T_3$ at time 5. This is what is meant by a pre-emptive s
     \includegraphics[width=0.8\linewidth]{images/rate-monotonic-scheduling.pdf}
 
     \caption{Example of rate monotonic scheduling for three tasks where $T_1=(1, 4, 4)$, $T_2=(2, 6,
-    6)$, $T_3=(4, 12, 12)$.}
+    6)$, $T_3=(4, 12, 12)$. Dashed boxes represent a task waiting to resume execution after being
+    preempted.} 
 
     \label{fig:rate_monotonic_scheduling}
 
@@ -718,7 +719,8 @@ using dashed lines.
 
     \includegraphics[width=0.8\linewidth]{images/scheduling_graph.pdf}
 
-    \caption{Non-preemptive task-set scheduled under \acrshort{edf} or \acrshort{rms}}
+    \caption{Example of the \acrshort{dag} scheduling graph with a branch representing two different
+        scheduling possibilities.}
 
     \label{fig:scheduling_graph}
 
@@ -731,8 +733,8 @@ using dashed lines.
 
     \includegraphics[width=0.8\linewidth]{images/scheduling_graph_merge.pdf}
 
-    \caption{Non-preemptive task-set where $J_7$ finishes 1 time unit earlier, scheduled under
-    \acrshort{edf} or \acrshort{rms}}
+    \caption{Example of the \acrshort{dag} scheduling graph merging two nodes that lead to the same
+    outcome.}
 
     \label{fig:scheduling_graph_merge}
 
