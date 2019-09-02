@@ -98,21 +98,25 @@
     Real-time multi-core systems with shared memory are harder to analyze due to varying execution
     times cause by congestion in accessing the shared memory. A promising way to make these systems
     more deterministic is the \acrshort{aer}-model which takes a memory-centric approach to
-    scheduling and instead of scheduling tasks onto cores schedules the memory accesses onto the
-    memory. In this thesis an extended version of the \acrshort{aer}-model and a new \acrshort{iip}
-    that can be used in conjunction with a state-of-the-art scheduling analysis tool to perform
-    timing analysis on job sets under the \acrshort{aer}-model is presented. The extended
+    scheduling which enables the multicore problem to be seen as a single core scheduling problem.
+    Memory-centric means that instead of scheduling tasks onto cores it schedules the memory
+    accesses onto the memory where in this case the memory phases are allowed to access the shared
+    memory non-preemptively during their allocated slots. In this thesis an extended version of the
+    \acrshort{aer}-model and a new \acrshort{iip}, which can make decisions on whether or not to
+    idle resources when there is work to be done as an attempt to improve schedulability, is
+    presented. These can be used in conjunction with a state-of-the-art scheduling analysis tool to
+    perform timing analysis on job sets under the \acrshort{aer}-model. The extended
     \acrshort{aer}-model introduces scheduling windows for the \acrshort{a}-phase and
     \acrshort{r}-phase of tasks in a way that no further precedence constraints needs to be
     considered by the scheduler as to not to schedule any of the \acrshort{a}-phase or
     \acrshort{r}-phase in the wrong order. The developed \acrshort{iip} is then used by the analysis
     tool to make sure that there is at least one free core in the system before a new task is
-    scheduled as it needs to be put into consideration in a memory-centric scheduler. The extended
+    scheduled as this needs to be put into consideration in a memory-centric scheduler. The extended
     \acrshort{aer}-model and the \acrshort{iip} are then benchmarked with task sets coherent to the
     \acrshort{autosar}-model. The benchmarks explore the schedulability ratio when varying task
-    amount, core amount, scheduling algorithms and the window ratio for the phases. The results show that
-    \acrshort{edf} outperforms other algorithms, tasks with a window ratio of 60\% and task sets of
-    sizes between 100 to 150 tasks yields the highest schedulability ratio.
+    amount, core amount, scheduling algorithms and the window ratio for the phases. The results show
+    that \acrshort{edf} outperforms other algorithms, tasks with a window ratio of 60\% and task
+    sets of sizes between 100 to 150 tasks yields the highest schedulability ratio.
 
 
 \end{abstract}
@@ -122,26 +126,31 @@
     
     \begin{abstract}
 
+        
         Flerkärniga realtissystem med delade minnen är svårare att analysera på grund av varierande
         exekveringstider orsakade av stockning vid åtkomst av det delade minnet. Ett lovande sätt
-        att göra dessa system mer deterministiska är \acrshort{aer}-modellen som tar en
-        minnes-centriskt tillvägagångssätt till schemaläggning och istället för att schemalägga
-        processer till kärnor enbart schemalägger åtkomster till minnet.  I denna avhandling
-        presenteras en vidareutvecklad \acrshort{aer}-model och en ny \acrshort{iip} som kan
-        användas i samband med ett toppmodernt analysverktyg för schemaläggning för att utföra
-        tidsanalys på processer under \acrshort{aer}-modellen. Den vidareutvecklade
-        \acrshort{aer}-modellen introducerar schemaläggningsfönster för \acrshort{a}-fasen och
-        \acrshort{r}-fasen utav processer på ett sätt som gör det överflödigt för en schemaläggare
-        att behöva oroa sig om någon företrädesrätt mellan de bägge faserna. Den utvecklade
-        \acrshort{iip}'n används sedan av analysverktyget för att se till att det finns minst en
-        ledig kärna i processorn när en ny process ska schemaläggas, eftersom det inte är något som
-        görs vid användning av ett minnes-centriskt tillvägagångssätt. Den vidareutvecklade
-        \acrshort{aer}-modellen och \acrshort{iip}'n sätts sedan på prov genom tester där de
-        schemalägger processer som följer \acrshort{autosar} standarden. Testerna utforskar hur väl
-        processerna schemaläggs när antalet procceser, antalet kärnor och fönster-faktorn för
-        faserna varieras. Resultaten visar att \acrshort{edf} presterar bättre än andra
-        schemaläggnignsalgoritmer, processer med en fönster-faktor på 60% presterar bättre och att
-        schemaläggning när antalet processer är mellan 100 och 150 är optimalt.
+        att göra dessa system mer deterministiska är \acrshort{aer}-modellen som tar ett
+        minnes-centriskt tillvägagångssätt till schemaläggning som möjliggör för flerkärniga system
+        att betraktas som enkärniga system, vilket reducerar komplexiteten. Minnes-centrisk innebär
+        att istället för schemaläggning utav processer till kärnor så schemaläggs enbart åtkomster
+        till minnet där i detta fall minnes-faserna får fri tillgång till det delade minnet utan
+        avbrott. Denna avhandling presenterar en vidareutvecklad \acrshort{aer}-model och en ny
+        \acrshort{iip} som fattar beslut om en resurs ska lämnas inaktiv trots att det finns arbete
+        att utföra i ett försöka att förbättra prestandan av schemaläggaren. Dessa kan användas i
+        samband med ett toppmodernt analysverktyg för schemaläggning för att utföra tidsanalys på
+        processer under \acrshort{aer}-modellen. Den vidareutvecklade \acrshort{aer}-modellen
+        introducerar schemaläggningsfönster för \acrshort{a}-fasen och \acrshort{r}-fasen utav
+        processer på ett sätt som gör det överflödigt för en schemaläggare att behöva oroa sig om
+        någon företrädesrätt mellan de bägge faserna.  Den utvecklade \acrshort{iip}'n används sedan
+        av analysverktyget för att se till att det finns minst en ledig kärna i processorn när en ny
+        process ska schemaläggas, eftersom det inte är något som garanteras vid användning av ett
+        minnes-centriskt tillvägagångssätt. Den vidareutvecklade \acrshort{aer}-modellen och
+        \acrshort{iip}'n sätts sedan på prov genom tester där de schemalägger processer som följer
+        \acrshort{autosar} standarden. Testerna utforskar hur väl processerna schemaläggs när
+        antalet procceser, antalet kärnor och fönster-faktorn för faserna varieras. Resultaten visar
+        att \acrshort{edf} presterar bättre än andra schemaläggnignsalgoritmer, processer med en
+        fönster-faktor på 60\% presterar bättre och att schemaläggning när antalet processer är
+        mellan 100 och 150 är optimalt.
 
 
     \end{abstract} 
