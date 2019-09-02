@@ -93,6 +93,26 @@
 \titlepage
 
 \begin{abstract} 
+    
+    % Problem
+    Real-time multi-core systems with shared memory are harder to analyze due to varying execution
+    times cause by congestion in accessing the shared memory. A promising way to make these systems
+    more deterministic is the \acrshort{aer}-model which takes a memory-centric approach to
+    scheduling and instead of scheduling tasks onto cores schedules the memory accesses onto the
+    memory. In this thesis an extended version of the \acrshort{aer}-model and a new \acrshort{iip}
+    that can be used in conjunction with a state-of-the-art scheduling analysis tool to perform
+    timing analysis on job sets under the \acrshort{aer}-model is presented. The extended
+    \acrshort{aer}-model introduces scheduling windows for the \acrshort{a}-phase and
+    \acrshort{r}-phase of tasks in a way that no further precedence constraints needs to be
+    considered by the scheduler as to not to schedule any of the \acrshort{a}-phase or
+    \acrshort{r}-phase in the wrong order. The developed \acrshort{iip} is then used by the analysis
+    tool to make sure that there is at least one free core in the system before a new task is
+    scheduled as it needs to be put into consideration in a memory-centric scheduler. The extended
+    \acrshort{aer}-model and the \acrshort{iip} are then benchmarked with task sets coherent to the
+    \acrshort{autosar}-model. The benchmarks explore the schedulability ratio when varying task
+    amount, core amount, scheduling algorithms and the window ratio for the phases. The results show that
+    \acrshort{edf} outperforms other algorithms, tasks with a window ratio of 60\% and task sets of
+    sizes between 100 to 150 tasks yields the highest schedulability ratio.
 
 
 \end{abstract}
@@ -101,6 +121,28 @@
 \begin{otherlanguage}{Swedish} 
     
     \begin{abstract}
+
+        Flerkärniga realtissystem med delade minnen är svårare att analysera på grund av varierande
+        exekveringstider orsakade av stockning vid åtkomst av det delade minnet. Ett lovande sätt
+        att göra dessa system mer deterministiska är \acrshort{aer}-modellen som tar en
+        minnes-centriskt tillvägagångssätt till schemaläggning och istället för att schemalägga
+        processer till kärnor enbart schemalägger åtkomster till minnet.  I denna avhandling
+        presenteras en vidareutvecklad \acrshort{aer}-model och en ny \acrshort{iip} som kan
+        användas i samband med ett toppmodernt analysverktyg för schemaläggning för att utföra
+        tidsanalys på processer under \acrshort{aer}-modellen. Den vidareutvecklade
+        \acrshort{aer}-modellen introducerar schemaläggningsfönster för \acrshort{a}-fasen och
+        \acrshort{r}-fasen utav processer på ett sätt som gör det överflödigt för en schemaläggare
+        att behöva oroa sig om någon företrädesrätt mellan de bägge faserna. Den utvecklade
+        \acrshort{iip}'n används sedan av analysverktyget för att se till att det finns minst en
+        ledig kärna i processorn när en ny process ska schemaläggas, eftersom det inte är något som
+        görs vid användning av ett minnes-centriskt tillvägagångssätt. Den vidareutvecklade
+        \acrshort{aer}-modellen och \acrshort{iip}'n sätts sedan på prov genom tester där de
+        schemalägger processer som följer \acrshort{autosar} standarden. Testerna utforskar hur väl
+        processerna schemaläggs när antalet procceser, antalet kärnor och fönster-faktorn för
+        faserna varieras. Resultaten visar att \acrshort{edf} presterar bättre än andra
+        schemaläggnignsalgoritmer, processer med en fönster-faktor på 60% presterar bättre och att
+        schemaläggning när antalet processer är mellan 100 och 150 är optimalt.
+
 
     \end{abstract} 
 
@@ -167,29 +209,29 @@ further exploration into its applicability within this industry.
 
     %define the terms and scope of the topic
 
-The \acrshort{aer}-model divides each work task that is executed on a processing core up into three
-distinct phases, the \acrfull{a}-phase, \acrfull{e}-phase and \acrfull{r}-phase. The
-\acrshort{a}-phase and \acrshort{r}-phase are both memory phases, meaning that during these phases
-the work-task is not doing any actual work, but simply only accessing the shared memory. In opposite the
-\acrshort{e}-phase only does work and is not allowed to access the shared memory, only its local
-memory. A task is then completed by starting off in the \acrshort{a}-phase where it fetches all the
-information needed for execution, such as program code and information produced by earlier tasks,
-by reading from the shared memory. This information is copied over by the processing core to its own
-local memory that only it has access to and can access without contention. The \acrshort{e}-phase then executes
-the code that has been copied over with any information it might have been given. Often some result
-is produced by the \acrshort{e}-phase which is of interest and may need to be shared to other tasks or
-simply stored for later use. This is the job of the \acrshort{r}-phase which copies all the
-information and results produced by the \acrshort{e}-phase and writes it back to the shared memory
-from the cores local memory. After this these three phases have finished the task is considered to
-be completed. Regular tasks (not under the \acrshort{aer}-model) are in opposite allowed to access
-shared memory whenever they like, making the system less deterministic in the sense that memory
-accesses cannot be controlled which affects how long a task will execute for. However, knowing that
-the \acrshort{aer}-model makes the execution of tasks more deterministic is not sufficient to
-increase the safety. The reason that deterministic tasks is good is because they become much easier
-to analyse. However developing new executions models such as \acrshort{aer} often also require new
-methods of analysis to be developed, or older ones to be customized to fit newer models. The focus
-of this thesis is to examine how existing methods of timing analysis can be extended to the
-\acrshort{aer}-model. 
+%The \acrshort{aer}-model divides each work task that is executed on a processing core up into three
+%distinct phases, the \acrfull{a}-phase, \acrfull{e}-phase and \acrfull{r}-phase. The
+%\acrshort{a}-phase and \acrshort{r}-phase are both memory phases, meaning that during these phases
+%the work-task is not doing any actual work, but simply only accessing the shared memory. In opposite the
+%\acrshort{e}-phase only does work and is not allowed to access the shared memory, only its local
+%memory. A task is then completed by starting off in the \acrshort{a}-phase where it fetches all the
+%information needed for execution, such as program code and information produced by earlier tasks,
+%by reading from the shared memory. This information is copied over by the processing core to its own
+%local memory that only it has access to and can access without contention. The \acrshort{e}-phase then executes
+%the code that has been copied over with any information it might have been given. Often some result
+%is produced by the \acrshort{e}-phase which is of interest and may need to be shared to other tasks or
+%simply stored for later use. This is the job of the \acrshort{r}-phase which copies all the
+%information and results produced by the \acrshort{e}-phase and writes it back to the shared memory
+%from the cores local memory. After this these three phases have finished the task is considered to
+%be completed. Regular tasks (not under the \acrshort{aer}-model) are in opposite allowed to access
+%shared memory whenever they like, making the system less deterministic in the sense that memory
+%accesses cannot be controlled which affects how long a task will execute for. However, knowing that
+%the \acrshort{aer}-model makes the execution of tasks more deterministic is not sufficient to
+%increase the safety. The reason that deterministic tasks is good is because they become much easier
+%to analyse. However developing new executions models such as \acrshort{aer} often also require new
+%methods of analysis to be developed, or older ones to be customized to fit newer models. The focus
+%of this thesis is to examine how existing methods of timing analysis can be extended to the
+%\acrshort{aer}-model. 
 
     %outline the current situation
 
@@ -1313,9 +1355,9 @@ After the utilizations have been generated the next step is to create the actual
 be approached from two different directions. Either the periods of the tasks can be generated, and
 from them the execution times using the already generated utilizations. Or the process can be
 reversed and the execution times can be generated first and then the periods from them based on the
-utilizations. It can be a good idea to create the task set to be as reflective of a real application
-as possible as it would give the most accurate information about how the \acrshort{aer}
-\acrshort{iip} and the extended \acrshort{aer} model would behave in a real application.
+utilizations. It can be a good idea to create the task set with characteristics of a real
+application as it would give valuable information about how the \acrshort{aer} \acrshort{iip} and
+the extended \acrshort{aer} model would behave in a real application.
 
 Since the major application of the \acrshort{aer} model lies within the automotive and avionics
 sector the task set should cohere to the standards and practices to these industries.  However large
@@ -1587,7 +1629,11 @@ resolution for smaller task sets. The \acrshort{a}-ratio and \acrshort{r}-ratio 
 the window-ratio will be set to 0.6, the utilization will be set to 0.5 for both experiments. To
 make sure that memory accesses is the bottleneck the core amount is set to be larger than the amount
 of tasks, such that in worst case each task has its own dedicated core. The used scheduling
-algorithm will be \acrshort{edf}.
+algorithm will be \acrshort{edf} and the experiment will be iterated 100 times for each data point
+for both intervals of task sizes to create the schedulability ratio. Since the runtime rises rapidly
+with the size of the task set the iterations are set to a lower amount than for some of the other
+experiments.
+
 
 \subsubsection{Core amount}
 
@@ -1816,6 +1862,23 @@ This can be improved upon by further extension of the task model which is discus
 \ref{sec:future_work}.
 
 % Task amount
+
+As seen in figure \ref{fig:task_amount_1} there is a sweet spot of task set sizes where the
+schedulability ratio is at a local maximum. There is also problem area for small task sets where the
+schedulability ratio quickly drops-off to then recover. The initial drop-off in schedulability ratio
+for task sets of small sizes are probably due to each task getting a higher execution time. This
+increases the risk that a task with a high period gets a high execution time, which in turn can
+make the execution time of the tasks \acrshort{a}-phase or \acrshort{r}-phase to be as high,
+or higher than the period of low-period tasks. This would then increase the low-period tasks chance
+to miss their deadline as they might get blocked for accessing the memory through their whole period
+by a single high-period task. As the task set size increases the execution times of each individual
+task also decreases on average, which decreases the risk of any low-period tasks missing their
+deadline. This problem was hypothesised and explained in section \ref{subsec:task_generation} which
+resulted in periods of 1000ms being removed from any generated task set. The schedulability ratio
+within this problem area could probably be increased further by shrinking the interval between the
+lowest-period and the highest-period of all tasks the task sets by, for example, also removing
+periods of 100ms and 200ms. The schedulability ratio would also expect to improve for the other
+experiments, as these typically had a task set of sizes within the problem area.
 
 % Scheduling algorithms
 
