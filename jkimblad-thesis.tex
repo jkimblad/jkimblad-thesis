@@ -276,8 +276,8 @@ The existing research does have its shortcomings that could be improved. Since t
 memory-centric approach to the problem also reduces it to a single-core problem it opens the
 possibility to adapt existing analysis tools that are less pessimistic and scales better to larger
 task sets in their approach. One analysis tool proposed by \textcite{nasri_exact_2017} has shown
-promising results for regular single-core timing analysis. This analysis however have not
-been made to be used with the \acrshort{aer}-model, thus a gap in the research has been identified.
+promising results for regular single-core timing analysis. However, this analysis method has not
+been created to be used with the \acrshort{aer}-model, thus a gap in the research has been identified.
 
 %\section{Background} 
 
@@ -1293,20 +1293,47 @@ There are several interesting ways to prioritise the jobs. Existing scheduling a
 \acrshort{rms} for a job set using periods defined by the \acrshort{autosar} framework as done in
 section \ref{subsec:task_generation}. For a large task set a lot of tasks will end up with the same
 period, thus their jobs will have the same priority, so it is of interest to further prioritise the
-jobs which share the same period according to some tie-breaker. The implementation of
+jobs which share the same period according to some tiebreaker. The implementation of
 \acrshort{np}-test tie-brakes priorities based on task-id and job-id where lower id's are given
-higher priorities. A more interesting idea is to prioritize jobs within their period group according
-to their utilization as it might prove to increase the schedulability. To test this seven different
-scheduling algorithms are proposed and will be used during benchmarking.
+higher priorities. A more interesting idea is to prioritize jobs with the same period according
+to their utilization as it might prove to increase the schedulability. 
+
+Seven different scheduling algorithms will be used during benchmarking where the first one is
+\acrshort{edf} which is well known and can be used as a baseline to compare the other algorithms
+with. The rest of the algorithms are a bit more unique, four of them base the priorities on the jobs
+periods and their utilizations. They first prioritize jobs according to their periods, but since
+a lot of jobs may end up with the priority, the jobs of the same period are also prioritised using
+the jobs utilization as a tiebreaker. They can in a way be thought of as special versions of
+\acrshort{rms} that also use the jobs utilizations to tiebreak jobs with the same period. In
+addition two algorithms will be tested that only priorities jobs according to their utilization and
+completely ignores the jobs period. All of these algorithms are explained closer in the following
+list.
 
 \begin{itemize}
-    \item \textbf{\acrshort{edf}} - Earliest Deadline First
-    \item \textbf{\acrshort{lulp}} - Low utilization and low period have the highest priority
-    \item \textbf{\acrshort{luhp}} - Low utilization and high period have the highest priority
-    \item \textbf{\acrshort{hulp}} - High utilization and low period have the highest priority
-    \item \textbf{\acrshort{huhp}} - High utilization and high period have the highest priority
-    \item \textbf{\acrshort{lu}} - Low utilization have the highest priority (period is ignored)
-    \item \textbf{\acrshort{hu}} - High utilization have the highest priority (period is ignored)
+    \item \textbf{\acrshort{edf}} - Earliest Deadline First, the job that is closest to reach its
+        deadline is always given the highest priority.
+    \item \textbf{\acrfull{lulp}} - Initially priorities are given according to \acrshort{rms}
+        by always giving the jobs with the lowest periods the highest priorities. In addition to
+        regular \acrshort{rms} jobs with the same period are further prioritised according to their
+        utilizations where the jobs with the lowest utilizations are given the highest priorities of
+        all jobs with the same period.
+    \item \textbf{\acrfull{luhp}} - Initially priorities are given inverse to \acrshort{rms} by
+        giving the jobs with the highest periods the highest priorities. In addition the jobs with
+        the same periods are further prioritized according to their utilizations just like
+        \acrshort{lulp} where the jobs with the lowest utilization are given the highest priorities
+        of all jobs with the same period.
+    \item \textbf{\acrfull{hulp}} - Works just like \acrshort{lulp} but jobs with the same period
+        are instead prioritised in a way where the jobs with the highest utilizations always are
+        given the highest priorities of all jobs with the same period.
+    \item \textbf{\acrfull{huhp}} - Work just like \acrshort{luhp} but jobs with the same period are
+        instead prioritised by giving the jobs with the highest utilizations the highest priorities
+        of all jobs with the same period.
+    \item \textbf{\acrfull{lu}} - The jobs are assigned priorities solely based on their
+        utilization and their periods are completely ignored, the jobs with the lowest utilizations
+        are given the highest priorities. 
+    \item \textbf{\acrfull{hu}} - Just like \acrshort{lu} the jobs are assigned priorities based on
+        their utilization, but the jobs with the highest utilization are instead given the highest
+        priorities.
 \end{itemize}
 
 \begin{figure}
@@ -1884,8 +1911,14 @@ and \acrshort{huhp} while \acrshort{hu} and \acrshort{lu} perform somewhere in t
 at the top.
 
 
-\chapter{Discussion} \label{ch:discussion}
+\chapter{Summary and Conclusion} \label{ch:discussion}
 
+This chapter concludes the thesis by summarising its findings from benchmarking and the results in
+section \ref{sec:summary}, the conclusions are then presented in section \ref{sec:conclusions}
+before discussing what could be done in future work to further progress the subject in section
+\ref{sec:future_work}.
+
+\section{Summary}\label{sec:summary}
 % Window ratios
 As discussed in section \ref{sec:result_window_ratios} giving more time to the \acrshort{a}-phase
 rather than the \acrshort{r}-phase favors schedulability ratios. This is probably due to how the
@@ -2034,7 +2067,7 @@ the schedulability ratio.
 % A-jobs that are scheduled early in the window and R-jobs scheduled late in their window creates a
 % huge gap were the processors is idle.
 
-\section{Conclusions}
+\section{Conclusions}\label{sec:conclusions}
 
 The \acrshort{aer}-model has been extended such that it can be used with the state-of-the-art
 timing analysis tool known as the \acrshort{np}-test. Using the \acrshort{aer}-model has earlier
@@ -2070,7 +2103,7 @@ performance is quickly decreased when the amount of cores are decreased below th
 
 
 
-\subsection{Future work}\label{sec:future_work}
+\section{Future work}\label{sec:future_work}
 
 Since the developed task-model puts heavy constraints on when the \acrshort{a}-jobs and
 \acrshort{r}-jobs can be scheduled by creating windows for them within which they are to be
