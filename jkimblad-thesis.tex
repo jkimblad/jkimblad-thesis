@@ -108,7 +108,7 @@ modellen.}
     accesses are scheduled onto the memory, where in this case the memory phases are allowed to
     access the shared memory non-preemptively during their allocated slots. In this thesis an
     extended version of the \acrshort{aer}-model and a new \acrfull{iip}, which can make decisions
-    on whether or not to
+    on whether to
     leave resources idle when there is work to be done as an attempt to improve schedulability, is
     presented. These can be used in conjunction with a state-of-the-art scheduling analysis tool to
     perform timing analysis on job sets under the \acrshort{aer}-model. The extended
@@ -118,7 +118,7 @@ modellen.}
     \acrshort{r}-phase in the wrong order. The developed \acrshort{iip} is then used by the analysis
     tool to make sure that there is at least one free core in the system before a new task is
     scheduled as this needs to be put into consideration in a memory-centric scheduler. The extended
-    \acrshort{aer}-model and the \acrshort{iip} are then benchmarked with task sets coherent to the
+    \acrshort{aer}-model and the developed \acrshort{iip} are then benchmarked with task sets coherent to the
     \acrshort{autosar}-framework. The benchmarks explore the schedulability ratio when varying task
     amount, core amount, scheduling algorithms and the window ratio for the phases. The results show
     that \acrfull{edf} outperforms other algorithms that are special versions of \acrfull{rms} where
@@ -180,14 +180,14 @@ modellen.}
 
 Embedded systems are everywhere around us even though they might not be noticeable at first,
 but they exist in things such as our cellphones, cars, washing machines, airplanes, TV's and thanks
-to the rise of the internet of things even in our fridges and coffee makers. These systems often
+to the rise of the internet of things also in our fridges and coffee makers. These systems often
 interact with the surrounding world in some way and can range in complexity. While a washing
 machine may only require to read some input from a user pushing its buttons using a single embedded
 processor a car can contain tens, if not hundreds, of individual processors running millions of
 lines of code that monitor different systems and makes sure that the car operates as
 desired \parencite{doughty-white_million_nodate}. It needs to be put into consideration that a car
 requires a much higher degree of safety than a coffee maker in the sense that if the computers in a
-car crash randomly or exhibit undesirable behaviour they may lead to much more severe outcomes.
+car crash randomly or exhibit undesirable behavior they may lead to much more severe outcomes.
 
 
 
@@ -201,18 +201,15 @@ car crash randomly or exhibit undesirable behaviour they may lead to much more s
 Even though requirements on analysis and testing of systems in the automotive industry has been of a
 big concern for a long time it is not until recently that the issue has been raised to a broader
 audience due to the rise of popularity of autonomous vehicles as well as smarter cars and the
-scepticism of their abilities to make life-saving choices. This of course is one of the reasons
-to the increasing amounts of lines of code as well as the increasing amounts of computers in cars.
+skepticism of their abilities to make life-saving choices. This of course is one of the reasons
+to the increasing amounts of lines of code as well as the increasing amount of computers in cars.
 Due to increased complexity in these systems research has been focusing on developing safer models
-that are
-easier to test and that are more deterministic. One research area with interesting results is to
-examine the access
-of shared memory by different computers in the car. As modern cars can contain over 100 different
-processors, known as \acrfull{ecu}'s, internal communication between them is a necessity.
-Communication is often done using some type of databus technology such as a \acrfull{can}-bus, but
-sometimes a single \acrshort{ecu} can hold more than a single processing unit (core) making it
-multi-core.  Communication is then not only necessary between \acrshort{ecu}'s but also internally
-between cores on a single \acrshort{ecu}. This is done through shared memory in a non-deterministic
+that are easier to test and that are more deterministic. One research area with interesting results 
+is to examine the access of shared memory by different computers in the car. As modern cars can 
+contain over 100 different processors, known as \acrfull{ecu}'s, internal communication between them 
+is a necessity and often use some type of databus technology such as a \acrfull{can}-bus.
+Communication is then not only necessary between \acrshort{ecu}'s but also internally
+between cores on a single \acrshort{ecu}. This is done non-deterministically through shared memory
 way where all cores contest the access to memory creating congestion as no more than one core can
 access the shared memory at any point in time. 
 
@@ -259,12 +256,12 @@ Some analysis of memory-centric scheduling models, where memory access can be sc
 \acrshort{aer}), exists such as the paper by \textcite{alhammad_schedulability_2014} which explores
 analysis of an extension of the so called \acrfull{prem} model on multi-core. Under \acrshort{prem}
 each task is divided into a computation phase and a memory phase. This is to be compared to the
-three-phase model \acrshort{aer} but without the \acrshort{r}-phase. The write phase (similar to the
+three-phase model \acrshort{aer} but without the \acrshort{r}-phase. The write-phase (similar to the
 \acrshort{r}-phase for \acrshort{aer}) of a task is instead incorporated into the read phase
 (similar to the \acrshort{a}-phase) of the task running directly after on the same core as the first
 task and is referred to as the memory phase. The memory phase of the \acrshort{prem} is then further
 divided up into what the authors refer to as the pre-fetch and write-back phases. The authors state
-the reason for only using two phases is that adding a write phase would make analysis much harder
+the reason for only using two phases is that adding a write-phase would make analysis much harder
 for tasks that are dynamically scheduled. Another paper written by
 \textcite{maia_schedulability_2017} focuses on improving the findings in the earlier paper by creating
 an analysis for the \acrshort{aer}-model from a memory-centric approach which reduces the problem to
@@ -290,12 +287,12 @@ been created to be used with the \acrshort{aer}-model, thus a gap in the researc
 
 \section{Problem}
 
-The existing problem is that timing-analysis is hard and needs to be customized for many
-different ways of scheduling tasks. Analysing embedded systems is hard but very necessary,
+The existing problem is that timing-analysis is hard and needs to be customized for
+different ways of scheduling tasks. Analyzing embedded systems is hard but very necessary,
 especially hard are multi-core systems \parencite{davis_survey_2011} that have complicated
 memory-hierarchies where cores share access creating congestion. An emerging and already adopted
 technology to deal with it is to explicitly schedule the access to shared memory using something
-like the \acrshort{aer}-model.  Although some techniques do exist to analyse scheduling under the
+like the \acrshort{aer}-model.  Although some techniques do exist to analyze scheduling under the
 \acrshort{aer}-model they are either not complete, pessimistic or only allow for task-level
 priorities. Good analysis methods do exist for regular tasks and can be adapted for the
 \acrshort{aer} model which is the problem this thesis aims to solve.
@@ -338,9 +335,9 @@ The goals of the project can be summarized into the following key points.
 \section{Methodology / Methods}
 
 %TODO: How are these things used in practice? Is this section required?
-The theoretical research methods and methodologies have been chosen following the guidelines
+The theoretical research methods and methodologies have been chosen to follow the guidelines
 presented by \textcite{hakansson_portal_2013}. The thesis will take a quantitative research approach
-to try and refute or verify the presented theories. Experimental research methods will be applied
+to try to refute or verify the presented theories. Experimental research methods will be applied
 under the fundamental philosophical framework of positivism where facts and truths about the world
 are assumed to be gathered through our sensory experiences. A deductive research approach is used
 where data is analyzed to see if the theories can be supported or not. To gather the data an
@@ -355,18 +352,18 @@ of the conclusions made from the data to be correct.
 This thesis covers a special extended version of the \acrshort{aer}-model, as to make it work
 with the timing analysis tool, that has been developed and is presented in section
 \ref{sec:work_task_model}. In the extended \acrshort{aer}-model the \acrshort{a}-phase and \acrshort{r}-phase both have dedicated
-pre-determined windows as parts of the tasks whole scheduling window within which they are allowed
+predetermined windows as parts of the tasks whole scheduling window within which they are allowed
 to execute. Due to the scope of the research there is no other scheduling analysis tool that
 will be used in order to find a comparison of how well the timing-analysis developed in this thesis
 performs. However, since the analysis tool is exact it would be expected that other analysis tools
-will either perform the same (being also exact) or simply more pessimistic while analysing the same
+will either perform the same (being also exact) or simply more pessimistic while analyzing the same
 model from a memory-centric perspective.
 
 
 \section{Ethics and Sustainability}
 Benefits of this thesis include trying to make time-critical systems that exist within machines such
 as airplanes and cars more deterministic. More deterministic systems are easier to analyze and to test
-for faulty behaviour which leads to fewer system failures that may cause harm to humans. As
+for faulty behavior which leads to fewer system failures that may cause harm to humans. As
 increasing safety of these systems leads to less unnecessary harm being caused to humans which is
 beneficial to society it follows that the thesis ought to bring benefit to society.
 
@@ -375,7 +372,7 @@ some ethical concerns as the transportation sector is one of the largest contrib
 gas emissions and contributed with 14\% of the global greenhouse gas emissions during 2010
 \parencite{us_epa_global_2016}. Would the contributions of this thesis be implemented in a real
 scenario however it would neither be dependent on emission or causing it but simply be a piece of
-software disconnected and independent from any parts causing emissions by burning fossil fuels. The
+software disconnected and independent of any parts causing emissions by burning fossil fuels. The
 contributions are also applicable to vehicles powered by electricity and even though an argument can
 be made that electric vehicles don't reduce emissions when the electricity is created by burning
 fossil fuels the total amount of electricity created through the use of renewable sources are on the
@@ -389,7 +386,7 @@ rise and projected by the International Energy Agency to keep rising
 
 Chapter \ref{ch:theoretic_background} gives a theoretic background to the problem area such that the
 reader becomes equipped to understand the topic at hand in-depth. Chapter \ref{ch:method} explains
-all of the new concepts and work that has been developed in this thesis and the methods from which
+all the new concepts and work that has been developed in this thesis and the methods from which
 the results have been gathered. Chapter \ref{ch:results} purely shows the results gathered during
 running experiments and benchmarking using the timing analysis tool while chapter \ref{ch:discussion}
 puts these results into context and discusses their meaning as well as give the final conclusions and
@@ -406,12 +403,12 @@ This chapter aims to give sufficient background such that the reader is able to 
 that the thesis covers. Section \ref{sec:the_task_model} begins by describing a common task model
 used within embedded systems to describe task sets. Section \ref{sec:scheduling} describes the basic
 ways to schedule tasks onto cores in embedded systems for single core as well as multi-core systems.
-When used in a real product it is important that a scheduling algorithm is able to scheduled a task
+When used in a real product it is important that a scheduling algorithm is able to schedule a task
 set without any missed deadlines, section \ref{sec:schedulability_analysis} covers how schedulers
-can be analysed to make sure this requirement is fulfilled. Section \ref{sec:np-test} presents the
+can be analyzed to make sure this requirement is fulfilled. Section \ref{sec:np-test} presents the
 most important paper which this thesis build onto, which is a schedulability analysis tool. Section
-\ref{sec:aer_execution_model} presents an execution model used to combat nondeterministic behaviour
-in scheduling in embedded systems caused by shared memory and section \ref{sec:related_work}
+\ref{sec:aer_execution_model} presents an execution model used to combat nondeterministic behavior
+using scheduling in embedded systems caused by shared memory and section \ref{sec:related_work}
 presents the related work.
 
 
@@ -424,9 +421,9 @@ A periodic task, denoted as $\tau_i$, is a unit of work that is executed periodi
 over and over again alongside other tasks. In embedded systems a task is usually completed in some
 amount of time after its start known as its \textbf{computation time}, denoted as $C_i$. Once a task
 has finished executing it will usually wait for some amount of time before it is ready to execute
-again, this is known as the tasks \textbf{period}, denoted by $T_i$. The earliest time where a task
+again, this is known as the tasks \textbf{period}, denoted by $T_i$. The earliest time when a task
 is ready to start execution within a new period is called the \textbf{arrival time} of the task and
-is denoted $ a_i $.  For all purposes in this thesis the tasks arrival time can be assumed to be the
+is denoted $ a_i $.  For all purposes in this thesis the task arrival times can be assumed to be the
 same as the start of each new period.
 
 The \acrfull{lcm} of the periods for all the tasks in a task set is known as the task set's
@@ -443,14 +440,14 @@ possible to define a task set as $ \Gamma = \{\tau_1, \tau_2, \tau_3, ..., \tau_
 The task model presented thus far has made some assumptions that are not realistic, such as the
 release time and computation time being exactly the same each period. In order for the model to
 better represent reality and increase the validity of timing analysis methods some additional
-concepts are introduced. Computation time of a task varies because of unpredictable behaviour in the
+concepts are introduced. Computation time of a task varies because of unpredictable behavior in the
 processor such as caches. Therefor the notions of \acrfull{bcet} and \acrfull{wcet} is introduced to
 represent the interval between the fastest and the slowest computation time of a specific task. To
 denote this $ C_i^{min} $ and $ C_i^{max} $ is used. In addition to uncertainties in the computation
 times there are also uncertainties in the arrival time of tasks known as release jitter. The notion
-of earliest arrival time, denoted $ a_i^{min} $, is the  absolute earliest time at which a task may
+of the earliest arrival time, denoted $ a_i^{min} $, is the  absolute earliest time at which a task may
 be able to start executing within the period and likewise the latest arrival time, denoted $
-a_i^{max} $ is the time when the task is guaranteed to be able to start execution. Thus an extended
+a_i^{max} $ is the time when the task is guaranteed to be able to start execution. Thus, an extended
 more precise task could be described by $ \tau_i = ( [C_i^{min}, C_i^{max}], T_i, D_i) $. An
 individual instance of a task within a period is referred to as a single job and can be defined by
 many of the same characteristics as a task but with time being absolute and not relative to the
@@ -458,10 +455,10 @@ start of the period and is denoted by $J$. Likewise a collection of jobs is know
 defined as $ \mathcal{J} = \{j_1, j_2, j_3, ..., j_n\} $.
 
 Following the above definitions different states can be ascribed to tasks depending on their
-status in the system at a specific time instance. When a task arrives at the start of a new period
+status in the system at a specific time instance. When a task arrives at the start of a new period,
 it can be said to be in the \textit{ready} state where it is waiting to be allocated to a processing
 core such that it can finish its execution. When the task is allocated a core to execute on it is
-moved into the \textit{running} state where it hopes to remain until it completes its execution
+moved into the \textit{running} state, where it hopes to remain until it completes its execution
 before its deadline. The task can also be moved back to the ready state from the running state
 before execution is finished by being \textbf{preempted} by the scheduler, this halts execution of
 the task by deallocating the processing core allocated to the task. If a task requires access to
@@ -496,12 +493,12 @@ finished without ever making any other transitions.
 % TODO: Mention Job-Level priority (JLP) and Task-Level Priority (TLP)
 \section{Scheduling} \label{sec:scheduling}
 
-Although computers give the illusion of being able to do many things simultaneously this
+Although computers give the illusion of being able to do many things simultaneously, this
 is actually not the case. Computers are limited to how much parallel computing they are able to do
 by the hardware, specifically the amount of cores within the \acrfull{cpu}. A computer with a
 single core \acrshort{cpu}, for example, is only able to execute one task at a time. In order for a
 computer with a single core to deal with more than a single task at the same time it needs to switch
-ongoing tasks in and out of the core during runtime. For the \acrshort{os} to switch tasks quickly
+ongoing tasks in and out of the core during run time. For the \acrshort{os} to switch tasks quickly
 in and out of the core it needs to schedule the tasks according to some order. This is where the
 priority of tasks come in handy, by scheduling tasks and switching them in and out of the processor
 very quickly depending on their priority the \acrshort{os} is able to execute more than one task,
@@ -518,8 +515,8 @@ The order in which tasks are executed is determined by the scheduler which in of
 type of task executed by the \acrshort{os}. The scheduler is invoked by specific events happening in
 the system. It could for example be that a task is finished executing or that it has begun waiting
 on some resource that is not yet available or a new task is released and ready to start execution.
-As not all scheduling algorithms were created equal they vary in how good they manage to schedule
-the same task sets. Because of this some measurements must be introduced in order to make a fair
+As not all scheduling algorithms were created equal, they vary in how good they manage to schedule
+the same task sets. Because of this, some measurements must be introduced in order to make a fair
 comparison of how well they work. The processor utilization ratio, denoted as $ U $, is such a
 measurement introduced to show to what percentage a specific task set would keep the processor busy.
 The utilization can be calculated as $ U = \sum_{i=1}^n \frac{C_i}{T_i} $. So a very good scheduling
@@ -549,7 +546,7 @@ An example of how \acrshort{rms} would schedule a task set can be seen in figure
 \ref{fig:rate_monotonic_scheduling}. A special point of interest is at time 4 when $T_3$ is
 executing while $T_1$ is released. Due to $T_1$ having a lower period than $T_3$ it also has a
 higher priority. The scheduler preempts $T_3$ and lets $T_1$ execute instead. $T_3$ is later allowed
-to resume execution of $T_3$ at time 5. This is what is meant by a pre-emptive scheduling algorithm.
+to resume execution of $T_3$ at time 5. This is what is meant by a preemptive scheduling algorithm.
 
 \begin{figure}
 
@@ -575,7 +572,7 @@ such a schedule exists, it is considered to be a \textbf{heuristic}.
 
 \subsection{Multiprocessor scheduling} \label{subsec:multiprocessor_scheduling}
 
-When considering multi-core processors designing good scheduling algorithms becomes a little harder. On a single-core
+When considering multi-core processors, designing good scheduling algorithms becomes a little harder. On a single-core
 processor the scheduler only needs to consider temporal allocation of the task, as in
 \underline{when} they should run. Scheduling tasks on a multi-core system also requires the
 scheduler to consider spatial allocation of the tasks, as in \underline{where} they should run
@@ -589,22 +586,22 @@ what is known as \textbf{global scheduling} or through \textbf{partitioned sched
 %http://retis.sssup.it/~giorgio/slides/cbsd/mc3-global-2p.pdf
 Partitioned scheduling entails that each task is assigned to a dedicated core which is the only core
 the task is allowed to execute on, even when other cores are free. Due to this any single-core
-scheduling algorithm can be used individually on each core during runtime. It is then possible to
+scheduling algorithm can be used individually on each core during run time. It is then possible to
 also use the existing scheduling analysis methods for the respective scheduling algorithm. This
 sounds easy enough, but in reality assigning tasks to cores is a version of the bin packing problem
 which is known to be a NP-hard problem meaning that there exists no algorithm to solve it in less
 than polynomial time. However, good heuristics
 \parencite{johnson_fast_1974}\parencite{coffman_application_1978} exists that find good solutions
 fast and since tasks can be allocated to cores offline more computing power and time can be used to
-find close to optimal solutions than if it had to be done during runtime.
+find close to optimal solutions than if it had to be done during run time.
 
 Global scheduling means that the scheduler takes into account both spatial and temporal allocation
 when scheduling each task. Single-core scheduling algorithms, such as \acrshort{rms} and
-\acrshort{edf}, can be applied to global scheduling but they will have different behaviour. Global
+\acrshort{edf}, can be applied to global scheduling, but they will have different behavior. Global
 scheduling decreases the determinism of the system and creates more combinations of possible
 schedules for each task set. This makes global scheduling much harder to analyze.
 
-All of the algorithms explored this far have taken a \textbf{core-centric} approach to scheduling tasks,
+All the algorithms explored this far have taken a \textbf{core-centric} approach to scheduling tasks,
 meaning they see the cores as the resources and try to assign tasks to them as efficiently as
 possible. Another possibility is to take a \textbf{memory-centric} approach to scheduling instead.
 As the amount of cores in a processor increases so does the usage of shared memory to a point where
@@ -622,7 +619,7 @@ memory-centric scheduling approach can be implemented is discussed in the rest o
 When developing new scheduling algorithms it is important to put the schedules that they produce under
 analysis to show whether they are feasible or not. It is especially important when the schedules
 are used in hard real-time systems like those found in the avionics and the automotive sector where
-missed deadlines could mean fatal outcome. For example, \acrshort{rms} can be analysed
+missed deadlines could mean fatal outcome. For example, \acrshort{rms} can be analyzed
 mathematically and has been proven to be able to schedule any task set that fulfills the constraint
 $ U \le n(2^{\frac{1}{n}}-1) $ where $ n $ is the amount of tasks \parencite{liu_scheduling_1973}.
 This is only a \textbf{sufficient} condition, meaning that \acrshort{rms} might be able to schedule
@@ -649,10 +646,10 @@ pessimistic necessary and sufficient conditions for scheduling algorithms to clo
 them which is still not a solved problem in all cases. In addition, each unique scheduling algorithm
 may require its own set of unique conditions for analysis. All conditions are also not as simple as
 the one presented for \acrshort{rms} especially when also considering multi-core. The conditions
-have varying complexity and they often need to make the trade-off between complexity and how
+have varying complexity, and they often need to make the trade-off between complexity and how
 pessimistic they are. The paper \parencite{bertogna_tests_2011} shows examples of conditions that
-are of $ O(n^3) $ complexity which can be alright when analysing small task sets, but is too complex
-as the task sets grow or if it has to be calculated during runtime with limited computation power.
+are of $ O(n^3) $ complexity which can be alright when analyzing small task sets, but is too complex
+as the task sets grow or if it has to be calculated during run time with limited computation power.
 
 \begin{figure}
 
@@ -679,18 +676,18 @@ as it ever will be in the given task set. If the task doesn't miss its deadline 
 instant it is guaranteed to never miss its deadline for any other instance in the schedule. As an
 effect of this, each task can be examined during its critical instant, and if all tasks meet their
 deadlines the task set is guaranteed to be schedulable. This simplifies analysis considerably as
-only a small part of the schedule needs to be analysed.
+only a small part of the schedule needs to be analyzed.
 
 However, having the arrival and computation time defined as intervals creates the possibility of
 different schedules for the same task set using the same scheduler. This makes analysis more
 difficult as analysis requires testing several of the combinations of release and computation times.
-It is intuitive to think that it is sufficient to analyse the worst-case times of all tasks to find
+It is intuitive to think that it is sufficient to analyze the worst-case times of all tasks to find
 if the schedule is feasible. This is however not true for non-preemptive systems as two jobs with
 the same arrival-time interval can lead to either being scheduled before the other until its
 completion. For some task sets with this property a later or earlier release of a certain job may
 lead to a missed deadline later in the schedule. This also means that examining the critical instant
 of a task is no longer sufficient in determining if a task set is schedulable or not. An example of
-this phenomena can be seen in figures \ref{fig:np-test_schedule} and \ref{fig:np-test_schedule_fail} and is further explored in the next
+this phenomenon can be seen in figures \ref{fig:np-test_schedule} and \ref{fig:np-test_schedule_fail} which is also further explored in the next
 section.
 % TODO Example of how earlier release of a task on multicore systems can make the schedule miss a
 % deadline while a later release of the same task may have been able to complete the deadline.
@@ -700,7 +697,7 @@ section.
 
 The timing analysis tool which this thesis builds upon is presented by \textcite{nasri_exact_2017}. An open-source
 implementation written in c++ by one of the authors is available on
-Github \parencite{brandenburg_implementation_2018} and will further be referred to as the
+GitHub \parencite{brandenburg_implementation_2018} and will further be referred to as the
 \acrfull{np}-test. It presents an \textbf{exact} non-preemptive schedulability test for single-core
 processors. The basic idea is to build a schedule graph, using vertices and edges, that fully
 represents all possible schedules for a given job set input. A job set contains all the individual
@@ -712,7 +709,7 @@ reflect reality by taking both release-time jitter and the \acrshort{bcet} and \
 consideration. The test is both sufficient, necessary and sustainable. Where sustainable is defined
 as "A schedulability test is defined to be sustainable if any task system deemed schedulable by the
 test remains so if it behaves 'better' than mandated by its system
-specifications"\parencite{baruah_sustainable_2006}. Thus also making it exact.
+specifications" \parencite{baruah_sustainable_2006}. Thus, also making it exact.
 
 The analysis tool is also able to deal with non-work-conserving schedulers by accepting an
 \acrshort{iip} function. An \acrfull{iip} is used during scheduling to see if the highest priority
@@ -730,7 +727,7 @@ A job-set containing 9 unique jobs derived from the tasks $\tau_1=([3,13], 60, 6
 when every job executes for its \acrshort{wcet} and the result is that they all meet their
 deadlines. However, if $J_7$ would instead execute for one time unit \textbf{less} it would result in the
 schedule depicted in figure \ref{fig:np-test_schedule_fail} where $J_2$ misses its deadline. This
-example perfectly shows the problem with analysing non-preemptive scheduling as it is not sufficient
+example perfectly shows the problem with analyzing non-preemptive scheduling as it is not sufficient
 to just check if all deadlines are met when all jobs execute for their \acrshort{wcet}. The task-set
 is shown to have a feasible schedule if the priorities are reordered as $ p_1 < p_2 < p_3 < p_4 < p_5 < p_6 <
 p_9 < p_7 < p_8$.
@@ -791,7 +788,7 @@ very well. However, the novelty of the approach presented in \parencite{nasri_ex
 introduce a merge-phase. The merge phase tries to decrease the search space by merging vertices that
 lead to similar execution scenarios. The criteria for merging two vertices is that (a) the same jobs
 have been scheduled before the vertices and (b) the finish-time interval they both represent
-overlaps, i.e. $v_i \cap v_j \neq \emptyset$.  When this is the case the new vertex $v_n$ that is
+overlaps, i.e. $v_i \cap v_j \neq \emptyset$. When this is the case the new vertex $v_n$ that is
 created from the merge represents the union of finish times from the two merged vertices $v_i$ and
 $v_j$ as such $v_n \gets v_i \cup v_j$. Both of these criteria are fulfilled for vertices $v_4$ and
 $v_5$ meaning that they can be merged into a single vertex. The merging is illustrated in figure
@@ -831,21 +828,21 @@ The \acrfull{aer} execution model was first presented by \parencite{durrieu_pred
 improve performance and predictability while using \acrfull{cots} multi-core processors with shared
 and private memory in the avionics industry. It builds on top of the \acrfull{prem} first presented
 by \textcite{pellizzoni_predictable_2011} which introduces the idea of dividing tasks into a memory
-access phase and an execute phase. Since the bottleneck for utilization in multi-core systems can
+access phase and an execution phase. Since the bottleneck for utilization in multi-core systems can
 become the congestion when accessing the shared memory when introducing an increasing number of
 cores the \acrshort{aer}-model focuses on making shared memory access more deterministic and easier
-to analyse. This
+to analyze. This
 is done by dividing up each task into three distinct parts. The \textbf{acquisition}
 \acrshort{a}-phase reads all
 the data necessary for execution of the task such as code and shared variables into the private
 memory of the core dedicated for execution. The \textbf{execution} \acrshort{e}-phase then executes the code
 operating on local copies of any shared variables without making any further read or write
-instructions to the shared memory. The \textbf{restitution} \acrshort{r}-phase then writes back all of the
+instructions to the shared memory. The \textbf{restitution} \acrshort{r}-phase then writes back all the
 acquired results that need to be shared to the shared memory. Since all the instructions are read
-during the \acrshort{a}-phase before the \acrshort{e}-phase starts its execution a pre-requisite of
+during the \acrshort{a}-phase before the \acrshort{e}-phase starts its execution a prerequisite of
 the model
 is that each core has a separate private memory, such as a cache or a scratchpad. Since these types
-of memories often are constrained in size it puts a limit to how many instructions a task can
+of memories are often constrained in size it puts a limit to how many instructions a task can
 consist of in addition with the amount of shared variables that is used as they all must fit in
 the private memory of the core.
 
@@ -858,7 +855,7 @@ can be said to employ a \textit{memory-centric} approach to scheduling instead o
 \textit{core-centric} approach that schedulers usually employ. This model also has the advantage of
 easier analysis by being more deterministic. When several cores compete for resources and create
 congestion which leads to timing deviations the system model becomes more complex thus harder to
-analyse. Timing that was calculated offline, for example the \acrshort{wcet}, may not match reality
+analyze. Timing that was calculated offline, for example the \acrshort{wcet}, may not match reality
 or require very pessimistic approximations that exaggerate the timings, both of which decreases the
 certainty or predictability of the design and analysis.
 
@@ -905,7 +902,7 @@ global-\acrshort{edf} scheduling algorithm due to congestion of the shared memor
 
 %TODO: Mention that this does no take into the account the deadline of the R-phase.
 %TODO: Maybe keep all related work covering scheduling analysis in a new subsection
-Some work on analysing the schedulability of algorithms developed around
+Some work on analyzing the schedulability of algorithms developed around
 \acrshort{prem} have been done such as the paper by \textcite{alhammad_schedulability_2014} which builds on the idea of a
 problem window from the paper by \textcite{baker_multiprocessor_2003}. The paper presents an analysis method for
 \acrshort{edf} and \acrfull{dms} on multi-core processors and defines the problem window as the
@@ -929,8 +926,8 @@ becomes a single-core problem as only one core can access the bus at a time.  In
 for an upper bound of the interference that tasks create on cores the method describes a way to find
 the upper bound of the interference on the bus created by the other tasks. A bus hole is defined as
 "\textit{A bus hole is an interval of time, within the problem window, where all m cores are busy
-executing E-phases}" \parencite{maia_schedulability_2017}. The amount of time within all the bus
-holes inside the problem window must be enough for the task being examined to schedule its A and R
+executing \acrshort{e}-phases}" \parencite{maia_schedulability_2017}. The amount of time within all the bus
+holes inside the problem window must be enough for the task being examined to schedule its \acrshort{a} and \acrshort{r}
 phases to be able to meet its deadline. The paper describes a method that can compute an upper bound
 on the holes in the problem window in pseudo-polynomial time.
 
@@ -940,7 +937,7 @@ the physical platform Kalray MPPA-256. It consists of 16 compute clusters that c
 elements and 16 banks of shared parallel memory each. The concept builds on top of the
 \acrshort{autosar} architecture for automotive \acrshort{ecu}'s where the smallest unit of execution
 is known as a runnable. Runnables communicate with each other through variables called labels. For
-each compute cluster one memory bank is reserved as the shared memory which stores all of the
+each compute cluster one memory bank is reserved as the shared memory which stores all the
 labels, thus referred to as the label bank. The remaining 15 memory bank are then each assigned as a
 private memory to a unique processing element. The runnables running on the processing units are
 then executing under the \acrshort{aer} model. A scheduler is then presented to schedule the memory
@@ -960,7 +957,7 @@ The paper \parencite{nasri_response-time_2018} presents a state-of-the art analy
 non-preemptive multi-processor global scheduling. The method gives a sufficient condition for
 schedulability. The input is a set of jobs consisting of their ID, deadline, priority, earliest
 release time, latest release time, \acrshort{wcet} and \acrshort{bcet}. The output then tells
-whether or not the input is schedulable. The basic idea of the analysis is to enumerate all of
+whether the input is schedulable. The basic idea of the analysis is to enumerate all of
 possible combinations of \acrshort{wcet}, \acrshort{bcet} and release jitter but as not to be
 computation- or memory-heavy it tries to be clever about it. This is done by removing all duplicates
 of schedules that lead to the same ordering of start times for the jobs.
@@ -1019,7 +1016,7 @@ circumvented by introducing new concepts to the \acrshort{aer}-model. The schedu
 task can be divided into three non-overlapping intervals that can be thought of as sub-windows of
 the schedulability window. The first window is referred to as the acquisition-window and is the
 interval within which the \acrshort{a}-phase is allowed to execute within. The second interval
-begins right after the first and is the size of the \acrshort{wcet} of the \acrshort{e}-phase as it
+begins right after the first and is the size of the \acrshort{wcet} taken from the \acrshort{e}-phase as it
 is the required time before the \acrshort{r}-phase is allowed to start execution. After the second
 interval is the \acrshort{r}-window within which the \acrshort{r}-phase is allowed to execute. So
 each phase has a predetermined interval as a part of the whole schedulability-window where no
@@ -1042,7 +1039,7 @@ intervals are allowed to overlap. This concept is illustrated in figure \ref{fig
 
 The task within each of its period is in this way divided into two separate jobs, the first job,
 denoted $ J^{A} $, represents the \acrshort{a}-phase and the second job, denoted $ J^{R} $, representing
-the \acrshort{r}-phase. Each of the jobs arrival time and deadline are then set to correspond to its
+the \acrshort{r}-phase. Each of the job's arrival time and deadline are then set to correspond to its
 scheduling window as seen in figure \ref{fig:aer_window_model}. Each individual job then represents
 accesses to the shared memory and can be scheduled by a regular scheduler as if they were regular
 jobs being scheduled on a single core, which is why the multi-core problem is in a way reduced to a
@@ -1089,11 +1086,11 @@ scheduled the second task might miss its deadline as the core will not be availa
 this instance it could prove beneficial for the scheduling algorithm to leave a core idle even when
 there is work to be completed in order to wait for a higher priority task to be released. This idea of
 leaving core idles and postponing work is the philosophy behind using an \acrshort{iip}. An
-\acrshort{iip} makes a decision about whether or not the highest priority job is to be scheduled
+\acrshort{iip} makes a decision about whether the highest priority job is to be scheduled
 when the core becomes free or if the core should be idle until another higher priority job is
 released.
 
-For a basic \acrshort{iip} to make a decision about whether or not to schedule a job it is provided
+For a basic \acrshort{iip} to make a decision about whether to schedule a job it is provided
 with three pieces of information. First the job-set of jobs that have previously been scheduled and
 are finished, second it is provided the job that just has been released and is to be scheduled,
 thirdly it is provided the present time at which the released job is to be scheduled. The policy
@@ -1121,7 +1118,7 @@ algorithm \ref{algo:iip_eligibility}, inspired by \parencite{nasri_exact_2017}.
 A problem with using the extended \acrshort{aer}-model proposed in section
 \ref{sec:work_task_model} with the timing analysis \acrshort{np}-test is that the \acrshort{np}-test doesn't
 know if a processing core is free when scheduling an \acrshort{a}-job as it is only concerned about
-whether or not the memory is free. The \acrshort{np}-test can however be used in conjunction with
+whether the memory is free. The \acrshort{np}-test can however be used in conjunction with
 different \acrshort{iip}'s. To make sure the task model described in section
 \ref{sec:work_task_model} works with the \acrshort{np}-test a custom \acrshort{aer} \acrshort{iip}
 is created as scheduling tasks using a memory-centric approach in some ways is similar to a
@@ -1129,12 +1126,12 @@ non-work-conserving scheduler as the memory might be left idle, even when there 
 
 The \acrshort{aer} \acrshort{iip} needs to make sure of two things when a job is ready to be
 scheduled. The first thing is to check if the job to be scheduled is an \acrshort{r}-job or a
-\acrshort{a}-job. And secondly if it is an \acrshort{a}-job there has to be a check if there is an
+\acrshort{a}-job. And secondly if it is an \acrshort{a}-job there has to be a check if there is a
 free core for the job to be scheduled onto. This is only true for \acrshort{a}-jobs as
 \acrshort{r}-jobs had their core dedicated to them when their respective \acrshort{a}-job was
 scheduled. To find if there are any free cores an additional argument needs to be passed into the
-\acrshort{aer} \acrshort{iip}, which is the total amount of cores in the system (whether
-or not they are free). To find out the amount of free cores in the system an additional algorithm is
+\acrshort{aer} \acrshort{iip}, which is the total amount of cores in the system (whether they are free). 
+To find out the amount of free cores in the system an additional algorithm is
 called from within the \acrshort{iip} with two arguments, the total amount of cores in the system
 and the job-set of jobs that have been scheduled. 
 
@@ -1163,8 +1160,8 @@ need to wait for a core to be released and scheduling it would even release a bu
 algorithms used with the extended \acrshort{aer}-model to give every single \acrshort{r}-job a
 higher priority than every single \acrshort{a}-job. This might seem like a very strict condition but
 doing so can have additional benefits. In fact, the paper by \textcite{becker_contention-free_2016}
-argues that prioritising \acrshort{r}-jobs will free up cores and hinder blockage in the system and
-also mentions that the \acrshort{r}-job often will be closer to the tasks deadline making it more
+argues that prioritizing \acrshort{r}-jobs will free up cores and hinder blockage in the system and
+also mentions that the \acrshort{r}-job often will be closer to the task's deadline making it more
 important to prioritize anyway.
 
 \begin{algorithm}
@@ -1233,7 +1230,7 @@ at which the \acrshort{iip} will be called upon again.
 There are two criteria for any job to be scheduled correctly by a scheduler, the first is that the
 job has a core to execute on, and the second is that the shared memory is free to be used by the job
 to be scheduled. Each time the \acrshort{iip} is invoked the criteria that the shared memory is free
-to be used is guaranteed to be fulfilled, as it is a criteria for the scheduler to be invoked. There
+to be used is guaranteed to be fulfilled, as it is a criterion for the scheduler to be invoked. There
 are then three different cases for the algorithm to consider. The first is that the job to be
 scheduled is an \acrshort{r}-job. The second is that it is an \acrshort{a}-job, in which case there
 are two further cases, the first is that there is a free core and the second being that there is no
@@ -1250,7 +1247,7 @@ is invoked it is because the memory has just become available allowing the \acrs
 instantly access it. Since the \acrshort{r}-job has been released we are also guaranteed due to the
 nature of the task-model that the respective \acrshort{a}-job and \acrshort{e}-phase have finished.
 This also means that the task has been assigned a processing core already. In short, every time the
-\acrshort{iip} is called with a \acrshort{r}-job it is guaranteed that the job
+\acrshort{iip} is called with an \acrshort{r}-job it is guaranteed that the job
 can start execution straight away as it has a core and the memory is free to be used (i.e. both
 criteria are fulfilled). 
 
@@ -1266,16 +1263,16 @@ memory is left idle until a higher priority job is released, which is equal to t
 
 \subsection{Testing}
 
-Testing of software is always important to make sure it exhibits the desired behaviour. As the
-software developed within the thesis was an extension to already existing software the testing
+Testing of software is always important to make sure it exhibits the desired behavior. As the
+software developed within the thesis was an extension to already existing software, the testing
 focuses only on the extension. The existing software has already been tested extensively using the
-c++ testing framework called doctest by the authors. However, to test the developed software a
-manual approach was used were well defined job sets were manually fed as input to the program
+c++ testing framework known as doctest by the authors. However, to test the developed software a
+manual approach was used were well-defined job sets were manually fed as input to the program
 followed by checking that the output corresponded to what was expected. Debugging was also used to
 check that the internal control flow of the program was as expected and that the scheduling graph
 was correctly built. The input was chosen to
-represent both the average-case and edge-cases to increase coverage and the chance to catch
-undesired behaviour and bugs in the code.
+represent both the average-case and edge-cases to increase coverage and the possibility of catching
+undesired behavior and bugs in the code.
 
 
 \section{Scheduling algorithms} \label{sec:scheduling_algorithms}
@@ -1288,24 +1285,24 @@ used, but because of the novelty of the task model it is also interesting to exp
 scheduling algorithms could better exploit the nature of the task model and compare their results to
 an existing algorithm.
 
-There are several interesting ways to prioritise the jobs. Existing scheduling algorithms
+There are several interesting ways to prioritize the jobs. Existing scheduling algorithms
 \acrshort{edf} and \acrshort{rms} can be used. Note however that there are limitations to using
 \acrshort{rms} for a job set using periods defined by the \acrshort{autosar} framework as done in
 section \ref{subsec:task_generation}. For a large task set a lot of tasks will end up with the same
-period, thus their jobs will have the same priority, so it is of interest to further prioritise the
+period, thus their jobs will have the same priority, so it is of interest to further prioritize the
 jobs which share the same period according to some tiebreaker. The implementation of
-\acrshort{np}-test tie-brakes priorities based on task-id and job-id where lower id's are given
-higher priorities. A more interesting idea is to prioritize jobs with the same period according
+\acrshort{np}-test tie-brakes priorities based on task-id and job-id where a lower id is given
+a higher priority. A more interesting idea is to prioritize jobs with the same period according
 to their utilization as it might prove to increase the schedulability. 
 
 Seven different scheduling algorithms will be used during benchmarking where the first one is
 \acrshort{edf} which is well known and can be used as a baseline to compare the other algorithms
 with. The rest of the algorithms are a bit more unique, four of them base the priorities on the jobs
 periods and their utilizations. They first prioritize jobs according to their periods, but since
-a lot of jobs may end up with the priority, the jobs of the same period are also prioritised using
-the jobs utilization as a tiebreaker. They can in a way be thought of as special versions of
+a lot of jobs may end up with the same priority, the jobs of the same period are also prioritized using
+the jobs' utilizations as a tiebreaker. They can in a way be thought of as special versions of
 \acrshort{rms} that also use the jobs utilizations to tiebreak jobs with the same period. In
-addition two algorithms will be tested that only priorities jobs according to their utilization and
+addition, two algorithms will be tested that only priorities jobs according to their utilization and
 completely ignores the jobs period. All of these algorithms are explained closer in the following
 list.
 
@@ -1314,19 +1311,19 @@ list.
         deadline is always given the highest priority.
     \item \textbf{\acrfull{lulp}} - Initially priorities are given according to \acrshort{rms}
         by always giving the jobs with the lowest periods the highest priorities. In addition to
-        regular \acrshort{rms} jobs with the same period are further prioritised according to their
+        regular \acrshort{rms} jobs with the same period are further prioritized according to their
         utilizations where the jobs with the lowest utilizations are given the highest priorities of
         all jobs with the same period.
     \item \textbf{\acrfull{luhp}} - Initially priorities are given inverse to \acrshort{rms} by
-        giving the jobs with the highest periods the highest priorities. In addition the jobs with
+        giving the jobs with the highest periods the highest priorities. In addition, the jobs with
         the same periods are further prioritized according to their utilizations just like
         \acrshort{lulp} where the jobs with the lowest utilization are given the highest priorities
         of all jobs with the same period.
     \item \textbf{\acrfull{hulp}} - Works just like \acrshort{lulp} but jobs with the same period
-        are instead prioritised in a way where the jobs with the highest utilizations always are
+        are instead prioritized in a way where the jobs with the highest utilizations always are
         given the highest priorities of all jobs with the same period.
     \item \textbf{\acrfull{huhp}} - Work just like \acrshort{luhp} but jobs with the same period are
-        instead prioritised by giving the jobs with the highest utilizations the highest priorities
+        instead prioritized by giving the jobs with the highest utilizations the highest priorities
         of all jobs with the same period.
     \item \textbf{\acrfull{lu}} - The jobs are assigned priorities solely based on their
         utilization and their periods are completely ignored, the jobs with the lowest utilizations
@@ -1351,8 +1348,8 @@ list.
 The general concept of prioritization in this manner is depicted in figure
 \ref{fig:scheduling_priorities} which describes how jobs would be prioritized according to
 \acrshort{hulp}. The priorities are ordered along the x-axis where higher priorities are higher up
-and a job is depicted by a box. It is important to remember that all of the \acrshort{r}-jobs must
-have a higher priority than all of the \acrshort{a}-jobs as described in section \ref{sec:iip}. As
+and a job is depicted by a box. It is important to remember that all the \acrshort{r}-jobs must
+have a higher priority than all the \acrshort{a}-jobs as described in section \ref{sec:iip}. As
 can be seen in the figure the highest priority is given to the \acrshort{r}-jobs with the lowest
 periods (10ms) colored orange. Within the period the jobs are then prioritized according to their
 utilization which is depicted by the number on the job. 
@@ -1364,8 +1361,8 @@ utilization which is depicted by the number on the job.
 
 \section{Benchmarking}\label{sec:benchmarking}
 
-To benchmark the extended \acrshort{aer}-model and the \acrshort{aer} \acrshort{iip} the job sets
-have to be generated to adhere to the input restrictions of the np-test. The input to the
+To benchmark the extended \acrshort{aer}-model and the \acrshort{aer} \acrshort{iip} job sets
+have to be generated to adhere to the input restrictions of the \acrshort{np}-test. The input to the
 \acrshort{np}-test is in the form of a \acrfull{csv} file. It is a plain-text file where each new
 row holds a unique job to be scheduled and its attributes are represented in the columns separated
 by commas. The columns expected by the analysis tools are as follows.
@@ -1383,7 +1380,7 @@ by commas. The columns expected by the analysis tools are as follows.
 
 
 
-Thus all of the properties of each job must be properly generated in order to perform benchmarks.
+Thus, all the properties of each job must be properly generated in order to perform benchmarks.
 One option would be to just randomize everything, but this would not be very reflective of any real
 system or application. Since a lot of the benchmarking will explore how different metrics are
 affected by different utilizations a good starting point would be to explore how task sets can be
@@ -1399,8 +1396,8 @@ task set is then passed on to the task transformation phase which transforms the
 set which adheres to the extended \acrshort{aer}-model discussed in section \ref{sec:work_task_model}. The job
 set is also on the appropriate form to be used as input for the \acrshort{np}-test which is the
 final phase of the benchmarking and outputs the result of whether the original task set is schedulable or not. The three
-phases are depicted in figure \ref{fig:benchmark_toolchain}. The reason for decoupling the three
-phases is that any one can be switched out to a counterpart without having to make any changes to
+phases are depicted in figure \ref{fig:benchmark_toolchain}. Decoupling is done such that each of the three
+phases can be switched out to a counterpart without having to make any changes to
 the others as long as the form of the input and output is the same. The remainder of the section
 goes into detail of each of the three phases. 
 
@@ -1410,7 +1407,7 @@ goes into detail of each of the three phases.
 
     \includegraphics[width=0.8\linewidth]{images/benchmark_toolchain.pdf}
 
-    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+    \caption{The toolchain developed to generate input to the \acrshort{np}-test.}
 
     \label{fig:benchmark_toolchain}
 
@@ -1419,7 +1416,7 @@ goes into detail of each of the three phases.
 
 \subsection{Task generation} \label{subsec:task_generation}
 
-The paper by \textcite{bini_measuring_2005} goes into great detail explaining some of the common pitfalls
+The paper by \textcite{bini_measuring_2005} goes into great detail explaining some common pitfalls
 when creating good task sets for benchmarking. It also presents the \textbf{Uunifast} algorithm to
 help create fair task sets which is an $O(n)$ algorithm used to create sets of utilization values.
 The algorithm takes two inputs, the size of the set to be created (the amount of tasks) and the
@@ -1427,7 +1424,7 @@ total utilization sum of all the tasks. Once the output of the algorithm has bee
 becomes a more trivial task to generate task sets by using the given utilizations to create
 execution times from periods, or periods from execution times.
 
-After the utilizations have been generated the next step is to create the actual task set. This can
+After the utilizations have been generated, the next step is to create the actual task set. This can
 be approached from two different directions. Either the periods of the tasks can be generated, and
 from them the execution times using the already generated utilizations. Or the process can be
 reversed and the execution times can be generated first and then the periods based on the
@@ -1436,7 +1433,7 @@ application as it would give valuable information about how the \acrshort{aer} \
 the extended \acrshort{aer}-model would behave in a real application.
 
 Since the major application of the \acrshort{aer}-model lies within the automotive and avionics
-sector the task set should cohere to the standards and practices of those industries. However large
+sector the task set should cohere to the standards and practices of those industries. However, large
 companies tend to be very secretive of their work but luckily there is a standard within the
 automotive industry called \acrshort{autosar} that has been agreed upon to make it easier for
 cooperation between corporations when developing embedded systems. According to the
@@ -1450,7 +1447,7 @@ considered.
 
 %TODO: Explain the choice to not use the 1000ms period during experiments
 Since a set of predefined periods are given the execution times of the tasks can easily be generated
-from randomising a period and pairing it with a random utilization from the set created by the
+from randomizing a period and pairing it with a random utilization from the set created by the
 uunifast algorithm. However, the probability distribution for the periods might not be uniform for a
 real life system which should be put into consideration when choosing the period. Luckily a research
 group at Bosch has released benchmarking data from real world automotive systems to be used for
@@ -1458,7 +1455,7 @@ free by anyone in the paper by \textcite{kramer_real_2015}. The data has been ex
 real-world application to a point where it doesn't give away any \acrfull{ip}-critical
 information about the actual application. The actual distribution of the periods from the paper are
 given in table \ref{tab:period_distribution}. Since we do not consider angle-synchronous tasks in
-this thesis the extra 15\% is simply ignored. In addition, when pairing a 1000ms with any
+this thesis, the extra 15\% is simply ignored. In addition, when pairing a 1000ms with any
 utilization during benchmarking its \acrshort{a}-phase and \acrshort{r}-phase have a high chance of
 having an execution time of above 1ms making it so that no task with a period of 1ms will ever be
 schedulable and is thus also ignored. The remaining percentages are scaled such that their
@@ -1491,24 +1488,24 @@ probability sum equals 100\% as shown in the third column in table \ref{tab:peri
         Angle-synchronous & 15\% & 0\% \\
         \hline
     \end{tabular}
-    \caption{Distribution of periods within a real \acrshort{autosar} system. Taken from \parencite{kramer_real_2015}}
+    \caption{Distribution of periods within a real \acrshort{autosar} system. Taken from \parencite{kramer_real_2015}.}
     \label{tab:period_distribution}
 \end{table}
 
-After pairing a utilization with a period to create the tasks execution time the question remains
+After pairing a utilization with a period to create the task's execution time the question remains
 how to decide the \acrshort{wcet} and \acrshort{bcet}. Even though the free benchmarks from Bosch
 offer a way to generate these from the average execution time and it is accepted by the
 \acrshort{np}-test it does not provide much of a benefit to the benchmark. This becomes more clear
 in section \ref{sub:task_transformation} but the short reason is that only the \acrshort{wcet} is
-used when creating the job set and setting it to something different than what was generated by the
+used when creating the job set and setting it to something different from what was generated by the
 uunifast algorithm will change the total utilization of the task set, which is undesirable.
 
 The execution times of the \acrshort{a}-phase and \acrshort{r}-phase are functions of the size of
 the data read and written to the memory during each phase which can be very deterministic if no
 cache is assumed and since the phases cannot be preempted. The question remains what size to pick
-for the phases and it is not trivial. The paper by \textcite{becker_scheduling_2018}
-contains information about the execution times of the acquisition and restitution phases of 18
-different tasks in an engine management system in a car. These could be used to make approximations
+for the phases and it is not trivial. Information about the execution times of the acquisition and restitution phases of 18
+different tasks in an engine management system in a car can be found in the paper by \textcite{becker_scheduling_2018}.
+These could be used to make approximations
 of the ratios between the execution times of the three different phases. However, it could be of
 interest to benchmark how the schedulability of the job sets is affected by varying the ratios
 between the three phases. These ratios are thus instead provided during benchmarking as an input to
@@ -1526,7 +1523,7 @@ The \acrshort{np}-test accepts the release-time to be defined as an interval in 
 jitter. This is not used in benchmarking and the worst-case release time is thus defined to be
 the same as the best-case release time for all jobs. The priorities of the jobs are then
 assigned by a scheduling algorithm discussed in section \ref{sec:scheduling_algorithms}. Even though
-it would be possible to create a task generator that represents reality even closer the proposed method
+it would be possible to create a task generator that represents reality even closer, the proposed method
 is deemed to be sufficient.
 
 %TODO: Mention that even though one could create a much more accurate task set using the information
@@ -1629,7 +1626,7 @@ scheduled until the \acrshort{e}-phase is guaranteed to have finished.
 
 The jobs are transformed according to algorithm \ref{algo:task_transformation}. Since a schedule is
 bound to repeat itself after one hyperperiod it is sufficient to test the schedulability during this
-interval. Thus the algorithm first finds the hyperperiod of the task set by finding the
+interval. Thus, the algorithm first finds the hyperperiod of the task set by finding the
 least-common-multiple of all the periods. It is then sufficient to create the jobs that are released
 within the hyperperiod, placing an upper-bound on their release times. This ensures that the
 task-transformation will terminate and create a job set of finite size. The jobs are then created
@@ -1641,17 +1638,17 @@ of the windows. Since the \acrshort{np}-test requires absolute time for all jobs
 which is relative to the start of the period) the start time for each period is calculated and used
 to transform relative time values from the task to absolute time values for the jobs. This continues until the hyperperiod is
 reached at which no more jobs are created for that task. All the jobs are created in pairs of
-an \acrshort{a}-job and a \acrshort{r}-job where the \acrshort{a}-job is created first and given an odd
+an \acrshort{a}-job and an \acrshort{r}-job where the \acrshort{a}-job is created first and given an odd
 job-id as required and further explained in section \ref{sec:scheduling_algorithms}. The
 \acrshort{a}-jobs release
 time is then transformed from the tasks relative release time to an absolute release time. Its
 worst-case execution time is then assigned according to the execution time of the \acrshort{a}-phase
 in the task. The deadline is then calculated from the window size and the window ratio which is
 given as input to the algorithm and transformed to an absolute time. The \acrshort{r}-phase is then
-created in a similar manner, but given an even job-id. Its release time is calculated as the
+created similarly, but given an even job-id. Its release time is calculated as the
 deadline of the \acrshort{a}-job plus the \acrshort{wcet} of the \acrshort{e}-phase. The
 \acrshort{r}-job gets its execution time from the execution time of the \acrshort{r}-phase in the
-task. The deadline is then assigned according to the tasks deadline, but transformed into absolute
+task. The deadline is then assigned according to the task's deadline, but transformed into absolute
 time. When all the jobs for every task have been created they are all assigned priorities according
 to one of the scheduling algorithms described in section \ref{sec:scheduling_algorithms}. This
 is because the priorities describe a relation between the jobs, thus all the jobs must sometimes be
@@ -1660,13 +1657,13 @@ created before the priorities can be assigned.
 
 \subsection{Running benchmarks}\label{subsec:running_benchmarks}
 
-The experiments will be running on a "HP Z210 Workstation" with a quad-core Intel Core i7-2600 CPU
-\@3.40GHz and 16 GiB of memory.
+The experiments will be running on an "HP Z210 Workstation" with a quad-core Intel Core i7-2600 CPU
+\@3.40GHz and 16 GB of memory.
 
 The idea of benchmarking is to first identify the dependent and independent variables of the system
 and then make changes to the independent variables and see what effect they have on the dependent
 variables. The most interesting dependent variable is the \textbf{schedulability ratio} which is the
-ratio between schedulable task sets and the total amount of task sets tested. The independent
+ratio between schedulable task sets and the total amount of task sets tested. All the independent
 variables are explained in the following list.
 
 \begin{itemize}
@@ -1675,9 +1672,9 @@ variables are explained in the following list.
     \item \textbf{Core amount} - The amount of cores available for jobs to be scheduled onto.
     \item \textbf{Scheduling algorithm} - The algorithm used to schedule the task set.
     \item \textbf{\acrshort{a}-ratio} - The execution time of the \acrshort{a}-phase as a ratio of
-        the tasks utilization.
+        the task's utilization.
     \item \textbf{\acrshort{r}-ratio} - The execution time of the \acrshort{r}-phase as a ratio of
-        the tasks utilization.
+        the task's utilization.
     \item \textbf{Window ratio} - The ratio between the \acrshort{a}-window and \acrshort{r}-window.
     \item \textbf{Utilization} - The total utilization of all tasks summed.
 
@@ -1710,15 +1707,14 @@ the window-ratio will be set to 0.6, the utilization will be set to 0.5 for both
 make sure that memory accesses is the bottleneck the core amount is set to be larger than the amount
 of tasks, such that in the worst case each task has its own dedicated core. The used scheduling
 algorithm will be \acrshort{edf} and the experiment will be iterated 100 times for each data point
-for both of the experiments to create the schedulability ratio. Since the runtime rises rapidly
-with the size of the task set the iterations are set to a lower amount than for some of the other
-experiments.
+for both of the experiments to create the schedulability ratio. Since the run time rises rapidly
+with the size of the task set the iterations are set to a lower amount than for some other experiments.
 
 
 \subsubsection{Core amount}
 
-As the other experiments bottleneck the memory accesses by using more cores than tasks it should
-also be tested what the effects are when the amount of cores are a possible bottleneck. This will be
+As the other experiments bottleneck the memory accesses by using more cores than tasks, it should
+also be tested what the effects are when the amount of cores is a possible bottleneck. This will be
 done by constraining the amount of cores that are available for tasks to be scheduled onto. The
 size of the task set is chosen to 10 tasks and as such the core amount will be varied from 10 cores down
 to a single core. In addition to cores being varied the utilization of the task sets will also be
@@ -1734,7 +1730,7 @@ The window ratio describes the ratio of the size difference between the \acrshor
 \acrshort{r}-window as the two phases does not necessarily have to be given the same amount of time
 to complete execution. So this will examine what characteristics the system exhibits for different
 sizes of the windows. For the window sizes nine different sizes will be tried ranging from 10\% to 90\% of the
-total size allocated to the \acrshort{a}-window, where all of the remaining percentages are
+total size allocated to the \acrshort{a}-window, where all the remaining percentages are
 allocated to the \acrshort{r}-phase. The utilization will range from 0 to 4 with an increment size
 of 0.1, each step iterated 1000 times to create a schedulability ratio. The task amount is set to
 15, the scheduling algorithm used is \acrshort{edf} and the core amount is set to be larger than
@@ -1776,12 +1772,12 @@ ratio for different tested scheduling algorithms when varying the utilization of
 
 \end{figure}
 
-All of the window ratios have a quick initial fall of in schedulability before it planes out to a
+All the window ratios have a quick initial fall of in schedulability before it planes out to a
 slower decent as shown in figure \ref{fig:window_ratio}. Most of the lines stay clumped together
 throughout except for the line that represents 10\% which takes on a faster decline than the others. The lines for 90\% and
 20\% are close to each other throughout and fall a bit below the majority of the lines when
 approaching a higher utilization. Towards higher utilizations the 60\% window ratio seems to perform
-better than all others, but during lower utilizations although it being amongst the top ones it is
+better than all others, but during lower utilizations although it being among the top ones it is
 sometimes surpassed by both the 50\% and 40\% window ratios.
 
 
@@ -1791,7 +1787,7 @@ sometimes surpassed by both the 50\% and 40\% window ratios.
 
     \includegraphics[width=0.8\linewidth]{images/window_ratio_averages.pdf}
 
-    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+    \caption{The schedulability ratios of each tested window ratio averaged out over the amount of different utilizations.}
 
     \label{fig:window_ratio_averages}
 
@@ -1800,8 +1796,8 @@ sometimes surpassed by both the 50\% and 40\% window ratios.
 Averaging the schedulability ratio for all tested utilizations for every window ratio shows that a
 window ratio of 60\% has the highest average schedulability ratio overall in figure
 \ref{fig:window_ratio_averages}. Furthermore, choosing a window ratio that gives more time to the
-\acrshort{r}-phase (high window ratio) seems to favor the average schedulability ratio compared to
-given the same size of the window to the \acrshort{a}-phase.
+\acrshort{r}-phase (a high window ratio) seems to favor the average schedulability ratio compared to
+giving the same window size to the \acrshort{a}-phase.
 
 \section{Task amount} \label{sec:task_amount}
 When looking at the task amount from a macro-level as in figure \ref{fig:task_amount_2} it is shown
@@ -1819,7 +1815,7 @@ at a much slower tempo.
 
     \includegraphics[width=0.8\linewidth]{images/task_amount_2.pdf}
 
-    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+    \caption{The schedulability ratio as an effect of increasing the amount of tasks while utilization is constant between 0 and 1000 tasks.}
 
     \label{fig:task_amount_2}
 
@@ -1831,7 +1827,7 @@ at a much slower tempo.
 
     \includegraphics[width=0.8\linewidth]{images/task_amount_1.pdf}
 
-    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+    \caption{The schedulability ratio as an effect of increasing the amount of tasks while utilization is constant between 0 and 250 tasks.}
 
     \label{fig:task_amount_1}
 
@@ -1846,19 +1842,20 @@ at a much slower tempo.
 
     \includegraphics[width=0.8\linewidth]{images/core_amounts.pdf}
 
-    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+    \caption{The schedulability ratio of different core amounts as an effect of the total
+    	utilization of the task set.}
 
     \label{fig:core_amounts}
 
 \end{figure}
 
 The first thing to notice is that a core amount of 4 and below are unable to schedule any task sets
-at all, even for a utilization of 0.1. Furthermore it is very clear that the core amount have a
+at all, even for a utilization of 0.1. Furthermore, it is very clear that the core amount have a
 large impact on the schedulability ratio. Reducing the core amount down from 10 to 9 reduces the
 schedulability ratio by almost 0.4 as seen in figure \ref{fig:core_amounts}. Each reduction in the
 amount of cores then substantially lowers the schedulability ratio for a utilization of 0.1 down
 until the schedulability ratio hits 0 for 4 cores. Figure \ref{fig:core_amounts_averages} also shows
-the steady decline in schedulability ratio as the amount of cores are decreased.
+the steady decline in schedulability ratio as the amount of cores is decreased.
 
 \begin{figure}
 
@@ -1866,7 +1863,7 @@ the steady decline in schedulability ratio as the amount of cores are decreased.
 
     \includegraphics[width=0.8\linewidth]{images/core_amounts_averages.pdf}
 
-    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+    \caption{The schedulability ratios of each tested core amount averaged out over the amount of different utilizations.}
 
     \label{fig:core_amounts_averages}
 
@@ -1877,7 +1874,7 @@ the steady decline in schedulability ratio as the amount of cores are decreased.
 
 The worst scheduling algorithms are shown to be the \acrshort{huhp} and \acrshort{luhp} while the
 best ones were \acrshort{edf}, \acrshort{hulp} and \acrshort{lulp} as can be seen in figure
-\ref{fig:sched_algos}. All of the algorithms had a quick initial drop off in schedulability ratio
+\ref{fig:sched_algos}. All the algorithms had a quick initial drop off in schedulability ratio
 when increasing the utilization from 0 towards 1.0. The drop in schedulability ratio then takes on a
 slower descent, especially slow for \acrshort{edf}, \acrshort{lulp} and \acrshort{hulp} which keeps
 the highest schedulability ratios until they approach schedulability ratio of 0. The \acrshort{huhp}
@@ -1892,7 +1889,8 @@ before a utilization of 2 where they then continue to perform equally badly.
 
     \includegraphics[width=0.8\linewidth]{images/sched_algos.pdf}
 
-    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+    \caption{The schedulability ratio of different scheduling algorithms as an effect of the total
+    	utilization of the task set.}
 
     \label{fig:sched_algos}
 
@@ -1904,7 +1902,7 @@ before a utilization of 2 where they then continue to perform equally badly.
 
     \includegraphics[width=0.8\linewidth]{images/sched_algos_averages.pdf}
 
-    \caption{Priorities assigned according to a HULP scheduler with utilization written on each task}
+    \caption{The schedulability ratios of each tested scheduling algorithm averaged out over the amount of different utilizations.}
 
     \label{fig:sched_algos_averages}
 
@@ -1920,7 +1918,7 @@ at the top.
 
 \chapter{Summary and Conclusion} \label{ch:discussion}
 
-This chapter concludes the thesis by summarising its findings from benchmarking and the results in
+This chapter concludes the thesis by summarizing its findings from benchmarking and the results in
 section \ref{sec:summary}, the conclusions are then presented in section \ref{sec:conclusions}
 before discussing what could be done in future work to further progress the subject in section
 \ref{sec:future_work}.
@@ -1929,12 +1927,12 @@ before discussing what could be done in future work to further progress the subj
 % Window ratios
 As discussed in section \ref{sec:result_window_ratios} giving more time to the \acrshort{a}-phase
 rather than the \acrshort{r}-phase favors schedulability ratios. This is probably due to how the
-scheduling algorithms are designed to always give all of the \acrshort{r}-jobs a higher
+scheduling algorithms are designed to always give all the \acrshort{r}-jobs a higher
 priority than the highest priority \acrshort{a}-jobs. This has the effect that whenever an
 \acrshort{a}-job and an \acrshort{r}-job are both available the \acrshort{r}-job will always be
-scheduled first. Thus the \acrshort{a}-job will be pushed closer to its deadline, decreasing its
+scheduled first. Thus, the \acrshort{a}-job will be pushed closer to its deadline, decreasing its
 slack time and also increasing the chance that it will miss its deadline. So if the
-\acrshort{r}-jobs on average will have a larger slack time than the \acrshort{a}-jobs, some of the
+\acrshort{r}-jobs on average will have a larger slack time than the \acrshort{a}-jobs, some
 slack time that \acrshort{r}-jobs have can instead be reassigned to the \acrshort{a}-jobs to
 increase their slack times resulting in fewer deadlines missed and a higher schedulability ratio. As
 is shown from the results the optimal window-ratio is to allocate, out of the tried window ratios,
@@ -1951,7 +1949,7 @@ This can be improved upon by further extension of the task model which is discus
 
 % Task amount
 
-As seen in figure \ref{fig:task_amount_1} there is a sweet spot of task set sizes where the
+As seen in figure \ref{fig:task_amount_1}, there is a sweet spot of task set sizes where the
 schedulability ratio is at a local maximum. There is also a problem area for small task sets where the
 schedulability ratio quickly drops-off to then recover. The initial drop-off in schedulability ratio
 for task sets of small sizes is probably due to each task getting a higher execution time. This
@@ -1961,7 +1959,7 @@ or higher than the period of low-period tasks. This would then increase the low-
 to miss their deadline as they might get blocked for accessing the memory through their whole period
 by a single high-period task. As the task set size increases the execution times of each individual
 task also decreases on average, which decreases the risk of any low-period tasks missing their
-deadline. This problem was hypothesised and explained in section \ref{subsec:task_generation} which
+deadline. This problem was hypothesized and explained in section \ref{subsec:task_generation} which
 resulted in periods of 1000ms being removed from any generated task set. The schedulability ratio
 within this problem area could probably be increased further by shrinking the interval between the
 lowest-period and the highest-period of all tasks in the task sets by also removing
@@ -1970,10 +1968,10 @@ experiments, as these typically had a task set of sizes within the problem area.
 
 % Scheduling algorithms
 
-When looking at the different tried scheduling algorithms it is evident that \acrshort{edf} is the
+When looking at the different tried scheduling algorithms, it is evident that \acrshort{edf} is the
 top performing algorithm. Seeing that \acrshort{huhp} and \acrshort{luhp} both have the lowest
 average schedulability ratio of all the algorithms and \acrshort{hulp} and \acrshort{lulp} had the
-highest average schedulability ratios after \acrshort{edf} makes it evident that prioritising jobs with a
+highest average schedulability ratios after \acrshort{edf} makes it evident that prioritizing jobs with a
 low period boosts schedulability immensely. Jobs with a lower period are more probable to have its
 deadline closer than a higher period job for job sets where the period equals its relative deadline.
 Therefore, putting a higher priority on the jobs with a lower period should decrease missed deadlines
@@ -1983,10 +1981,10 @@ is developed from. And as discussed in section \ref{sec:scheduling_algorithms} t
 which take period into account from the ones tested were versions of the \acrshort{rms}
 algorithm. 
 
-The results also show that prioritising jobs within their periods according to their utilization
+The results also show that prioritizing jobs within their periods according to their utilization
 does not have a significant impact on schedulability. This could be due to the low amount of tasks
 in the task set. A task set of size 15 means that the amount of tasks with the most common periods
-(10ms or 20ms with a distribution of 29\% of tasks, see table \ref{tab:period_distribution}) is on
+(10ms or 20ms with a distribution totaling 29\% of tasks, see table \ref{tab:period_distribution}) is on
 average only 4.35 tasks. It could also be due to all the jobs that share a period have the same
 schedulability window, and it does not matter in what order we scheduled the jobs within that
 window although the \acrshort{a}-jobs from the tasks with the same periods will have different
@@ -1997,7 +1995,7 @@ scheduled.
 
 When looking at the results of reducing the amount of cores to be less than the amount of tasks in
 the task set, presented in section \ref{sec:results_core_amount}, it is evident that it has a large
-detrimental effect on the schedulability ratio. Even though this is to be expected to some degree it
+detrimental effect on the schedulability ratio. Even though this is to be expected to some degree, it
 is most likely exaggerated due to the nature of the extended \acrshort{aer} task model (explained in
 section \ref{sec:work_task_model}). A big drawback of the model is that whenever the amount of tasks
 that share any period exceeds the amount of cores in the system it will never be schedulable no
@@ -2016,7 +2014,7 @@ however not be released until 51ms after the release time of the \acrshort{a}-ph
 tasks. At this point the deadline of the \acrshort{a}-phase of the idle task will already have
 passed and the deadline is missed. It is also worth noting that increasing the core amount further
 in the experiment would not amount to a higher schedulability ratio. At the maximum the amount of
-cores are equal to the amount of tasks, which means that each task has a dedicated core to execute
+cores is equal to the amount of tasks, which means that each task has a dedicated core to execute
 on and no more cores could be utilized by any task.
 
 Not only is it a problem that the task sets with more tasks of a single period than the amount of
@@ -2026,23 +2024,23 @@ also true for when the \acrshort{r}-jobs are scheduled late in their \acrshort{r
 worst-case scenario being that the \acrshort{a}-job is scheduled just as its released and the
 \acrshort{r}-job is scheduled as close to its deadline as possible. This would leave the occupied
 core idle without being able to do any actual work for what might be a long time. This does not
-matter when the amount of tasks are the same or smaller than the amount of cores, but should be
-expected to become a larger problem when the task set grows or the amount of cores are lowered
+matter when the amount of tasks is the same or smaller than the amount of cores, but should be
+expected to become a larger problem when the task set grows or the amount of cores is lowered
 making them the bottleneck instead of the memory.
 
 It is important to realize that the utilization of the task set does not reflect the utilization of
-the memory. In all of the experiments presented in chapter \ref{ch:results} an \acrshort{a}-ratio and
+the memory. In all the experiments presented in chapter \ref{ch:results} an \acrshort{a}-ratio and
 \acrshort{r}-ratio of 0.1 was used. This means that out of the total utilization of a job 10\% of it
 comes from the \acrshort{a}-phase, 80\% from the \acrshort{e}-phase and the remaining 10\% from the
 \acrshort{r}-phase. When taking all of this into account the utilization of the memory will just be
 the \acrshort{a}-phases and \acrshort{r}-phases which together accounts for 20\% of the total
 utilization. So in the results, chapter \ref{ch:results}, when the utilization totals for
 example 1.0 this is the total utilization of all the cores. The utilization of the memory will then
-be 20\% of this equalling a utilization of 0.2.
+be 20\% of this equaling a utilization of 0.2.
 
-As discussed in section \ref{subsec:running_benchmarks} there are a lot of different independent
-variables that all affect the schedulability ratio. Even though a lot of different values are tried
-for the different variables to show their general affect on the schedulability ratio it is a very
+As discussed in section \ref{subsec:running_benchmarks}, there are a lot of different independent
+variables that all affects the schedulability ratio. Even though a lot of different values are tried
+for the different variables to show their general effect on the schedulability ratio it is a very
 complex system and different combinations of values are not tried very extensively in this thesis.
 Different results could  have been reached for other combinations of values for the
 variables and also for different ways of generating tasks. This was however not the focus of the
@@ -2098,8 +2096,8 @@ that \acrshort{edf} outperforms all other tested scheduling algorithms. A window
 also shown to outperform all other tested window ratios. There is also a sweet spot in
 schedulability ratio when the task set contains somewhere between 100 to 150 tasks, but 0 to ~300
 tasks is fine without decreasing the schedulability ratio too much. The task model performs the best
-when the amount of cores exceed the amount of tasks, which is not realistic in all cases, but the
-performance is quickly decreased when the amount of cores are decreased below the amount of tasks.
+when the amount of cores exceeds the amount of tasks, which is not realistic in all cases, but the
+performance is quickly decreased when the amount of cores is decreased below the amount of tasks.
 
 % Task model has been created that can be used in conjunction with an exact schedulability analysis
 % tool
@@ -2125,7 +2123,7 @@ are scheduled, and is something that already have been implemented in the \acrsh
 however, requires a special type of precedence. The \acrshort{e}-phases are not explicitly scheduled
 by the scheduler as they have nothing to do with the memory, but they are still required to finish
 execution before the \acrshort{r}-phase is allowed to begin. An idea then could be to pose a special
-type of precedence constraint where a \acrshort{r}-job must not only wait for its \acrshort{a}-job
+type of precedence constraint where an \acrshort{r}-job must not only wait for its \acrshort{a}-job
 to finish, but must also wait x amount of time after the \acrshort{a}-job has finished before the
 \acrshort{r}-job is allowed to start execution. Time x would then be represented by the
 \acrshort{wcet} of the \acrshort{e}-phase similarly to how the extended \acrshort{aer}-model
@@ -2137,19 +2135,19 @@ placed at the same point in time for each task. It could thus be of interest to 
 moving the \acrshort{e}-phase around within the schedulability window (i.e. changing the tasks
 window-ratio) to be different for each individual task within the same period. It would be expected
 to have an effect on the schedulability ratio as it should, under the right circumstances, allow for
-more tasks with the same period than the amount of cores to be schedulable.
+more tasks with the same period as the amount of cores to be schedulable.
 
 The model can further be extended to make it more accurately represent reality. Release jitter can be
 added to the tasks by adding it to the \acrshort{a}-job, the naive way of using the \acrshort{wcet}
 of the \acrshort{e}-job to model the time-interval required from the latest possible completion of
 the \acrshort{a}-job to the earliest possible scheduling of the \acrshort{r}-job can be improved
-upon by modelling the \acrshort{wcet} and \acrshort{bcet} of the \acrshort{e}-job as release jitter
+upon by modeling the \acrshort{wcet} and \acrshort{bcet} of the \acrshort{e}-job as release jitter
 for the \acrshort{r}-job. The deadline of the \acrshort{a}-job plus the \acrshort{bcet} of the
 \acrshort{e}-job is the earliest possible starting time of the \acrshort{r}-job and the deadline of
 the \acrshort{a}-job plus the \acrshort{wcet} of the \acrshort{e}-job is the latest time at which
 the \acrshort{r}-job will be available for scheduling. This time interval can simply be modeled as
 the release jitter for the \acrshort{r}-job. Furthermore, relaxing the assumption that the
-\acrshort{a}-jobs and \acrshort{r}-jobs are always constant in time is possible by modelling them
+\acrshort{a}-jobs and \acrshort{r}-jobs are always constant in time is possible by modeling them
 with a \acrshort{wcet} and \acrshort{bcet} of their own. All of these proposals are already
 implemented in the \acrshort{np}-test and only requires further extension to the
 \acrshort{aer}-model. In addition to make the model further reflect reality it would also be
